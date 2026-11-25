@@ -101,6 +101,45 @@ export function describeProfileRepositoryContract(
       expect(await repo.findByHandle(FIXTURE.snapshot.handle)).toEqual(asProfile(FIXTURE));
     });
 
+    it('save devuelve true al crear y al actualizar una ficha no retirada', async () => {
+      const repo = await factory();
+      const fresh: Profile = { ...asProfile(FIXTURE), id: NEW_ID, handle: 'perfil.true.test' };
+      expect(await repo.save(fresh)).toBe(true);
+      expect(await repo.save({ ...fresh, declared: null })).toBe(true);
+    });
+
+    // Ley 29733: una edición concurrente no puede revivir una ficha que el titular retiró.
+    it('save NUNCA revive una ficha retirada: devuelve false y la deja como estaba', async () => {
+      const repo = await factory();
+      const removed: Profile = { ...asProfile(FIXTURE), status: 'removed' };
+      expect(await repo.save(removed)).toBe(true);
+      const attempts = [
+        { ...removed, status: 'verified' as const },
+        { ...removed, status: 'unclaimed' as const, ownerUserId: null },
+      ];
+      const results = await Promise.all(attempts.map((p) => repo.save(p)));
+      expect(results).toEqual([false, false]);
+      expect(await repo.findById(FIXTURE.id)).toEqual(removed);
+    });
+
+    it('sobre una ficha retirada solo se puede mantener retirada (save removed → true)', async () => {
+      const repo = await factory();
+      const removed: Profile = { ...asProfile(FIXTURE), status: 'removed' };
+      await repo.save(removed);
+      expect(await repo.save(removed)).toBe(true);
+    });
+
+    it('un retiro concurrente con una edición deja la ficha retirada, gane quien gane', async () => {
+      const repo = await factory();
+      const base = asProfile(FIXTURE);
+      await Promise.all([
+        repo.save({ ...base, declared: null }),
+        repo.save({ ...base, status: 'removed' }),
+        repo.save({ ...base, declared: null }),
+      ]);
+      expect((await repo.findById(FIXTURE.id))?.status).toBe('removed');
+    });
+
     it('los removidos siguen legibles: claimProfile los usa como lista de bloqueo y el filtro es del caso de uso', async () => {
       const repo = await factory();
       await repo.save({ ...asProfile(FIXTURE), status: 'removed' });

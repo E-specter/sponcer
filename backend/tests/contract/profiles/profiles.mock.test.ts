@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto';
 import { describe } from 'vitest';
 import { fixtureProfiles } from '@sponcer/contracts/fixtures';
 import { createProfilesMockAdapters } from '../../../src/modules/profiles/infrastructure/out/mock/mock-adapters';
@@ -8,6 +9,7 @@ import {
 } from './readers.contract';
 import { describeRemovalRequestStoreContract } from './removal-request-store.contract';
 import { describeServiceRepositoryContract } from './service-repository.contract';
+const MIN_CATALOG = 2;
 
 // Los adaptadores Supabase (F2/F3) se enchufan aquí con la misma suite sobre una BD local sembrada.
 describe('profiles · adaptadores mock', () => {
@@ -15,7 +17,7 @@ describe('profiles · adaptadores mock', () => {
   describeServiceRepositoryContract(
     () => {
       const repo = createProfilesMockAdapters().services;
-      const catalogs = fixtureProfiles.filter((f) => f.services.length >= 2);
+      const catalogs = fixtureProfiles.filter((f) => f.services.length >= MIN_CATALOG);
       const empty = fixtureProfiles.find((f) => f.services.length === 0)!;
       return {
         repo,
@@ -34,6 +36,7 @@ describe('profiles · adaptadores mock', () => {
     return {
       store: removals,
       handle,
+      adminId: randomUUID(),
       recorded: () => removals.all().filter((r) => r.handle.startsWith(handle)),
     };
   });

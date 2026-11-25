@@ -47,6 +47,17 @@ export function describeNotificationRepositoryContract(
       expect(await repo.findById(n.id)).toEqual(n);
     });
 
+    it('add con un id ya existente se rechaza con DomainError CONFLICT (sin pisar el original)', async () => {
+      const { repo, newUserId } = await factory();
+      const user = await newUserId();
+      const original = note(user, 0);
+      await repo.add(original);
+      await expect(repo.add({ ...original, kind: 'message_received' })).rejects.toMatchObject({
+        code: 'CONFLICT',
+      });
+      expect(await repo.findById(original.id)).toEqual(original);
+    });
+
     it('findById devuelve null si no existe', async () => {
       expect(await (await factory()).repo.findById(MISSING_ID)).toBeNull();
     });

@@ -85,11 +85,12 @@ describe.skipIf(!hasSupabase)('adaptadores reales (Supabase local)', () => {
   });
 
   describe('profiles · RemovalRequestStore', () => {
-    describeRemovalRequestStoreContract(() => {
+    describeRemovalRequestStoreContract(async () => {
       const handle = world.newHandle();
       return {
         store: createSupabaseRemovalStore(sb),
         handle,
+        adminId: (await world.newUser()).id,
         recorded: async () => {
           const res = await sb
             .from('profile_removal_requests')
