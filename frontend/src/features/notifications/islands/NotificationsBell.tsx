@@ -1,8 +1,11 @@
 import { useEffect, useState } from 'react';
+import { Bell } from 'lucide-react';
 import type { Notification } from '@sponcer/contracts';
 import { formatDate } from '../../../lib/labels';
 import { listNotifications, markRead } from '../api/notifications';
 import { subscribeNotifications } from '../api/realtime';
+
+const ICON_SIZE = 18;
 
 const KIND_TEXT: Record<Notification['kind'], string> = {
   match_created: 'Tienes un nuevo match',
@@ -54,12 +57,18 @@ export default function NotificationsBell() {
     <div className="bell">
       <button
         type="button"
-        className="btn btn-secondary"
+        className="bell-btn"
         aria-expanded={open}
         aria-controls="panel-notificaciones"
         onClick={() => setOpen((o) => !o)}
       >
-        Notificaciones{unread > 0 && <span className="badge"> {unread} sin leer</span>}
+        <Bell size={ICON_SIZE} strokeWidth={2} aria-hidden="true" />
+        <span className="sr-only">Notificaciones{unread > 0 ? `, ${unread} sin leer` : ''}</span>
+        {unread > 0 && (
+          <span className="bell-count" aria-hidden="true">
+            {unread}
+          </span>
+        )}
       </button>
       {open && (
         <section id="panel-notificaciones" className="card bell-panel" aria-label="Notificaciones">
@@ -75,7 +84,7 @@ export default function NotificationsBell() {
                 {n.readAt ? (
                   <span className="small muted">Leída</span>
                 ) : (
-                  <button type="button" className="btn btn-secondary" onClick={() => read(n.id)}>
+                  <button type="button" className="btn btn-text" onClick={() => read(n.id)}>
                     Marcar como leída
                   </button>
                 )}

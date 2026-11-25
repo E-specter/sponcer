@@ -1,15 +1,13 @@
 import type { ReactNode } from 'react';
+import { Notice } from './Notice';
 
-interface AlertProps {
+/** Compatibilidad con las islas existentes: delega en `Notice`. */
+export function Alert({
+  kind,
+  children,
+}: {
   kind: 'error' | 'success' | 'info';
   children: ReactNode;
-}
-
-/** Los errores se anuncian de inmediato (role=alert); el resto de forma educada (role=status). */
-export function Alert({ kind, children }: AlertProps) {
-  return (
-    <div className={`alert alert-${kind}`} role={kind === 'error' ? 'alert' : 'status'}>
-      {children}
-    </div>
-  );
+}) {
+  return <Notice kind={kind}>{children}</Notice>;
 }

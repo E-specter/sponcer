@@ -19,7 +19,7 @@ export function Field({ id, label, error, hint, children }: FieldProps) {
   return (
     <div className="field">
       <label htmlFor={id}>{label}</label>
-      {hint && <span className="muted small">{hint}</span>}
+      {hint && <span className="hint">{hint}</span>}
       {children}
       {error && (
         <p id={`${id}-error`} className="field-error">

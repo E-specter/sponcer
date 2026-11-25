@@ -2,9 +2,12 @@
 import App from '../../layouts/App.astro';
 import { ApiError, call } from '../../lib/api';
 import { getMe } from '../../lib/session';
-import { NICHE_LABEL, TIER_LABEL, formatPercent } from '../../lib/labels';
+import { NICHE_LABEL, TIER_LABEL, formatCount, formatPercent } from '../../lib/labels';
 import IngestedCard from '../../features/profiles/components/IngestedCard.astro';
 import DeclaredCard from '../../features/profiles/components/DeclaredCard.astro';
+import { Avatar } from '../../components/ui/Avatar';
+import { Chip } from '../../components/ui/Chip';
+import { Tag } from '../../components/ui/Tag';
 import ServiceCatalog from '../../features/quotes/islands/ServiceCatalog';
 
 const handle = Astro.params.handle ?? '';
@@ -29,31 +32,34 @@ try {
       </section>
     ) : (
       <>
-        <header class="stack">
-          <h1>
-            @{profile.handle} <span class="muted small">{profile.fullName}</span>
-          </h1>
+        <header class="card stack">
+          <div class="row">
+            <Avatar name={profile.fullName || profile.handle} size="xl" />
+            <div>
+              <p class="eyebrow">{profile.role === 'brand' ? 'Perfil de marca' : 'Perfil de creador'} · Instagram</p>
+              <h1>{profile.fullName || `@${profile.handle}`}</h1>
+              <p class="muted small">@{profile.handle}</p>
+            </div>
+          </div>
           <p class="row">
-            <span class="badge">{profile.role === 'brand' ? 'Marca' : 'Creador'}</span>
-            <span class={`badge ${profile.status === 'verified' ? 'badge-success' : ''}`}>
+            <Tag tone={profile.status === 'verified' ? 'exito' : 'neutral'}>
               {profile.status === 'verified' ? 'Verificado' : 'Sin reclamar'}
-            </span>
-            {profile.isOwner && <span class="badge">Tu perfil</span>}
-            {profile.classification && (
-              <>
-                <span class="badge">{TIER_LABEL[profile.classification.tier]}</span>
-                <span class="badge">Interacción {formatPercent(profile.classification.engagementRate)}</span>
-              </>
-            )}
+            </Tag>
+            {profile.isOwner && <Tag tone="accion">Tu perfil</Tag>}
           </p>
           {profile.classification && (
             <p class="row" aria-label="Nichos clasificados">
               {profile.classification.niches.map((n) => (
-                <span class="chip">
-                  {NICHE_LABEL[n.niche]} ·{' '}
-                  {n.source === 'declared' ? 'declarado' : 'detectado'}
-                </span>
+                <Chip>
+                  {NICHE_LABEL[n.niche]} · {n.source === 'declared' ? 'declarado en Sponcer' : 'detectado en Instagram'}
+                </Chip>
               ))}
+            </p>
+          )}
+          {profile.classification && (
+            <p class="small muted">
+              {TIER_LABEL[profile.classification.tier]} · {formatCount(profile.ingested.followers)} seguidores · Interacción{' '}
+              {formatPercent(profile.classification.engagementRate)}
             </p>
           )}
         </header>

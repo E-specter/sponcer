@@ -2,11 +2,14 @@ import { useStore } from '@nanostores/react';
 import { useEffect, useState } from 'react';
 import type { FeedItem, ProfileSummary } from '@sponcer/contracts';
 import { Alert } from '../../../components/ui/Alert';
+import { Notice } from '../../../components/ui/Notice';
+import { EmptyState, ErrorState, Skeleton } from '../../../components/ui/States';
+import { NICHE_LABEL } from '../../../lib/labels';
 import { messageOf } from '../../../components/ui/errors';
 import { activeProfileId, resolveActive } from '../../../lib/state/active-profile';
 import { interact, loadFeed } from '../api/feed';
 import FeedCard from './FeedCard';
-import { filters } from './filters.store';
+import { EMPTY_FILTERS, filters, searchQuery } from './filters.store';
 
 interface Notice {
   kind: 'success' | 'error' | 'info';
@@ -16,12 +19,15 @@ interface Notice {
 
 export default function Feed({ profiles }: { profiles: ProfileSummary[] }) {
   const f = useStore(filters);
+  const query = useStore(searchQuery).trim().toLowerCase();
   const active = resolveActive(profiles, useStore(activeProfileId));
   const [items, setItems] = useState<FeedItem[]>([]);
   const [next, setNext] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [busyId, setBusyId] = useState<string | null>(null);
   const [notice, setNotice] = useState<Notice | null>(null);
+  const [reloads, setReloads] = useState(0);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   const activeId = active?.id;
   useEffect(() => {
@@ -35,8 +41,9 @@ export default function Feed({ profiles }: { profiles: ProfileSummary[] }) {
         setItems(page.items);
         setNext(page.nextCursor);
         setNotice(null);
+        setLoadError(null);
       } catch (e) {
-        if (!cancelled) setNotice({ kind: 'error', text: messageOf(e) });
+        if (!cancelled) setLoadError(messageOf(e));
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -44,7 +51,7 @@ export default function Feed({ profiles }: { profiles: ProfileSummary[] }) {
     return () => {
       cancelled = true;
     };
-  }, [activeId, f]);
+  }, [activeId, f, reloads]);
 
   async function more() {
     if (!activeId || !next) return;
@@ -97,26 +104,58 @@ export default function Feed({ profiles }: { profiles: ProfileSummary[] }) {
     );
   }
 
+  const visible = query
+    ? items.filter((i) =>
+        [i.card.fullName, i.card.handle, ...i.card.niches.map((n) => NICHE_LABEL[n])].some((t) =>
+          t.toLowerCase().includes(query),
+        ),
+      )
+    : items;
+
   return (
     <section aria-label="Resultados" className="stack">
-      <p className="muted">
-        Viendo como <strong>@{active.handle}</strong> (
-        {active.role === 'brand' ? 'marca' : 'creador'}): se muestran{' '}
-        {active.role === 'brand' ? 'creadores' : 'marcas'}.
-      </p>
+      <div className="criteria">
+        <span>
+          Viendo como <strong>@{active.handle}</strong> (
+          {active.role === 'brand' ? 'marca' : 'creador'}):{' '}
+          {active.role === 'brand' ? 'creadores' : 'marcas'} con afinidad
+        </span>
+        <span>Orden: compatibilidad</span>
+      </div>
       <div aria-live="polite">
         {notice && (
           <Alert kind={notice.kind}>
             {notice.text} {notice.href && <a href={notice.href}>Abrir chat</a>}
           </Alert>
         )}
-        {loading && <p className="muted">Cargando…</p>}
       </div>
-      {!loading && items.length === 0 && !notice && (
-        <p className="card">No hay más perfiles con estos filtros. Prueba quitar alguno.</p>
+      {loadError && <ErrorState message={loadError} onRetry={() => setReloads((n) => n + 1)} />}
+      {loading && items.length === 0 && (
+        <div className="feed-grid" aria-busy="true">
+          <Skeleton />
+          <Skeleton />
+        </div>
       )}
-      <div className="grid">
-        {items.map((item) => (
+      {!loading && !loadError && visible.length === 0 && !notice && (
+        <EmptyState
+          message="No hay perfiles que coincidan con estos filtros."
+          action={
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={() => {
+                filters.set({ ...EMPTY_FILTERS });
+                searchQuery.set('');
+              }}
+            >
+              Limpiar filtros
+            </button>
+          }
+          note="No mostramos resultados que no coinciden."
+        />
+      )}
+      <div className="feed-grid">
+        {visible.map((item) => (
           <FeedCard
             key={item.card.id}
             item={item}
@@ -131,6 +170,10 @@ export default function Feed({ profiles }: { profiles: ProfileSummary[] }) {
           Cargar más
         </button>
       )}
+      <Notice kind="info">
+        Las afinidades se basan en nichos y datos públicos de Instagram, no en seguidores. La fuente
+        acompaña al dato.
+      </Notice>
     </section>
   );
 }

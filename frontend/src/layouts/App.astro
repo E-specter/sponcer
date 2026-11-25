@@ -1,49 +1,114 @@
 ---
 import { PUBLIC_AUTH_MODE } from 'astro:env/client';
+import { Compass, FileText, ShieldCheck, UserRound, Users } from 'lucide-react';
 import Base from './Base.astro';
 import { getMe } from '../lib/session';
+import { Avatar } from '../components/ui/Avatar';
+import { Logo } from '../components/ui/Logo';
+import { Tabs } from '../components/ui/Tabs';
+import { Tag } from '../components/ui/Tag';
 import ProfileSwitcher from '../features/profiles/islands/ProfileSwitcher';
+import ContextPanel from '../features/profiles/islands/ContextPanel';
 import NotificationsBell from '../features/notifications/islands/NotificationsBell';
 
 interface Props {
   title: string;
 }
 
+const ICON = 18;
+const BOTTOM_ICON = 20;
+
 const me = await getMe(Astro.locals);
 const path = Astro.url.pathname;
-const links = [
+const displayName = me.email.split('@')[0] ?? me.email;
+
+// /mensajes cuelga de Matches (cada conversación nace de un match).
+const section = path.startsWith('/mensajes') ? '/panel/matches' : path;
+const isCurrent = (href: string) => (href === '/panel' ? section === '/panel' : section.startsWith(href));
+
+const tabs = [
   { href: '/descubrir', label: 'Descubrir' },
-  { href: '/panel', label: 'Mi panel' },
   { href: '/panel/matches', label: 'Matches' },
   { href: '/panel/cotizaciones', label: 'Cotizaciones' },
+  { href: '/panel', label: 'Mi panel' },
+];
+const sideLinks = [
+  { href: '/descubrir', label: 'Para ti', Icon: Compass },
+  { href: '/panel/matches', label: 'Matches', Icon: Users },
+  { href: '/panel/cotizaciones', label: 'Cotizaciones', Icon: FileText },
+  { href: '/panel', label: 'Mis perfiles', Icon: UserRound },
+  { href: '/privacidad', label: 'Privacidad', Icon: ShieldCheck },
+];
+const bottomLinks = [
+  { href: '/descubrir', label: 'Descubrir', Icon: Compass },
+  { href: '/panel/matches', label: 'Matches', Icon: Users },
+  { href: '/panel/cotizaciones', label: 'Cotizaciones', Icon: FileText },
+  { href: '/panel', label: 'Panel', Icon: UserRound },
 ];
 ---
 
 <Base title={Astro.props.title}>
-  <header class="site-header">
-    <div class="container">
-      <a class="brand" href="/descubrir">Sponcer</a>
-      <nav aria-label="Principal">
+  <header class="app-header">
+    <div class="app-header-inner">
+      <div class="logo-wrap">
+        <Logo href="/descubrir" />
+        {PUBLIC_AUTH_MODE === 'mock' && <Tag>Vista de demostración</Tag>}
+      </div>
+      <Tabs links={tabs} current={section} label="Principal" />
+      <div class="header-account">
+        <div class="who">
+          <strong>{displayName}</strong>
+        </div>
+        <ProfileSwitcher client:load profiles={me.profiles} />
+        <NotificationsBell client:idle />
+        <Avatar name={displayName} />
         {
-          links.map((l) => (
-            <a href={l.href} aria-current={path === l.href ? 'page' : undefined}>
-              {l.label}
-            </a>
-          ))
+          PUBLIC_AUTH_MODE === 'supabase' && (
+            <form class="logout" method="post" action="/auth/logout">
+              <button class="btn btn-secondary" type="submit">
+                Salir
+              </button>
+            </form>
+          )
         }
-      </nav>
-      <ProfileSwitcher client:load profiles={me.profiles} />
-      <NotificationsBell client:idle />
-      {
-        PUBLIC_AUTH_MODE === 'supabase' && (
-          <form method="post" action="/auth/logout">
-            <button class="btn btn-secondary" type="submit">Salir</button>
-          </form>
-        )
-      }
+      </div>
     </div>
   </header>
-  <main id="contenido" class="container stack">
-    <slot />
-  </main>
+  <div class="app-shell">
+    <nav class="side-nav" aria-label="Tu espacio">
+      <p class="side-nav-title">Tu espacio</p>
+      <ul>
+        {
+          sideLinks.map(({ href, label, Icon }) => (
+            <li>
+              <a href={href} aria-current={isCurrent(href) ? 'page' : undefined}>
+                <Icon size={ICON} strokeWidth={2} aria-hidden="true" />
+                {label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="side-nav-note">
+        <strong>Sin ranking de popularidad.</strong>
+        Aquí cuentan los puntos en común, no los seguidores.
+      </p>
+    </nav>
+    <main id="contenido" class="app-main">
+      <slot />
+    </main>
+    <aside class="context-panel" aria-label="Contexto">
+      <ContextPanel client:idle profiles={me.profiles} />
+    </aside>
+  </div>
+  <nav class="bottom-nav" aria-label="Navegación inferior">
+    {
+      bottomLinks.map(({ href, label, Icon }) => (
+        <a href={href} aria-current={isCurrent(href) ? 'page' : undefined}>
+          <Icon size={BOTTOM_ICON} strokeWidth={2} aria-hidden="true" />
+          {label}
+        </a>
+      ))
+    }
+  </nav>
 </Base>

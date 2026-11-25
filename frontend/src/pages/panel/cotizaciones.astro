@@ -16,7 +16,11 @@ const sections = await Promise.all(
 ---
 
 <App title="Cotizaciones">
-  <h1>Cotizaciones</h1>
+  <header class="page-head">
+    <p class="eyebrow">Tu espacio / cotizaciones</p>
+    <h1>Cotizaciones</h1>
+    <p class="lead">Solicitudes enviadas y recibidas, con su estado.</p>
+  </header>
   {me.profiles.length === 0 && <p class="card">Reclama un perfil en <a href="/panel">Mi panel</a> para empezar.</p>}
   {
     sections.map(({ profile, quotes }) => (

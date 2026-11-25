@@ -91,6 +91,10 @@ export default function ClaimFlow() {
   return (
     <section className="card stack" aria-labelledby="reclamar">
       <h2 id="reclamar">Reclamar un perfil</h2>
+      <p className="muted small">
+        Tus fuentes, tu control: confirmas que la cuenta es tuya con un código en tu bio. No
+        accedemos a datos privados.
+      </p>
       {!claim && !verified && (
         <form onSubmit={start} noValidate>
           <Field id="claim-handle" label="Tu @handle de Instagram" error={errors.handle}>

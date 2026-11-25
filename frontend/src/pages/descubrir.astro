@@ -8,11 +8,11 @@ const me = await getMe(Astro.locals);
 ---
 
 <App title="Descubrir">
-  <h1>Descubrir</h1>
-  <div class="layout-sidebar">
-    <aside aria-label="Filtros">
-      <FilterPanel client:load profiles={me.profiles} />
-    </aside>
-    <Feed client:load profiles={me.profiles} />
-  </div>
+  <header class="page-head">
+    <p class="eyebrow">Descubrir / personas, no algoritmos</p>
+    <h1>Tu próximo punto en común.</h1>
+    <p class="lead">Encuentra personas y marcas por lo que les interesa. Conoce su contexto antes de dar el primer paso.</p>
+  </header>
+  <FilterPanel client:load profiles={me.profiles} />
+  <Feed client:load profiles={me.profiles} />
 </App>

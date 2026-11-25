@@ -31,7 +31,8 @@ if (Astro.request.method === 'POST' && PUBLIC_AUTH_MODE === 'supabase') {
 ---
 
 <Public title="Ingresar">
-  <h1>Ingresar</h1>
+  <p class="eyebrow">Acceso</p>
+  <h1>Entrar a Sponcer</h1>
   {
     message && (
       <div class={`alert ${failed ? 'alert-error' : 'alert-success'}`} role={failed ? 'alert' : 'status'}>

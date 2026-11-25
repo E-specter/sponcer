@@ -17,7 +17,7 @@ export default function ProfileSwitcher({ profiles }: Props) {
   if (profiles.length <= 1) return null;
   return (
     <div className="row">
-      <label htmlFor="perfil-activo" className="small">
+      <label htmlFor="perfil-activo" className="sr-only">
         Perfil activo
       </label>
       <select

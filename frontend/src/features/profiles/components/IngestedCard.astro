@@ -9,7 +9,8 @@ const { ingested } = Astro.props;
 ---
 
 <section class="card" aria-labelledby="ingerido">
-  <h2 id="ingerido">Datos de Instagram <span class="badge">Solo lectura</span></h2>
+  <h2 id="ingerido">Desde Instagram</h2>
+  <p class="row"><span class="tag tag-accion">Instagram · ingerido</span><span class="tag">Solo lectura</span></p>
   <p class="muted small">
     Información pública leída de Instagram el {formatDate(ingested.fetchedAt)}. No puede editarse.
   </p>

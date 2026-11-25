@@ -1,34 +1,100 @@
 ---
+import { ShieldCheck } from 'lucide-react';
 import Public from '../layouts/Public.astro';
+import { Chip } from '../components/ui/Chip';
+import { Tag } from '../components/ui/Tag';
 
 export const prerender = true;
+
+const steps = [
+  {
+    title: 'Definir',
+    text: 'Reclamas tu perfil con un código en tu bio y declaras tus nichos, servicios o presupuesto.',
+  },
+  {
+    title: 'Encontrar afinidad',
+    text: 'Recibes tarjetas ordenadas por compatibilidad, con el motivo y la procedencia de cada dato.',
+  },
+  {
+    title: 'Decidir colaborar',
+    text: 'Si el interés es mutuo hay match, chat y cotizaciones con estados claros.',
+  },
+];
 ---
 
-<Public title="Conecta marcas y creadores">
-  <section class="stack">
-    <h1>Encuentra a la marca o al creador ideal en Perú</h1>
-    <p>
-      Sponcer te recomienda perfiles de Instagram compatibles según nicho, alcance, interacción y
-      presupuesto. Si hay interés de ambos lados, se abre el chat y puedes pedir o enviar
-      cotizaciones.
-    </p>
-    <p class="row">
-      <a class="btn" href="/login">Empezar</a>
-      <a class="btn btn-secondary" href="/privacidad">Cómo tratamos los datos</a>
-    </p>
+<Public title="Influencers y marcas, juntos de forma natural" ink bare>
+  <section class="hero" aria-labelledby="titular">
+    <div>
+      <p class="eyebrow">Emparejamiento para colaboraciones</p>
+      <h1 id="titular">Influencers y marcas, juntos de forma natural.</h1>
+      <p class="lead">
+        Sponcer empareja influencers con marcas de productos o servicios para colaboraciones más relevantes.
+      </p>
+      <div class="hero-sign">
+        <span class="signature-line" aria-hidden="true"></span>
+        <span>Influencers primero. Marcas alineadas.</span>
+      </div>
+      <div class="hero-cta">
+        <a class="btn" href="/login">Entrar</a>
+        <a class="btn btn-secondary" href="/privacidad">Cómo tratamos los datos</a>
+      </div>
+    </div>
+
+    <div class="hero-art">
+      <img class="ring ring-a" src="/assets/campo-afinidad.svg" alt="" />
+      <img class="ring ring-b" src="/assets/campo-contexto.svg" alt="" />
+      <article class="hero-card hero-card-a">
+        <img src="/assets/demo-retrato-alba.png" alt="" />
+        <h3>Alba Ríos</h3>
+        <p>Influencer · Lifestyle</p>
+        <p class="src">Perfil de influencer · Instagram</p>
+      </article>
+      <span class="hero-pill">Colaboración alineada</span>
+      <article class="hero-card hero-card-b">
+        <img src="/assets/demo-producto-cafe-norte.png" alt="" />
+        <h3>Café Norte</h3>
+        <p>Marca · Café especial</p>
+        <p class="src">Perfil de marca · Instagram</p>
+      </article>
+      <p class="hero-note">Perfiles ficticios · Caso de demostración · Sin vínculo real</p>
+    </div>
   </section>
-  <section class="grid" aria-label="Cómo funciona">
-    <article class="card">
-      <h2>1. Reclama tu perfil</h2>
-      <p>Pega un código en tu bio de Instagram para verificar que la cuenta es tuya.</p>
-    </article>
-    <article class="card">
-      <h2>2. Descubre</h2>
-      <p>Recibe tarjetas ordenadas por compatibilidad y filtra por nicho, tamaño y presupuesto.</p>
-    </article>
-    <article class="card">
-      <h2>3. Conecta</h2>
-      <p>Cuando el interés es mutuo hay match, chat y cotizaciones con estados claros.</p>
-    </article>
+
+  <section class="steps-section" aria-labelledby="como-funciona">
+    <div>
+      <p class="eyebrow">Cómo funciona</p>
+      <h2 id="como-funciona" style="font-size: var(--text-titular)">Menos ruido. Más afinidad.</h2>
+      <ol class="steps">
+        {
+          steps.map((s, i) => (
+            <li class="step">
+              <span class="step-n">0{i + 1}</span>
+              <h3>{s.title}</h3>
+              <p>{s.text}</p>
+              <div class="step-demo row" aria-hidden="true">
+                {i === 0 && (
+                  <>
+                    <Chip>Moda</Chip>
+                    <Chip>Belleza</Chip>
+                  </>
+                )}
+                {i === 1 && <span class="small" style="color: var(--color-violeta)">Nichos en común: moda, belleza</span>}
+                {i === 2 && <Tag tone="exito">Cotización aceptada</Tag>}
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+      <div class="trust">
+        <ShieldCheck size={24} strokeWidth={2} aria-hidden="true" />
+        <div>
+          <h3>Tu información no es un atajo.</h3>
+          <p>
+            Solo mostramos datos públicos de Instagram y lo que declaras en Sponcer, siempre con su
+            fuente. El control siempre está en tus manos: puedes pedir la exclusión cuando quieras.
+          </p>
+        </div>
+      </div>
+    </div>
   </section>
 </Public>

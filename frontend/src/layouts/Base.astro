@@ -4,8 +4,10 @@ import '../styles/global.css';
 interface Props {
   title: string;
   description?: string;
+  /** Clase del body (p. ej. `ink-page` para la portada en tinta). */
+  bodyClass?: string;
 }
-const { title, description = 'Sponcer conecta marcas y creadores de Perú.' } = Astro.props;
+const { title, description = 'Sponcer empareja influencers con marcas para colaboraciones más relevantes.', bodyClass } = Astro.props;
 ---
 
 <!doctype html>
@@ -14,10 +16,17 @@ const { title, description = 'Sponcer conecta marcas y creadores de Perú.' } = 
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
+    <link rel="icon" href="/assets/vinculo.svg" type="image/svg+xml" />
     <title>{title} · Sponcer</title>
   </head>
-  <body>
+  <body class={bodyClass}>
     <a class="skip-link" href="#contenido">Saltar al contenido</a>
     <slot />
+    <footer class="site-footer">
+      <div>
+        <span>Datos públicos de Instagram tratados según la Ley N.º 29733. La fuente acompaña al dato.</span>
+        <span><a href="/privacidad">Privacidad</a> · <a href="/terminos">Términos</a></span>
+      </div>
+    </footer>
   </body>
 </html>

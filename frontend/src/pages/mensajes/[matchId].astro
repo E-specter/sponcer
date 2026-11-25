@@ -36,13 +36,13 @@ if (!match) Astro.response.status = 404;
       </section>
     ) : (
       <>
-        <h1>
-          Chat con <a href={`/perfil/${other.handle}`}>@{other.handle}</a>
-        </h1>
-        <p class="muted">
-          Escribes como @{found.profile.handle}. Los mensajes nuevos de la otra persona aparecerán al
-          recargar (el tiempo real llega en la siguiente fase).
-        </p>
+        <header class="page-head">
+          <p class="eyebrow">Matches / mensajes</p>
+          <h1>
+            Chat con <a href={`/perfil/${other.handle}`}>@{other.handle}</a>
+          </h1>
+          <p class="lead">Escribes como @{found.profile.handle}.</p>
+        </header>
         <Chat
           client:load
           matchId={matchId}

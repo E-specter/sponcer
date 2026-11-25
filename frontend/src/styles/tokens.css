@@ -1,53 +1,66 @@
-/* Design tokens provisionales (sin brief de Figma aún). Re-estilizar = cambiar solo este archivo. */
+/* Design tokens de Figma › Dirección visual (docs/03-diseno/tokens.md). Solo tema claro. */
 :root {
-  color-scheme: light dark;
+  color-scheme: light;
 
-  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --text-sm: 0.875rem;
-  --text-base: 1rem;
-  --text-lg: 1.25rem;
-  --text-xl: 1.75rem;
+  --font-sans: 'Inter Variable', Inter, system-ui, -apple-system, 'Segoe UI', sans-serif;
 
-  --space-1: 0.25rem;
-  --space-2: 0.5rem;
-  --space-3: 0.75rem;
-  --space-4: 1rem;
-  --space-6: 1.5rem;
-  --space-8: 2rem;
+  --color-tinta: #17171b;
+  --color-tinta-elevada: #242329;
+  --color-papel: #f6f5f2;
+  --color-blanco: #ffffff;
+  --color-violeta: #7028c9;
+  --color-violeta-hover: #5a1ca7;
+  --color-seleccion: #f0e7fb;
+  --color-magenta: #d32f88;
+  --color-albaricoque: #f5a064;
+  --color-cian: #69e0e8;
+  --color-rosa: #f58bb6;
+  --color-texto-secundario: #62616b;
+  --color-texto-sobre-tinta: #bebac8;
+  --color-borde: #dcd9e1;
+  --color-neutro-suave: #eceaf0;
+  --color-exito: #28634b;
+  --color-exito-fondo: #e8f2eb;
+  --color-error: #a53746;
+  --color-error-fondo: #faebed;
+  --gradiente-firma: linear-gradient(90deg, #f5a064 0%, #d32f88 46%, #7028c9 100%);
 
-  --radius: 0.5rem;
-  --focus-ring: 3px solid var(--color-focus);
+  --text-display: clamp(2.5rem, 6vw, 5.5rem);
+  --text-titular: clamp(2rem, 4vw, 3rem);
+  --text-titulo: 2rem;
+  --text-subtitulo: 1.3125rem;
+  --text-cuerpo: 1rem;
+  --text-control: 0.875rem;
+  --text-chip: 0.8125rem;
+  --text-nota: 0.75rem;
+  --text-micro: 0.6875rem;
+  --tracking-titular: -0.04em;
 
-  /* Claro. Contrastes verificados >= 4.5:1 sobre --color-bg / --color-surface. */
-  --color-bg: #f7f7f9;
-  --color-surface: #ffffff;
-  --color-text: #1b1b24;
-  --color-muted: #4b4b5c;
-  --color-border: #c9c9d6;
-  --color-primary: #4338ca;
-  --color-primary-text: #ffffff;
-  --color-accent-soft: #e8e7fb;
-  --color-danger: #b42318;
-  --color-danger-soft: #fdecea;
-  --color-success: #0b6b3a;
-  --color-success-soft: #e3f6ec;
-  --color-focus: #1d4ed8;
+  --space-0-5: 0.5rem;
+  --space-1: 1rem;
+  --space-1-5: 1.5rem;
+  --space-2: 2rem;
+  --space-3: 3rem;
+  --space-4: 4rem;
+
+  --radius-check: 5px;
+  --radius-tag: 6px;
+  --radius-control: 10px;
+  --radius-focus: 14px;
+  --radius-card: 16px;
+  --radius-hero-card: 18px;
+  --radius-pill: 100px;
+
+  --control-h: 2.75rem;
+  --header-h: 68px;
+  --sidenav-w: 176px;
+  --context-w: 300px;
+  --gutter: 20px;
 }
 
-@media (prefers-color-scheme: dark) {
+@media (min-width: 900px) {
   :root {
-    --color-bg: #12121a;
-    --color-surface: #1c1c28;
-    --color-text: #f1f1f6;
-    --color-muted: #b4b4c6;
-    --color-border: #3d3d52;
-    --color-primary: #a5a0ff;
-    --color-primary-text: #12121a;
-    --color-accent-soft: #2a2950;
-    --color-danger: #ff9b90;
-    --color-danger-soft: #3b1a17;
-    --color-success: #6fdc9f;
-    --color-success-soft: #14301f;
-    --color-focus: #8ab4ff;
+    --header-h: 88px;
+    --gutter: 32px;
   }
 }

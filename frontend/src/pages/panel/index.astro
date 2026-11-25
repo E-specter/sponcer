@@ -14,8 +14,11 @@ const details = await Promise.all(
 ---
 
 <App title="Mi panel">
-  <h1>Mi panel</h1>
-  <p class="muted">Sesión: {me.email}</p>
+  <header class="page-head">
+    <p class="eyebrow">Tu espacio / perfiles</p>
+    <h1>Mi panel</h1>
+    <p class="lead">Sesión: {me.email}. Aquí editas lo que declaras en Sponcer; lo ingerido de Instagram es de solo lectura.</p>
+  </header>
 
   <section aria-labelledby="mis-perfiles" class="stack">
     <h2 id="mis-perfiles">Mis perfiles</h2>
