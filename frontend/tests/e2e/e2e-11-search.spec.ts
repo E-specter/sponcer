@@ -71,6 +71,10 @@ test('F5: el filtro de ciudad deja solo perfiles de esa ciudad y la tarjeta la d
     expect(await cards.filter({ hasText: 'Trujillo · Ubicación declarada' }).count()).toBe(shown);
   }).toPass();
   await expect(cards.filter({ hasText: SOFIA })).toBeVisible();
+  // O-7: se usa la etiqueta del catálogo ("Trujillo"), no el valor interno ("trujillo"). `hasText` ignora mayúsculas: se compara el texto exacto.
+  const subtitles = await cards.locator('.pcard-sub').allTextContents();
+  expect(subtitles.length).toBeGreaterThan(0);
+  subtitles.forEach((text) => expect(text).toBe('Trujillo · Ubicación declarada'));
 
   // Otra ciudad cambia el resultado; "Todas las ciudades" lo restaura.
   await page.getByLabel('Ciudad').selectOption({ label: 'Cusco' });

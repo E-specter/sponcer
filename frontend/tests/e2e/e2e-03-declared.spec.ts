@@ -54,7 +54,8 @@ test('E2E-03: declarar nichos y un servicio actualiza la ficha y reclasifica', a
     await expect(niches).toContainText('Mascotas · declarado en Sponcer');
   }).toPass();
   const main = page.locator('#contenido');
-  await expect(main.getByText('Ciudad: Arequipa')).toBeVisible();
+  // O-7: etiqueta del catálogo con mayúscula (`getByText` ignora mayúsculas, por eso se compara el texto).
+  expect(await main.textContent()).toContain('Ciudad: Arequipa');
   await expect(main.getByText('Cuento historias de mascotas')).toBeVisible();
   await expect(main.getByText('Reel de 30 segundos con tu producto')).toBeVisible();
   await expect(main.getByRole('heading', { level: H3, name: PRICE_PEN })).toBeVisible();
