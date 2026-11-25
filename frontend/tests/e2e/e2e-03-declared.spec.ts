@@ -35,7 +35,7 @@ test('E2E-03: declarar nichos y un servicio actualiza la ficha y reclasifica', a
   await expect(declared.locator('.field-error').first()).toBeVisible();
 
   await declared.getByLabel('Mascotas').check();
-  await declared.getByLabel('Ciudad').fill('Arequipa');
+  await declared.getByLabel('Ciudad').selectOption({ label: 'Arequipa' });
   await declared.getByLabel('Descripción corta').fill('Cuento historias de mascotas');
   await declared.getByRole('button', { name: 'Guardar datos' }).click();
   await expect(declared.getByText('Datos guardados.')).toBeVisible();

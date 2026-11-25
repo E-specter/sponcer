@@ -1,7 +1,7 @@
 import { expect, test, type Page } from '@playwright/test';
 import { newBrand, newCreator, newMatch } from './support/actors';
 import { loginAs } from './support/session';
-import { openBell, visit } from './support/ui';
+import { openBell, realtimeReady, visit } from './support/ui';
 import { createWorld } from './support/world';
 
 // E2E-07 (RF-13): chat entre las partes del match en tiempo real con dos navegadores, sin recargar.
@@ -31,8 +31,10 @@ test('E2E-07: los mensajes llegan al otro navegador sin recargar y quedan en el 
   const brandPage = await brandCtx.newPage();
   await loginAs(creatorCtx, creator.user);
   await loginAs(brandCtx, brand.user);
+  const ready = [realtimeReady(creatorPage), realtimeReady(brandPage)];
   await visit(creatorPage, `/mensajes/${matchId}`);
   await visit(brandPage, `/mensajes/${matchId}`);
+  await Promise.all(ready);
   await expect(creatorPage.getByRole('heading', { level: 1 })).toContainText(`@${brand.handle}`);
   await expect(brandPage.getByText('Aún no hay mensajes. Saluda primero.')).toBeVisible();
 

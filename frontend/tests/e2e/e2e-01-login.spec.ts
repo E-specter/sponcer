@@ -12,7 +12,11 @@ const HTTP_FOUND = 302;
 // se reenvía el `code` al callback del frontend bajo prueba (el resto del flujo es el real).
 const CONFIGURED_ORIGIN = 'http://localhost:4321/**';
 
-test('E2E-01: enlace mágico real por Mailpit lleva a un panel vacío', async ({ page, context }) => {
+test('E2E-01: enlace mágico real por Mailpit lleva a un panel vacío', async ({
+  page,
+  context,
+  browserName,
+}) => {
   const email = `e2e-${uniqueTag()}@${E2E_EMAIL_DOMAIN}`;
   world.trackEmail(email);
 
@@ -48,7 +52,8 @@ test('E2E-01: enlace mágico real por Mailpit lleva a un panel vacío', async ({
 
   const sessionCookie = (await context.cookies()).find((c) => c.name.endsWith('-auth-token'));
   expect(sessionCookie?.httpOnly).toBe(true);
-  expect(sessionCookie?.sameSite).toBe('Lax');
+  // WebKit informa `None` para cookies Lax en su API de cookies; el atributo real lo fija el servidor (`supabase.ts`).
+  if (browserName !== 'webkit') expect(sessionCookie?.sameSite).toBe('Lax');
 
   await page.goto('/panel');
   await expect(page.getByRole('heading', { name: 'Mi panel' })).toBeVisible();
@@ -57,6 +62,8 @@ test('E2E-01: enlace mágico real por Mailpit lleva a un panel vacío', async ({
 
   // Cerrar sesión devuelve el panel a /login.
   await page.getByRole('button', { name: 'Salir' }).click();
+  // Esperar a que termine el cierre de sesión (POST + redirección) antes de pedir una ruta protegida.
+  await expect(page).toHaveURL(`${BASE_URL}/login`);
   await page.goto('/panel');
   await expect(page).toHaveURL(`${BASE_URL}/login`);
 });

@@ -119,7 +119,7 @@ test('E2E-04: la tarjeta del creador ofrece "Solicitar cotización" a la marca y
   await visit(brandPage, '/descubrir');
   await brandPage.getByRole('button', { name: 'Filtros', exact: true }).click();
   await brandPage.getByLabel('Precio máximo del servicio (S/)').fill(String(UNIQUE_PRICE_PEN));
-  const card = brandPage.getByRole('article').filter({ hasText: `@${creator.handle}` });
+  const card = brandPage.getByRole('article').filter({ hasText: creator.handle });
   await expect(card).toBeVisible();
   const request = card.getByRole('link', { name: 'Solicitar cotización' });
   await expect(request).toHaveAttribute('href', `/perfil/${creator.handle}#servicios`);
@@ -137,7 +137,7 @@ test('E2E-04: la tarjeta del creador ofrece "Solicitar cotización" a la marca y
   await creatorPage
     .getByLabel('Presupuesto máximo mínimo de la marca (S/)')
     .fill(String(UNIQUE_BUDGET_PEN));
-  const brandCard = creatorPage.getByRole('article').filter({ hasText: `@${brand.handle}` });
+  const brandCard = creatorPage.getByRole('article').filter({ hasText: brand.handle });
   await expect(brandCard).toBeVisible();
   await expect(brandCard.getByRole('link', { name: 'Solicitar cotización' })).toHaveCount(0);
   await creatorCtx.close();

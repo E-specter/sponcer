@@ -41,10 +41,15 @@ async function expectVisibleFocus(target: Locator): Promise<void> {
   expect(hasOutline || hasShadow, `sin anillo de foco: ${JSON.stringify(ring)}`).toBe(true);
 }
 
+// WebKit (Safari) no incluye enlaces en el orden de Tab salvo con Alt+Tab: no es un defecto del producto.
+const WEBKIT_SKIPS_LINKS = 'WebKit omite enlaces al tabular (Safari: Alt+Tab)';
+
 test('teclado: "Me interesa" se activa con Tab + Enter y el foco es visible en cada paso', async ({
   page,
   context,
+  browserName,
 }) => {
+  test.skip(browserName === 'webkit', WEBKIT_SKIPS_LINKS);
   const creator = await newCreator(world, {
     services: [
       {
@@ -74,7 +79,7 @@ test('teclado: "Me interesa" se activa con Tab + Enter y el foco es visible en c
   await page.keyboard.type(String(UNIQUE_PRICE_PEN));
 
   // La tarjeta del creador: Tab hasta "Me interesa", foco visible y activación con Enter.
-  const card = page.getByRole('article').filter({ hasText: `@${creator.handle}` });
+  const card = page.getByRole('article').filter({ hasText: creator.handle });
   await expect(card).toBeVisible();
   const interest = card.getByRole('button', { name: 'Me interesa' });
   await tabTo(page, interest);
@@ -86,7 +91,9 @@ test('teclado: "Me interesa" se activa con Tab + Enter y el foco es visible en c
 test('teclado: los controles del feed muestran anillo de foco (chips, Ver perfil, Descartar)', async ({
   page,
   context,
+  browserName,
 }) => {
+  test.skip(browserName === 'webkit', WEBKIT_SKIPS_LINKS);
   const brand = await newBrand(world);
   await loginAs(context, brand.user);
   await visit(page, '/descubrir');

@@ -59,6 +59,7 @@ const SCREENS: Screen[] = [
   { name: 'matches', path: '/panel/matches', as: 'creator' },
   { name: 'cotizaciones', path: '/panel/cotizaciones', as: 'brand' },
   { name: 'mensajes', path: `/mensajes/${matchId}`, as: 'creator' },
+  { name: 'admin-exclusiones', path: '/admin/exclusiones', as: 'creator' },
   { name: 'privacidad', path: '/privacidad' },
 ];
 

@@ -25,7 +25,7 @@ const cache = new Map<string, Session>();
  * (El camino por el correo se prueba aparte, en E2E-01.) Se cachea: los canjes tienen límite de tasa.
  */
 export async function sessionFor(user: E2EUser): Promise<Session> {
-  const hit = cache.get(user.email);
+  const hit = cache.get(`${user.email}:${user.id}`);
   if (hit) return hit;
   const link = await admin.auth.admin.generateLink({ type: 'magiclink', email: user.email });
   if (link.error) throw new Error(`generateLink: ${link.error.message}`);
@@ -46,20 +46,19 @@ export async function sessionFor(user: E2EUser): Promise<Session> {
   });
   if (res.error || !res.data.session) throw new Error(`verifyOtp: ${res.error?.message}`);
   const session = { cookies: jar, accessToken: res.data.session.access_token, userId: user.id };
-  cache.set(user.email, session);
+  cache.set(`${user.email}:${user.id}`, session);
   return session;
 }
 
 /** Deja el contexto del navegador con la sesión del usuario (cookies httpOnly como las del enlace mágico). */
 export async function loginAs(context: BrowserContext, user: E2EUser): Promise<Session> {
   const session = await sessionFor(user);
-  const { hostname } = new URL(BASE_URL);
   await context.addCookies(
     session.cookies.map((c) => ({
       name: c.name,
       value: c.value,
-      domain: hostname,
-      path: '/',
+      // `url` crea cookies host-only, como las de la app: así el logout del servidor también las borra en Firefox/WebKit.
+      url: BASE_URL,
       httpOnly: true,
       sameSite: 'Lax' as const,
       expires: Math.floor(Date.now() / MS_PER_SECOND) + (c.maxAge ?? 0),

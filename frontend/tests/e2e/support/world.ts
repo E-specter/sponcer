@@ -31,8 +31,8 @@ export function createWorld() {
   const handles: string[] = [];
 
   const world = {
-    async newUser(): Promise<E2EUser> {
-      const email = `e2e-${uniqueTag()}@${E2E_EMAIL_DOMAIN}`;
+    /** `email` fijo para cuentas especiales (p. ej. administrador); por defecto uno único. */
+    async newUser(email = `e2e-${uniqueTag()}@${E2E_EMAIL_DOMAIN}`): Promise<E2EUser> {
       const res = await admin.auth.admin.createUser({ email, email_confirm: true });
       if (res.error || !res.data.user) throw new Error(`createUser: ${res.error?.message}`);
       const user = { id: res.data.user.id, email };
@@ -42,6 +42,10 @@ export function createWorld() {
     /** Rastrea un correo creado por la propia app (p. ej. por el enlace mágico) para limpiarlo. */
     trackEmail(email: string): void {
       users.push({ id: '', email });
+    },
+    /** Rastrea un handle creado por fuera de `newHandle` (p. ej. perfiles insertados por BD). */
+    trackHandle(handle: string): void {
+      handles.push(handle);
     },
     newHandle(): string {
       const handle = `${E2E_HANDLE_PREFIX}${uniqueTag()}`;
