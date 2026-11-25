@@ -1,5 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { apiAs } from './support/api';
+import { newBrand, newCreator } from './support/actors';
+import { BASE_URL } from './support/env';
 import { loginAs, sessionFor } from './support/session';
 import { visit } from './support/ui';
 import { createWorld } from './support/world';
@@ -77,4 +79,53 @@ test('E2E-04: marca completa necesidades y su feed sale ordenado y filtrado', as
   await expect(cards).toHaveCount(0);
   await page.getByRole('button', { name: 'Limpiar filtros' }).first().click();
   await expect(cards.first()).toBeVisible();
+});
+
+// RF-10: "Solicitar cotización" en la tarjeta del creador cuando el perfil activo es una marca.
+const UNIQUE_PRICE_PEN = 8;
+const UNIQUE_BUDGET_PEN = 999_998;
+
+test('E2E-04: la tarjeta del creador ofrece "Solicitar cotización" a la marca y lleva a sus servicios', async ({
+  browser,
+}) => {
+  const creator = await newCreator(world, {
+    services: [
+      {
+        type: 'canje',
+        format: 'story',
+        pricePen: UNIQUE_PRICE_PEN,
+        description: 'Story de prueba',
+      },
+    ],
+  });
+  const brand = await newBrand(world, { budgetMinPen: 1, budgetMaxPen: UNIQUE_BUDGET_PEN });
+
+  const brandCtx = await browser.newContext();
+  const brandPage = await brandCtx.newPage();
+  await loginAs(brandCtx, brand.user);
+  await visit(brandPage, '/descubrir');
+  await brandPage.getByRole('button', { name: 'Filtros', exact: true }).click();
+  await brandPage.getByLabel('Precio máximo del servicio (S/)').fill(String(UNIQUE_PRICE_PEN));
+  const card = brandPage.getByRole('article').filter({ hasText: `@${creator.handle}` });
+  await expect(card).toBeVisible();
+  const request = card.getByRole('link', { name: 'Solicitar cotización' });
+  await expect(request).toHaveAttribute('href', `/perfil/${creator.handle}#servicios`);
+  await request.click();
+  await expect(brandPage).toHaveURL(`${BASE_URL}/perfil/${creator.handle}#servicios`);
+  await expect(brandPage.getByRole('button', { name: 'Solicitar cotización' })).toBeVisible();
+  await brandCtx.close();
+
+  // Un creador mira marcas: sus tarjetas no ofrecen cotización.
+  const creatorCtx = await browser.newContext();
+  const creatorPage = await creatorCtx.newPage();
+  await loginAs(creatorCtx, creator.user);
+  await visit(creatorPage, '/descubrir');
+  await creatorPage.getByRole('button', { name: 'Filtros', exact: true }).click();
+  await creatorPage
+    .getByLabel('Presupuesto máximo mínimo de la marca (S/)')
+    .fill(String(UNIQUE_BUDGET_PEN));
+  const brandCard = creatorPage.getByRole('article').filter({ hasText: `@${brand.handle}` });
+  await expect(brandCard).toBeVisible();
+  await expect(brandCard.getByRole('link', { name: 'Solicitar cotización' })).toHaveCount(0);
+  await creatorCtx.close();
 });

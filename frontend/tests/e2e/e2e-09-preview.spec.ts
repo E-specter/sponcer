@@ -44,10 +44,8 @@ test('E2E-09: con sesión se ve la ficha previa marcada como sin reclamar', asyn
   );
 });
 
-// BUG conocido (ver reporte F4-E2E, B-01): la ficha previa no emite `noindex` (RF-01, RNF-05).
-// `test.fail` mantiene la suite verde mientras el defecto exista y avisa (falla) cuando se corrija.
+// RF-01 / RNF-05: la ficha previa no es indexable (cabecera y meta), igual que el resto de rutas con sesión y /exclusion.
 test('E2E-09: la ficha previa lleva noindex', async ({ page, context }) => {
-  test.fail(true, 'B-01: falta noindex en /perfil/[handle] (RF-01)');
   const user = await world.newUser();
   await loginAs(context, user);
 
@@ -59,16 +57,24 @@ test('E2E-09: la ficha previa lleva noindex', async ({ page, context }) => {
       .first()
       .getAttribute('content', { timeout: META_TIMEOUT_MS })
       .catch(() => null)) ?? '';
-  expect(`${header} ${meta}`).toContain('noindex');
+  expect(header).toContain('noindex');
+  expect(meta).toContain('noindex');
+
+  // También las demás rutas con sesión y el formulario público de exclusión.
+  const panel = await page.goto('/panel');
+  expect(panel?.headers()['x-robots-tag']).toContain('noindex');
+  const exclusion = await page.goto(`/exclusion/${UNCLAIMED_SEED}`);
+  expect(exclusion?.headers()['x-robots-tag']).toContain('noindex');
+  expect(await page.locator('meta[name="robots"]').first().getAttribute('content')).toContain(
+    'noindex',
+  );
 });
 
-// BUG conocido (ver reporte F4-E2E, B-02): `GET /profiles/:handle` documenta "ingiere bajo demanda" y RF-01 pide crear la
-// ficha de cualquier @usuario profesional, pero un handle desconocido devuelve 404.
+// RF-01: un @handle profesional desconocido genera su ficha previa bajo demanda (ingesta mock: cuenta profesional pública).
 test('E2E-09: un @handle profesional desconocido genera su ficha previa bajo demanda', async ({
   page,
   context,
 }) => {
-  test.fail(true, 'B-02: no hay ingesta bajo demanda en getProfile (RF-01)');
   await loginAs(context, await world.newUser());
   await visit(page, `/perfil/${world.newHandle()}`);
   await expect(page.getByText('Sin reclamar', { exact: true })).toBeVisible({

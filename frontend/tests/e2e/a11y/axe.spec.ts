@@ -205,8 +205,6 @@ TOUCH_SCREENS.forEach((path) => {
     page,
     context,
   }) => {
-    // BUG conocido (reporte F4-E2E, B-03): los chips de filtro de /descubrir miden 32 px de alto.
-    test.fail(path === '/descubrir', 'B-03: chips de filtro < 44 px (brief de diseño)');
     await page.setViewportSize({ width: MOBILE.width, height: MOBILE.height });
     await loginAs(context, scenario.brand.user);
     await visit(page, path);
