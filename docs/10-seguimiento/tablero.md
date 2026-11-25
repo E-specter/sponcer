@@ -34,3 +34,7 @@ Estados: `pendiente` · `en progreso` · `en audit` · `hecho` · `bloqueado`. C
 | F3-A | Auditoría F3: slices de datos, privacidad (ProfileRemoved) | F3 | audit | Mariana | hecho (aprobado) | [reporte](../07-pruebas/reportes/2026-11-25-f3-data-slices.md) |
 | F3-P | Brief de diseño desde Figma + restyle | F3 | leader + dev-frontend | Esteban | hecho | [brief](../03-diseno/brief.md) |
 | F3-APIFY | Ingesta real con Apify (verificada: fetchLiveBio ~5 s, fetchProfile 10–23 s) | F3 | dev-data | Eduard | hecho | [ADR-001](../02-arquitectura/adr/ADR-001-ingesta-instagram.md) |
+| F4-E2E | Suite Playwright E2E-01..09 + axe (WCAG 2.1 AA) contra stack real | F4 | audit | Mariana | hecho (57/57, 0 violaciones axe) | [reporte](../07-pruebas/reportes/2026-11-25-f4-e2e.md) |
+| F4-DEPLOY | Ensayo de despliegue en clon limpio (producción, adaptadores reales) | F4 | dev-backend | Eduard | hecho | [ficha](../08-despliegue/ficha-despliegue.md) |
+| F4-FIX | B-01 noindex, B-02 ingesta bajo demanda, B-03 chips 44 px, cotizar desde el feed, caché del modelo fuera de node_modules | F4 | dev-frontend, dev-backend, dev-data | Esteban, Eduard, Leyla | hecho | [reporte](../07-pruebas/reportes/2026-11-25-f4-e2e.md) |
+| F4-REL | Release v1.0.0 (PR develop → main + tag) | F4 | leader | Eduard | pendiente de fusionar el PR | [git-flujo](../06-desarrollo/git-flujo.md) |
