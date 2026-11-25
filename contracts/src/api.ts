@@ -18,7 +18,16 @@ import {
   Service,
 } from './schemas/profiles';
 import { CreateQuoteRequest, Quote, QuotesQuery, TransitionQuoteRequest } from './schemas/quotes';
-import { AdminRemovalsQuery, RemovalRequestItem, ReviewRemovalRequest } from './schemas/admin';
+import {
+  AdminAddProfileRequest,
+  AdminEmailRequest,
+  AdminEntry,
+  AdminRemovalsQuery,
+  Invitation,
+  InviteUserRequest,
+  RemovalRequestItem,
+  ReviewRemovalRequest,
+} from './schemas/admin';
 
 export type HttpMethod = 'get' | 'post' | 'put' | 'patch';
 
@@ -169,6 +178,42 @@ export const api = {
     summary: 'Aplica o rechaza un pedido de exclusión (solo administradores)',
     body: ReviewRemovalRequest,
     response: RemovalRequestItem,
+  },
+  adminAddProfile: {
+    method: 'post',
+    path: '/api/v1/admin/profiles',
+    summary:
+      'Agrega una ficha previa ingiriendo un @handle profesional y público (solo administradores)',
+    body: AdminAddProfileRequest,
+    response: ProfileDetail,
+  },
+  adminInviteUser: {
+    method: 'post',
+    path: '/api/v1/admin/invitations',
+    summary: 'Invita a una persona por correo con un enlace de acceso (solo administradores)',
+    body: InviteUserRequest,
+    response: Invitation,
+  },
+  adminListAdmins: {
+    method: 'get',
+    path: '/api/v1/admin/admins',
+    summary: 'Lista los administradores (de ADMIN_EMAILS y nombrados en la app)',
+    response: z.array(AdminEntry),
+  },
+  adminGrantAdmin: {
+    method: 'post',
+    path: '/api/v1/admin/admins',
+    summary: 'Nombra administrador a un correo (solo administradores)',
+    body: AdminEmailRequest,
+    response: z.array(AdminEntry),
+  },
+  adminRevokeAdmin: {
+    method: 'post',
+    path: '/api/v1/admin/admins/revoke',
+    summary:
+      'Quita el rol de administrador nombrado en la app; no aplica a ADMIN_EMAILS ni al último admin',
+    body: AdminEmailRequest,
+    response: z.array(AdminEntry),
   },
 } as const satisfies Record<string, Endpoint>;
 

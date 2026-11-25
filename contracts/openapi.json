@@ -5361,6 +5361,1032 @@
           }
         }
       }
+    },
+    "/api/v1/admin/profiles": {
+      "post": {
+        "operationId": "adminAddProfile",
+        "summary": "Agrega una ficha previa ingiriendo un @handle profesional y público (solo administradores)",
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "handle": {
+                    "type": "string"
+                  },
+                  "role": {
+                    "default": "creator",
+                    "type": "string",
+                    "enum": [
+                      "creator",
+                      "brand"
+                    ]
+                  }
+                },
+                "required": [
+                  "handle"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    },
+                    "handle": {
+                      "type": "string",
+                      "pattern": "^[a-z0-9._]{1,30}$"
+                    },
+                    "role": {
+                      "type": "string",
+                      "enum": [
+                        "creator",
+                        "brand"
+                      ]
+                    },
+                    "fullName": {
+                      "type": "string"
+                    },
+                    "profilePicUrl": {
+                      "nullable": true,
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "format": "uri"
+                        },
+                        {
+                          "type": "string",
+                          "pattern": "^\\/(?!\\/)(?!.*\\.\\.)[\\w./-]+$"
+                        }
+                      ]
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "unclaimed",
+                        "verified",
+                        "removed"
+                      ]
+                    },
+                    "ingested": {
+                      "type": "object",
+                      "properties": {
+                        "biography": {
+                          "type": "string"
+                        },
+                        "followers": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "following": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "postsCount": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "isVerified": {
+                          "type": "boolean"
+                        },
+                        "externalUrl": {
+                          "nullable": true,
+                          "type": "string",
+                          "format": "uri"
+                        },
+                        "fetchedAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                        }
+                      },
+                      "required": [
+                        "biography",
+                        "followers",
+                        "following",
+                        "postsCount",
+                        "isVerified",
+                        "externalUrl",
+                        "fetchedAt"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "declared": {
+                      "nullable": true,
+                      "oneOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "role": {
+                              "type": "string",
+                              "enum": [
+                                "creator"
+                              ]
+                            },
+                            "niches": {
+                              "minItems": 1,
+                              "maxItems": 3,
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "enum": [
+                                  "moda",
+                                  "belleza",
+                                  "fitness",
+                                  "deportes",
+                                  "gastronomia",
+                                  "viajes",
+                                  "tecnologia",
+                                  "gaming",
+                                  "musica",
+                                  "entretenimiento",
+                                  "educacion",
+                                  "finanzas",
+                                  "salud-bienestar",
+                                  "familia-maternidad",
+                                  "mascotas",
+                                  "arte-diseno",
+                                  "emprendimiento",
+                                  "hogar-deco",
+                                  "automotriz",
+                                  "lifestyle"
+                                ]
+                              }
+                            },
+                            "city": {
+                              "type": "string",
+                              "enum": [
+                                "lima",
+                                "arequipa",
+                                "trujillo",
+                                "chiclayo",
+                                "piura",
+                                "cusco",
+                                "iquitos",
+                                "huancayo",
+                                "tacna",
+                                "ica",
+                                "juliaca",
+                                "puno",
+                                "pucallpa",
+                                "chimbote",
+                                "cajamarca",
+                                "ayacucho",
+                                "huaraz",
+                                "tarapoto",
+                                "otra"
+                              ]
+                            },
+                            "shortBio": {
+                              "type": "string",
+                              "maxLength": 280
+                            },
+                            "accountType": {
+                              "default": "unknown",
+                              "type": "string",
+                              "enum": [
+                                "business",
+                                "creator",
+                                "unknown"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "role",
+                            "niches",
+                            "accountType"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "role": {
+                              "type": "string",
+                              "enum": [
+                                "brand"
+                              ]
+                            },
+                            "sector": {
+                              "type": "string",
+                              "enum": [
+                                "moda-retail",
+                                "belleza-cuidado-personal",
+                                "alimentos-bebidas",
+                                "restaurantes",
+                                "tecnologia",
+                                "salud",
+                                "educacion",
+                                "finanzas-seguros",
+                                "turismo-hoteleria",
+                                "entretenimiento-medios",
+                                "deporte",
+                                "hogar",
+                                "automotriz",
+                                "servicios",
+                                "otro"
+                              ]
+                            },
+                            "objectives": {
+                              "minItems": 1,
+                              "maxItems": 3,
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "enum": [
+                                  "reconocimiento",
+                                  "interaccion",
+                                  "ventas",
+                                  "lanzamiento",
+                                  "trafico-web",
+                                  "comunidad"
+                                ]
+                              }
+                            },
+                            "targetNiches": {
+                              "minItems": 1,
+                              "maxItems": 5,
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "enum": [
+                                  "moda",
+                                  "belleza",
+                                  "fitness",
+                                  "deportes",
+                                  "gastronomia",
+                                  "viajes",
+                                  "tecnologia",
+                                  "gaming",
+                                  "musica",
+                                  "entretenimiento",
+                                  "educacion",
+                                  "finanzas",
+                                  "salud-bienestar",
+                                  "familia-maternidad",
+                                  "mascotas",
+                                  "arte-diseno",
+                                  "emprendimiento",
+                                  "hogar-deco",
+                                  "automotriz",
+                                  "lifestyle"
+                                ]
+                              }
+                            },
+                            "budgetMinPen": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 1000000
+                            },
+                            "budgetMaxPen": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 1000000
+                            },
+                            "city": {
+                              "type": "string",
+                              "enum": [
+                                "lima",
+                                "arequipa",
+                                "trujillo",
+                                "chiclayo",
+                                "piura",
+                                "cusco",
+                                "iquitos",
+                                "huancayo",
+                                "tacna",
+                                "ica",
+                                "juliaca",
+                                "puno",
+                                "pucallpa",
+                                "chimbote",
+                                "cajamarca",
+                                "ayacucho",
+                                "huaraz",
+                                "tarapoto",
+                                "otra"
+                              ]
+                            },
+                            "shortBio": {
+                              "type": "string",
+                              "maxLength": 280
+                            },
+                            "accountType": {
+                              "default": "unknown",
+                              "type": "string",
+                              "enum": [
+                                "business",
+                                "creator",
+                                "unknown"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "role",
+                            "sector",
+                            "objectives",
+                            "targetNiches",
+                            "budgetMinPen",
+                            "budgetMaxPen",
+                            "accountType"
+                          ],
+                          "additionalProperties": false
+                        }
+                      ]
+                    },
+                    "classification": {
+                      "nullable": true,
+                      "type": "object",
+                      "properties": {
+                        "niches": {
+                          "maxItems": 3,
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "niche": {
+                                "type": "string",
+                                "enum": [
+                                  "moda",
+                                  "belleza",
+                                  "fitness",
+                                  "deportes",
+                                  "gastronomia",
+                                  "viajes",
+                                  "tecnologia",
+                                  "gaming",
+                                  "musica",
+                                  "entretenimiento",
+                                  "educacion",
+                                  "finanzas",
+                                  "salud-bienestar",
+                                  "familia-maternidad",
+                                  "mascotas",
+                                  "arte-diseno",
+                                  "emprendimiento",
+                                  "hogar-deco",
+                                  "automotriz",
+                                  "lifestyle"
+                                ]
+                              },
+                              "confidence": {
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 1
+                              },
+                              "source": {
+                                "type": "string",
+                                "enum": [
+                                  "declared",
+                                  "rules",
+                                  "embedding"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "niche",
+                              "confidence",
+                              "source"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "tier": {
+                          "type": "string",
+                          "enum": [
+                            "nano",
+                            "micro",
+                            "mid",
+                            "macro",
+                            "mega"
+                          ]
+                        },
+                        "followers": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "engagementRate": {
+                          "type": "number",
+                          "minimum": 0
+                        },
+                        "classifiedAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                        }
+                      },
+                      "required": [
+                        "niches",
+                        "tier",
+                        "followers",
+                        "engagementRate",
+                        "classifiedAt"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "services": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "publicacion-patrocinada",
+                              "canje",
+                              "embajador",
+                              "evento",
+                              "contenido-ugc"
+                            ]
+                          },
+                          "format": {
+                            "type": "string",
+                            "enum": [
+                              "post",
+                              "reel",
+                              "story",
+                              "live",
+                              "combo"
+                            ]
+                          },
+                          "pricePen": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 1000000
+                          },
+                          "description": {
+                            "type": "string",
+                            "maxLength": 280
+                          },
+                          "id": {
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "format",
+                          "pricePen",
+                          "description",
+                          "id"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "isOwner": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "handle",
+                    "role",
+                    "fullName",
+                    "profilePicUrl",
+                    "status",
+                    "ingested",
+                    "declared",
+                    "classification",
+                    "services",
+                    "isOwner"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "enum": [
+                            "VALIDATION_ERROR",
+                            "UNAUTHORIZED",
+                            "FORBIDDEN",
+                            "NOT_FOUND",
+                            "CONFLICT",
+                            "RATE_LIMITED",
+                            "INVALID_TRANSITION",
+                            "UPSTREAM_ERROR",
+                            "INTERNAL_ERROR"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "details": {}
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/invitations": {
+      "post": {
+        "operationId": "adminInviteUser",
+        "summary": "Invita a una persona por correo con un enlace de acceso (solo administradores)",
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+                  }
+                },
+                "required": [
+                  "email"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "email": {
+                      "type": "string",
+                      "format": "email",
+                      "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "sent",
+                        "already_registered"
+                      ]
+                    },
+                    "invitedAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                    }
+                  },
+                  "required": [
+                    "email",
+                    "status",
+                    "invitedAt"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "enum": [
+                            "VALIDATION_ERROR",
+                            "UNAUTHORIZED",
+                            "FORBIDDEN",
+                            "NOT_FOUND",
+                            "CONFLICT",
+                            "RATE_LIMITED",
+                            "INVALID_TRANSITION",
+                            "UPSTREAM_ERROR",
+                            "INTERNAL_ERROR"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "details": {}
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/admins": {
+      "get": {
+        "operationId": "adminListAdmins",
+        "summary": "Lista los administradores (de ADMIN_EMAILS y nombrados en la app)",
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "email": {
+                        "type": "string",
+                        "format": "email",
+                        "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+                      },
+                      "source": {
+                        "type": "string",
+                        "enum": [
+                          "env",
+                          "app"
+                        ]
+                      },
+                      "grantedAt": {
+                        "nullable": true,
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                      },
+                      "grantedBy": {
+                        "nullable": true,
+                        "type": "string",
+                        "format": "email",
+                        "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+                      }
+                    },
+                    "required": [
+                      "email",
+                      "source",
+                      "grantedAt",
+                      "grantedBy"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "enum": [
+                            "VALIDATION_ERROR",
+                            "UNAUTHORIZED",
+                            "FORBIDDEN",
+                            "NOT_FOUND",
+                            "CONFLICT",
+                            "RATE_LIMITED",
+                            "INVALID_TRANSITION",
+                            "UPSTREAM_ERROR",
+                            "INTERNAL_ERROR"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "details": {}
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "adminGrantAdmin",
+        "summary": "Nombra administrador a un correo (solo administradores)",
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+                  }
+                },
+                "required": [
+                  "email"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "email": {
+                        "type": "string",
+                        "format": "email",
+                        "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+                      },
+                      "source": {
+                        "type": "string",
+                        "enum": [
+                          "env",
+                          "app"
+                        ]
+                      },
+                      "grantedAt": {
+                        "nullable": true,
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                      },
+                      "grantedBy": {
+                        "nullable": true,
+                        "type": "string",
+                        "format": "email",
+                        "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+                      }
+                    },
+                    "required": [
+                      "email",
+                      "source",
+                      "grantedAt",
+                      "grantedBy"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "enum": [
+                            "VALIDATION_ERROR",
+                            "UNAUTHORIZED",
+                            "FORBIDDEN",
+                            "NOT_FOUND",
+                            "CONFLICT",
+                            "RATE_LIMITED",
+                            "INVALID_TRANSITION",
+                            "UPSTREAM_ERROR",
+                            "INTERNAL_ERROR"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "details": {}
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/admins/revoke": {
+      "post": {
+        "operationId": "adminRevokeAdmin",
+        "summary": "Quita el rol de administrador nombrado en la app; no aplica a ADMIN_EMAILS ni al último admin",
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+                  }
+                },
+                "required": [
+                  "email"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "email": {
+                        "type": "string",
+                        "format": "email",
+                        "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+                      },
+                      "source": {
+                        "type": "string",
+                        "enum": [
+                          "env",
+                          "app"
+                        ]
+                      },
+                      "grantedAt": {
+                        "nullable": true,
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                      },
+                      "grantedBy": {
+                        "nullable": true,
+                        "type": "string",
+                        "format": "email",
+                        "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+                      }
+                    },
+                    "required": [
+                      "email",
+                      "source",
+                      "grantedAt",
+                      "grantedBy"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "enum": [
+                            "VALIDATION_ERROR",
+                            "UNAUTHORIZED",
+                            "FORBIDDEN",
+                            "NOT_FOUND",
+                            "CONFLICT",
+                            "RATE_LIMITED",
+                            "INVALID_TRANSITION",
+                            "UPSTREAM_ERROR",
+                            "INTERNAL_ERROR"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "details": {}
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
