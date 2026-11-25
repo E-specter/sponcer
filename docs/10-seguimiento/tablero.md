@@ -32,5 +32,5 @@ Estados: `pendiente` · `en progreso` · `en audit` · `hecho` · `bloqueado`. C
 | F2-A | Auditoría F2: RLS (15 tablas), contratos mock = real, concurrencia | F2 | audit | Mariana | hecho (aprobado tras correcciones) | [reporte](../07-pruebas/reportes/2026-11-25-f2-real-adapters.md) |
 | F3-I | Integración punta a punta en modo real (salvo ingesta: falta APIFY_TOKEN) | F3 | leader + todos | Eduard | hecho | [roadmap](roadmap.md) |
 | F3-A | Auditoría F3: slices de datos, privacidad (ProfileRemoved) | F3 | audit | Mariana | hecho (aprobado) | [reporte](../07-pruebas/reportes/2026-11-25-f3-data-slices.md) |
-| F3-P | Brief de diseño desde Figma + restyle | F3 | dev-frontend | Esteban | pendiente (falta URL de Figma) | [brief](../03-diseno/brief.md) |
-| F3-APIFY | Ingesta real con Apify | F3 | dev-data | Eduard | pendiente (falta APIFY_TOKEN) | [ADR-001](../02-arquitectura/adr/ADR-001-ingesta-instagram.md) |
+| F3-P | Brief de diseño desde Figma + restyle | F3 | leader + dev-frontend | Esteban | hecho | [brief](../03-diseno/brief.md) |
+| F3-APIFY | Ingesta real con Apify (verificada: fetchLiveBio ~5 s, fetchProfile 10–23 s) | F3 | dev-data | Eduard | hecho | [ADR-001](../02-arquitectura/adr/ADR-001-ingesta-instagram.md) |
