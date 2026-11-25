@@ -3,6 +3,7 @@ import { PUBLIC_AUTH_MODE, PUBLIC_DEMO_LOGIN } from 'astro:env/client';
 import { DEMO_PASSWORD } from 'astro:env/server';
 import Public from '../layouts/Public.astro';
 import { DEMO_ACCOUNTS } from '../lib/demo';
+import { siteOrigin } from '../lib/site';
 import { createSupabase } from '../lib/supabase';
 
 let message: string | null = null;
@@ -29,7 +30,7 @@ if (Astro.request.method === 'POST' && PUBLIC_AUTH_MODE === 'supabase') {
     // PKCE: el verificador queda en una cookie httpOnly; el enlace vuelve a /auth/callback.
     const { error } = await createSupabase(Astro).auth.signInWithOtp({
       email,
-      options: { emailRedirectTo: new URL('/auth/callback', Astro.url).toString() },
+      options: { emailRedirectTo: new URL('/auth/callback', siteOrigin(Astro.url)).toString() },
     });
     failed = Boolean(error);
     message = error

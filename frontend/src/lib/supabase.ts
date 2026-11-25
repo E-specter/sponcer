@@ -1,6 +1,7 @@
 import { PUBLIC_SUPABASE_ANON_KEY, PUBLIC_SUPABASE_URL } from 'astro:env/client';
 import { createServerClient, parseCookieHeader } from '@supabase/ssr';
 import type { APIContext } from 'astro';
+import { isSecureOrigin } from './site';
 
 /**
  * Cliente de Supabase del lado servidor (solo auth; nunca escribe en la BD).
@@ -11,7 +12,7 @@ export function createSupabase(context: Pick<APIContext, 'request' | 'cookies' |
   if (!PUBLIC_SUPABASE_URL || !PUBLIC_SUPABASE_ANON_KEY) {
     throw new Error('Faltan PUBLIC_SUPABASE_URL / PUBLIC_SUPABASE_ANON_KEY');
   }
-  const secure = context.url.protocol === 'https:';
+  const secure = isSecureOrigin(context.url);
   return createServerClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY, {
     cookies: {
       getAll: () =>
