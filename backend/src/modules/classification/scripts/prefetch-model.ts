@@ -13,7 +13,9 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 const withTimeout = <T>(work: Promise<T>, ms: number): Promise<T> =>
   Promise.race([
     work,
-    new Promise<never>((_, reject) => setTimeout(() => reject(new Error(`timeout de ${ms} ms`)), ms).unref()),
+    new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error(`timeout de ${ms} ms`)), ms).unref(),
+    ),
   ]);
 
 async function attempt(n: number): Promise<void> {
