@@ -1,4 +1,12 @@
-import type { Declared, ProfileDetail, Service, ServiceInput } from '@sponcer/contracts';
+import type {
+  Declared,
+  ProfileDetail,
+  RemovalRequestItem,
+  RemovalStatus,
+  ReviewRemovalRequest,
+  Service,
+  ServiceInput,
+} from '@sponcer/contracts';
 import type { DomainError } from '../../../../../shared/errors';
 import type { Result } from '../../../../../shared/result';
 
@@ -21,3 +29,14 @@ export type RequestProfileRemoval = (
   reason: string | undefined,
   viewerUserId: string | null,
 ) => R<{ ok: true }>;
+
+export type AdminListRemovals = (q: {
+  status?: RemovalStatus;
+  cursor?: string;
+  limit: number;
+}) => R<{ items: RemovalRequestItem[]; nextCursor: string | null }>;
+export type AdminReviewRemoval = (
+  adminUserId: string,
+  requestId: string,
+  req: ReviewRemovalRequest,
+) => R<RemovalRequestItem>;

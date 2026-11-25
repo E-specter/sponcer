@@ -36,6 +36,8 @@ export function createAuthModule(deps: {
   supabase?: SupabaseClient;
   /** Integración: avisa al origen de la bio del código emitido (solo ingestion mock lo necesita). */
   onClaimStarted?: (handle: string, code: string) => void;
+  /** `env.ADMIN_EMAILS`: usuarios con `isAdmin` en `/me`. */
+  adminEmails?: readonly string[];
   now?: () => Date;
 }): AuthModule {
   const real = deps.adapter === 'real';
@@ -60,7 +62,10 @@ export function createAuthModule(deps: {
   return {
     middleware: createAuthMiddleware(identity),
     router: createAuthRouter({
-      getCurrentUser: makeGetCurrentUser({ profiles: deps.profiles }),
+      getCurrentUser: makeGetCurrentUser({
+        profiles: deps.profiles,
+        adminEmails: deps.adminEmails,
+      }),
       // Mock: el código en claro se "pega" en la bio en vivo (mock propio o el de ingestion).
       startClaim: async (userId, req) => {
         const result = await startClaim(userId, req);
