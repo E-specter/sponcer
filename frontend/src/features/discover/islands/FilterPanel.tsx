@@ -1,7 +1,14 @@
 import { useStore } from '@nanostores/react';
 import { useState } from 'react';
 import { SlidersHorizontal } from 'lucide-react';
-import { CITIES, NICHES, TIERS, type Niche, type ProfileSummary, type Tier } from '@sponcer/contracts';
+import {
+  CITIES,
+  NICHES,
+  TIERS,
+  type Niche,
+  type ProfileSummary,
+  type Tier,
+} from '@sponcer/contracts';
 import { Chip } from '../../../components/ui/Chip';
 import { Field } from '../../../components/ui/Field';
 import { SearchField } from '../../../components/ui/SearchField';

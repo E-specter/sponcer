@@ -32,7 +32,11 @@ export const POST: APIRoute = async ({ params, request, locals, clientAddress })
   try {
     const out = await call(
       name as EndpointName,
-      { ...(args as object), token: locals.accessToken, clientIp: clientIpOf(request, clientAddress) } as never,
+      {
+        ...(args as object),
+        token: locals.accessToken,
+        clientIp: clientIpOf(request, clientAddress),
+      } as never,
     );
     return Response.json(out);
   } catch (e) {

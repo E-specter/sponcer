@@ -111,9 +111,17 @@ export default function AdminRemovals() {
         </select>
       </Field>
       <div aria-live="polite">{done && <Notice kind="success">{done}</Notice>}</div>
-      {error && <ErrorState message={error} onRetry={() => setReloads((n) => n + 1)} note="No se cambió nada." />}
+      {error && (
+        <ErrorState
+          message={error}
+          onRetry={() => setReloads((n) => n + 1)}
+          note="No se cambió nada."
+        />
+      )}
       {loading && <Skeleton />}
-      {!loading && !error && items.length === 0 && <EmptyState message="No hay pedidos con este estado." />}
+      {!loading && !error && items.length === 0 && (
+        <EmptyState message="No hay pedidos con este estado." />
+      )}
       {items.map((r) => (
         <article key={r.id} className="card stack" aria-labelledby={`r-${r.id}`}>
           <h3 id={`r-${r.id}`}>@{r.igHandle}</h3>
@@ -130,7 +138,9 @@ export default function AdminRemovals() {
               <dt>Ficha afectada:</dt>
               <dd>
                 {r.profile ? (
-                  <a href={`/perfil/${r.profile.handle}`}>{r.profile.fullName || `@${r.profile.handle}`}</a>
+                  <a href={`/perfil/${r.profile.handle}`}>
+                    {r.profile.fullName || `@${r.profile.handle}`}
+                  </a>
                 ) : (
                   'No existe (nunca se ingirió)'
                 )}
@@ -166,8 +176,8 @@ export default function AdminRemovals() {
             <div className="stack" role="group" aria-label="Confirmar decisión">
               {reviewing.decision === 'apply' ? (
                 <Notice kind="error" title="Esto no se puede deshacer">
-                  Se borrarán los datos de @{r.igHandle} (snapshots, clasificación, embedding y fotos) y se
-                  bloqueará el handle para que no vuelva a ingerirse.
+                  Se borrarán los datos de @{r.igHandle} (snapshots, clasificación, embedding y
+                  fotos) y se bloqueará el handle para que no vuelva a ingerirse.
                 </Notice>
               ) : (
                 <Notice kind="info">La ficha se mantiene y el pedido queda como rechazado.</Notice>
@@ -189,7 +199,12 @@ export default function AdminRemovals() {
                 >
                   {reviewing.decision === 'apply' ? 'Sí, aplicar exclusión' : 'Confirmar rechazo'}
                 </button>
-                <button type="button" className="btn btn-text" disabled={busy} onClick={() => setReviewing(null)}>
+                <button
+                  type="button"
+                  className="btn btn-text"
+                  disabled={busy}
+                  onClick={() => setReviewing(null)}
+                >
                   Cancelar
                 </button>
               </div>

@@ -3,7 +3,7 @@ import { MAX_CHAT_MESSAGE, SendMessageRequest, type Message } from '@sponcer/con
 import { Alert } from '../../../components/ui/Alert';
 import { messageOf } from '../../../components/ui/errors';
 import { formatDate } from '../../../lib/labels';
-import { olderMessages, sendMessage } from '../api/chat';
+import { latestMessages, olderMessages, sendMessage } from '../api/chat';
 import { subscribeMessages } from '../api/realtime';
 
 interface Props {
@@ -15,6 +15,15 @@ interface Props {
   nextCursor: string | null;
 }
 
+/** Une por id sin duplicados y ordena por fecha (más reciente primero). */
+const mergeMessages = (current: Message[], incoming: Message[]): Message[] => {
+  const known = new Set(current.map((m) => m.id));
+  const fresh = incoming.filter((m) => !known.has(m.id));
+  return fresh.length === 0
+    ? current
+    : [...current, ...fresh].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+};
+
 export default function Chat({ matchId, myProfileId, otherHandle, initial, nextCursor }: Props) {
   const [messages, setMessages] = useState(initial);
   const [cursor, setCursor] = useState(nextCursor);
@@ -25,8 +34,18 @@ export default function Chat({ matchId, myProfileId, otherHandle, initial, nextC
 
   useEffect(
     () =>
-      subscribeMessages(matchId, (m) =>
-        setMessages((prev) => (prev.some((x) => x.id === m.id) ? prev : [m, ...prev])),
+      subscribeMessages(
+        matchId,
+        (m) => setMessages((prev) => mergeMessages(prev, [m])),
+        // Lo enviado antes de que el canal quedara listo no llega por Realtime: se re-pide la primera página.
+        async () => {
+          try {
+            const page = await latestMessages(matchId);
+            setMessages((prev) => mergeMessages(prev, page.items));
+          } catch {
+            // Sin red: el siguiente SUBSCRIBED (reconexión) lo reintenta.
+          }
+        },
       ),
     [matchId],
   );

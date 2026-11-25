@@ -108,11 +108,7 @@ function matchesText(card: ProfileCard, q: string | undefined): boolean {
   return [card.fullName, card.handle, ...card.niches].some((t) => normalize(t).includes(needle));
 }
 
-const normalize = (s: string): string =>
-  s
-    .normalize('NFD')
-    .replace(DIACRITICS, '')
-    .toLowerCase();
+const normalize = (s: string): string => s.normalize('NFD').replace(DIACRITICS, '').toLowerCase();
 
 const handlers: Handlers = {
   health: () => ({ status: 'ok' }),
