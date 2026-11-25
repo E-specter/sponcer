@@ -1,0 +1,38 @@
+---
+import Base from './Base.astro';
+import { Logo } from '../components/ui/Logo';
+
+interface Props {
+  title: string;
+  description?: string;
+  /** Portada: cabecera y fondo en tinta, sin contenedor de lectura (la página compone su ancho). */
+  ink?: boolean;
+  bare?: boolean;
+  noindex?: boolean;
+}
+const { ink = false, bare = false, ...base } = Astro.props;
+---
+
+<Base {...base} bodyClass={ink ? 'ink-page' : undefined}>
+  <header class="site-header">
+    <div class="site-header-inner">
+      <Logo tone={ink ? 'ink' : 'light'} />
+      <nav aria-label="Principal">
+        <a href="/privacidad">Privacidad</a>
+        <a href="/terminos">Términos</a>
+      </nav>
+      <a class="btn" href="/login">Entrar</a>
+    </div>
+  </header>
+  {
+    bare ? (
+      <main id="contenido">
+        <slot />
+      </main>
+    ) : (
+      <main id="contenido" class="container prose">
+        <slot />
+      </main>
+    )
+  }
+</Base>

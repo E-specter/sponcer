@@ -1,0 +1,66 @@
+/* Design tokens de Figma › Dirección visual (docs/03-diseno/tokens.md). Solo tema claro. */
+:root {
+  color-scheme: light;
+
+  --font-sans: 'Inter Variable', Inter, system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --color-tinta: #17171b;
+  --color-tinta-elevada: #242329;
+  --color-papel: #f6f5f2;
+  --color-blanco: #ffffff;
+  --color-violeta: #7028c9;
+  --color-violeta-hover: #5a1ca7;
+  --color-seleccion: #f0e7fb;
+  --color-magenta: #d32f88;
+  --color-albaricoque: #f5a064;
+  --color-cian: #69e0e8;
+  --color-rosa: #f58bb6;
+  --color-texto-secundario: #62616b;
+  --color-texto-sobre-tinta: #bebac8;
+  --color-borde: #dcd9e1;
+  --color-neutro-suave: #eceaf0;
+  --color-exito: #28634b;
+  --color-exito-fondo: #e8f2eb;
+  --color-error: #a53746;
+  --color-error-fondo: #faebed;
+  --gradiente-firma: linear-gradient(90deg, #f5a064 0%, #d32f88 46%, #7028c9 100%);
+
+  --text-display: clamp(2.5rem, 6vw, 5.5rem);
+  --text-titular: clamp(2rem, 4vw, 3rem);
+  --text-titulo: 2rem;
+  --text-subtitulo: 1.3125rem;
+  --text-cuerpo: 1rem;
+  --text-control: 0.875rem;
+  --text-chip: 0.8125rem;
+  --text-nota: 0.75rem;
+  --text-micro: 0.6875rem;
+  --tracking-titular: -0.04em;
+
+  --space-0-5: 0.5rem;
+  --space-1: 1rem;
+  --space-1-5: 1.5rem;
+  --space-2: 2rem;
+  --space-3: 3rem;
+  --space-4: 4rem;
+
+  --radius-check: 5px;
+  --radius-tag: 6px;
+  --radius-control: 10px;
+  --radius-focus: 14px;
+  --radius-card: 16px;
+  --radius-hero-card: 18px;
+  --radius-pill: 100px;
+
+  --control-h: 2.75rem;
+  --header-h: 68px;
+  --sidenav-w: 176px;
+  --context-w: 300px;
+  --gutter: 20px;
+}
+
+@media (min-width: 900px) {
+  :root {
+    --header-h: 88px;
+    --gutter: 32px;
+  }
+}

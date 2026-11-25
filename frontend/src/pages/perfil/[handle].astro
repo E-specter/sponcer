@@ -1,0 +1,92 @@
+---
+import App from '../../layouts/App.astro';
+import { ApiError, call } from '../../lib/api';
+import { getMe } from '../../lib/session';
+import { NICHE_LABEL, TIER_LABEL, formatCount, formatPercent } from '../../lib/labels';
+import IngestedCard from '../../features/profiles/components/IngestedCard.astro';
+import DeclaredCard from '../../features/profiles/components/DeclaredCard.astro';
+import { Avatar } from '../../components/ui/Avatar';
+import { Chip } from '../../components/ui/Chip';
+import { Tag } from '../../components/ui/Tag';
+import ServiceCatalog from '../../features/quotes/islands/ServiceCatalog';
+
+const handle = Astro.params.handle ?? '';
+const me = await getMe(Astro.locals);
+
+let profile = null;
+try {
+  profile = await call('getProfile', { params: { handle }, token: Astro.locals.accessToken });
+} catch (e) {
+  if (!(e instanceof ApiError) || e.code !== 'NOT_FOUND') throw e;
+  Astro.response.status = 404;
+}
+---
+
+<App title={profile ? `@${profile.handle}` : 'Perfil no encontrado'}>
+  {
+    !profile ? (
+      <section class="card">
+        <h1>Perfil no encontrado</h1>
+        <p>No encontramos a @{handle}.</p>
+        <a class="btn" href="/descubrir">Volver a descubrir</a>
+      </section>
+    ) : (
+      <>
+        <header class="card stack">
+          <div class="row">
+            <Avatar name={profile.fullName || profile.handle} size="xl" />
+            <div>
+              <p class="eyebrow">{profile.role === 'brand' ? 'Perfil de marca' : 'Perfil de creador'} · Instagram</p>
+              <h1>{profile.fullName || `@${profile.handle}`}</h1>
+              <p class="muted small">@{profile.handle}</p>
+            </div>
+          </div>
+          <p class="row">
+            <Tag tone={profile.status === 'verified' ? 'exito' : 'neutral'}>
+              {profile.status === 'verified' ? 'Verificado' : 'Sin reclamar'}
+            </Tag>
+            {profile.isOwner && <Tag tone="accion">Tu perfil</Tag>}
+          </p>
+          {profile.classification && (
+            <p class="row" aria-label="Nichos clasificados">
+              {profile.classification.niches.map((n) => (
+                <Chip>
+                  {NICHE_LABEL[n.niche]} · {n.source === 'declared' ? 'declarado en Sponcer' : 'detectado en Instagram'}
+                </Chip>
+              ))}
+            </p>
+          )}
+          {profile.classification && (
+            <p class="small muted">
+              {TIER_LABEL[profile.classification.tier]} · {formatCount(profile.ingested.followers)} seguidores · Interacción{' '}
+              {formatPercent(profile.classification.engagementRate)}
+            </p>
+          )}
+        </header>
+
+        <div class="grid profile-sources">
+          <IngestedCard ingested={profile.ingested} handle={profile.handle} />
+          <DeclaredCard declared={profile.declared} />
+        </div>
+
+        {profile.role === 'creator' && (
+          <section aria-labelledby="servicios" class="stack">
+            <h2 id="servicios">Servicios</h2>
+            <ServiceCatalog
+              client:load
+              services={profile.services}
+              myProfiles={me.profiles}
+              viewedRole={profile.role}
+              isOwner={profile.isOwner}
+            />
+          </section>
+        )}
+
+        <p class="small">
+          ¿Eres el titular y no quieres aparecer?{' '}
+          <a href={`/exclusion/${profile.handle}`}>Solicitar exclusión</a>
+        </p>
+      </>
+    )
+  }
+</App>

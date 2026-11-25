@@ -31,4 +31,9 @@ Si necesitas cambiar `contracts/`, pídeselo al leader.
 - Los datos solo vienen de `src/lib/api` (modo `mock` o `http`). Supabase solo para auth y suscripciones Realtime de **lectura**; nunca escribes en la BD desde el frontend.
 - Formularios con los esquemas zod de `@sponcer/contracts`. Accesibilidad WCAG 2.1 AA.
 - Variables con `astro:env`. Nunca uses secretos en el frontend.
+- **Cierre obligatorio:**
+  - corre `npm run e2e:visual -w frontend` (filtra con `--grep` las pantallas que tocaste);
+  - compara cada captura de `frontend/test-results/visual/` con su referencia en `docs/03-diseno/referencias/` (Read de ambas imágenes);
+  - corrige las diferencias visibles antes de reportar;
+  - incluye en el reporte qué pantallas verificaste.
 - **Git: solo lectura.** No haces commits. Al terminar, reportas al leader los archivos tocados y cómo probarlos.

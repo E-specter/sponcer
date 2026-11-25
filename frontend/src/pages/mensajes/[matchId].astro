@@ -1,0 +1,57 @@
+---
+import App from '../../layouts/App.astro';
+import { call } from '../../lib/api';
+import { getMe } from '../../lib/session';
+import Chat from '../../features/chat/islands/Chat';
+
+const matchId = Astro.params.matchId ?? '';
+const me = await getMe(Astro.locals);
+const token = Astro.locals.accessToken;
+
+// Se busca el match entre los de mis perfiles para saber con cuál escribo y quién es la contraparte.
+const found = (
+  await Promise.all(
+    me.profiles.map(async (profile) => ({
+      profile,
+      match: (await call('matches', { query: { profileId: profile.id }, token })).find((m) => m.id === matchId),
+    })),
+  )
+).find((x) => x.match);
+
+const match = found?.match;
+const other = match && found ? (match.creator.id === found.profile.id ? match.brand : match.creator) : null;
+const history = match
+  ? await call('listMessages', { params: { matchId }, query: {}, token })
+  : null;
+if (!match) Astro.response.status = 404;
+---
+
+<App title="Mensajes">
+  {
+    !match || !found || !other || !history ? (
+      <section class="card">
+        <h1>Conversación no encontrada</h1>
+        <p>No existe o no participas en ella.</p>
+        <a class="btn" href="/panel/matches">Ver mis matches</a>
+      </section>
+    ) : (
+      <>
+        <header class="page-head">
+          <p class="eyebrow">Matches / mensajes</p>
+          <h1>
+            Chat con <a href={`/perfil/${other.handle}`}>@{other.handle}</a>
+          </h1>
+          <p class="lead">Escribes como @{found.profile.handle}.</p>
+        </header>
+        <Chat
+          client:load
+          matchId={matchId}
+          myProfileId={found.profile.id}
+          otherHandle={other.handle}
+          initial={history.items}
+          nextCursor={history.nextCursor}
+        />
+      </>
+    )
+  }
+</App>

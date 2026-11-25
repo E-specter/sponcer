@@ -1,0 +1,4667 @@
+[
+  {
+    "id": "376bec72-d8de-429c-a68f-7ddb0128acfd",
+    "role": "creator",
+    "status": "verified",
+    "ownerUserId": "97da2849-d73e-4438-9907-d090402c802d",
+    "snapshot": {
+      "handle": "sofi.moda.demo",
+      "fullName": "Sofía · moda",
+      "biography": "Estilo y rutina de belleza 📍Trujillo · colaboraciones por DM",
+      "followers": 6520,
+      "following": 624,
+      "postsCount": 580,
+      "isBusiness": true,
+      "businessCategory": "Fashion Model",
+      "isPrivate": false,
+      "isVerified": false,
+      "profilePicUrl": null,
+      "externalUrl": null,
+      "posts": [
+        {
+          "id": "sofi.moda.demo-1",
+          "type": "carousel",
+          "caption": "Maquillaje ✨ Cuéntenme en comentarios #makeup #skincare #belleza",
+          "hashtags": ["makeup", "skincare", "belleza"],
+          "likes": 183,
+          "comments": 5,
+          "views": null,
+          "postedAt": "2026-11-20T20:00:00Z"
+        },
+        {
+          "id": "sofi.moda.demo-2",
+          "type": "carousel",
+          "caption": "Estilo ✨ Cuéntenme en comentarios #moda #outfit #ootd #modaperu",
+          "hashtags": ["moda", "outfit", "ootd", "modaperu"],
+          "likes": 139,
+          "comments": 5,
+          "views": null,
+          "postedAt": "2026-11-16T20:00:00Z"
+        },
+        {
+          "id": "sofi.moda.demo-3",
+          "type": "video",
+          "caption": "Outfit ✨ Guárdalo para después #moda #outfit #ootd #modaperu",
+          "hashtags": ["moda", "outfit", "ootd", "modaperu"],
+          "likes": 171,
+          "comments": 6,
+          "views": 2565,
+          "postedAt": "2026-11-12T20:00:00Z"
+        },
+        {
+          "id": "sofi.moda.demo-4",
+          "type": "video",
+          "caption": "Skincare ✨ Nuevo post #makeup #skincare #belleza",
+          "hashtags": ["makeup", "skincare", "belleza"],
+          "likes": 256,
+          "comments": 10,
+          "views": 3584,
+          "postedAt": "2026-11-11T20:00:00Z"
+        },
+        {
+          "id": "sofi.moda.demo-5",
+          "type": "video",
+          "caption": "Outfit ✨ Nuevo post #moda #outfit #ootd #modaperu",
+          "hashtags": ["moda", "outfit", "ootd", "modaperu"],
+          "likes": 180,
+          "comments": 6,
+          "views": 2520,
+          "postedAt": "2026-11-08T20:00:00Z"
+        },
+        {
+          "id": "sofi.moda.demo-6",
+          "type": "video",
+          "caption": "Outfit ✨ ¿Qué opinan? #moda #outfit #ootd #modaperu",
+          "hashtags": ["moda", "outfit", "ootd", "modaperu"],
+          "likes": 198,
+          "comments": 11,
+          "views": 1584,
+          "postedAt": "2026-10-31T20:00:00Z"
+        },
+        {
+          "id": "sofi.moda.demo-7",
+          "type": "video",
+          "caption": "Estilo ✨ ¿Qué opinan? #moda #outfit #ootd #modaperu",
+          "hashtags": ["moda", "outfit", "ootd", "modaperu"],
+          "likes": 209,
+          "comments": 7,
+          "views": 2090,
+          "postedAt": "2026-10-27T20:00:00Z"
+        },
+        {
+          "id": "sofi.moda.demo-8",
+          "type": "carousel",
+          "caption": "Look del día ✨ Cuéntenme en comentarios #moda #outfit #ootd #modaperu",
+          "hashtags": ["moda", "outfit", "ootd", "modaperu"],
+          "likes": 141,
+          "comments": 6,
+          "views": null,
+          "postedAt": "2026-10-23T20:00:00Z"
+        },
+        {
+          "id": "sofi.moda.demo-9",
+          "type": "video",
+          "caption": "Outfit ✨ ¿Qué opinan? #moda #outfit #ootd #modaperu",
+          "hashtags": ["moda", "outfit", "ootd", "modaperu"],
+          "likes": 155,
+          "comments": 5,
+          "views": 2480,
+          "postedAt": "2026-10-19T20:00:00Z"
+        },
+        {
+          "id": "sofi.moda.demo-10",
+          "type": "video",
+          "caption": "Tendencias ✨ Guárdalo para después #moda #outfit #ootd #modaperu",
+          "hashtags": ["moda", "outfit", "ootd", "modaperu"],
+          "likes": 288,
+          "comments": 9,
+          "views": 5184,
+          "postedAt": "2026-10-24T20:00:00Z"
+        },
+        {
+          "id": "sofi.moda.demo-11",
+          "type": "image",
+          "caption": "Look del día ✨ Cuéntenme en comentarios #moda #outfit #ootd #modaperu",
+          "hashtags": ["moda", "outfit", "ootd", "modaperu"],
+          "likes": 282,
+          "comments": 16,
+          "views": null,
+          "postedAt": "2026-10-11T20:00:00Z"
+        },
+        {
+          "id": "sofi.moda.demo-12",
+          "type": "video",
+          "caption": "Tendencias ✨ Cuéntenme en comentarios #moda #outfit #ootd #modaperu",
+          "hashtags": ["moda", "outfit", "ootd", "modaperu"],
+          "likes": 260,
+          "comments": 11,
+          "views": 4160,
+          "postedAt": "2026-10-18T20:00:00Z"
+        }
+      ],
+      "fetchedAt": "2026-11-20T20:00:00Z",
+      "source": "mock"
+    },
+    "declared": {
+      "role": "creator",
+      "niches": ["moda", "belleza"],
+      "city": "Trujillo",
+      "shortBio": "Creo contenido de moda para una comunidad real.",
+      "accountType": "business"
+    },
+    "services": [
+      {
+        "id": "fc4aad6e-5e65-4d9d-924f-74acbb2de871",
+        "type": "publicacion-patrocinada",
+        "format": "combo",
+        "pricePen": 319,
+        "description": "Publicación patrocinada con brief previo"
+      },
+      {
+        "id": "679b8021-16dd-4104-a4da-ee51a3744b87",
+        "type": "canje",
+        "format": "post",
+        "pricePen": 346,
+        "description": "Canje de producto con brief previo"
+      },
+      {
+        "id": "be100533-f9d5-40bc-83c8-21c6dc7f228a",
+        "type": "contenido-ugc",
+        "format": "combo",
+        "pricePen": 210,
+        "description": "Contenido UGC con brief previo"
+      }
+    ]
+  },
+  {
+    "id": "3e8b0f94-05bc-4d72-983d-12f37897a2fd",
+    "role": "creator",
+    "status": "unclaimed",
+    "ownerUserId": null,
+    "snapshot": {
+      "handle": "diego.belleza.demo",
+      "fullName": "Diego · belleza",
+      "biography": "Maquillaje y bienestar 📍Cusco · colaboraciones por DM",
+      "followers": 6942,
+      "following": 752,
+      "postsCount": 623,
+      "isBusiness": true,
+      "businessCategory": "Health/beauty",
+      "isPrivate": false,
+      "isVerified": false,
+      "profilePicUrl": null,
+      "externalUrl": "https://example.com/diego",
+      "posts": [
+        {
+          "id": "diego.belleza.demo-1",
+          "type": "image",
+          "caption": "Skincare ✨ Guárdalo para después #makeup #skincare #belleza",
+          "hashtags": ["makeup", "skincare", "belleza"],
+          "likes": 245,
+          "comments": 10,
+          "views": null,
+          "postedAt": "2026-11-20T20:00:00Z"
+        },
+        {
+          "id": "diego.belleza.demo-2",
+          "type": "carousel",
+          "caption": "Skincare ✨ Cuéntenme en comentarios #makeup #skincare #belleza",
+          "hashtags": ["makeup", "skincare", "belleza"],
+          "likes": 254,
+          "comments": 6,
+          "views": null,
+          "postedAt": "2026-11-17T20:00:00Z"
+        },
+        {
+          "id": "diego.belleza.demo-3",
+          "type": "image",
+          "caption": "Skincare ✨ Nuevo post #makeup #skincare #belleza",
+          "hashtags": ["makeup", "skincare", "belleza"],
+          "likes": 384,
+          "comments": 8,
+          "views": null,
+          "postedAt": "2026-11-12T20:00:00Z"
+        },
+        {
+          "id": "diego.belleza.demo-4",
+          "type": "video",
+          "caption": "Skincare ✨ Nuevo post #makeup #skincare #belleza",
+          "hashtags": ["makeup", "skincare", "belleza"],
+          "likes": 450,
+          "comments": 26,
+          "views": 4950,
+          "postedAt": "2026-11-11T20:00:00Z"
+        },
+        {
+          "id": "diego.belleza.demo-5",
+          "type": "video",
+          "caption": "Bienestar ✨ Guárdalo para después #bienestar #mindfulness #salud",
+          "hashtags": ["bienestar", "mindfulness", "salud"],
+          "likes": 378,
+          "comments": 14,
+          "views": 5292,
+          "postedAt": "2026-11-04T20:00:00Z"
+        },
+        {
+          "id": "diego.belleza.demo-6",
+          "type": "carousel",
+          "caption": "Rutina de belleza ✨ Guárdalo para después #makeup #skincare #belleza",
+          "hashtags": ["makeup", "skincare", "belleza"],
+          "likes": 457,
+          "comments": 9,
+          "views": null,
+          "postedAt": "2026-10-31T20:00:00Z"
+        },
+        {
+          "id": "diego.belleza.demo-7",
+          "type": "carousel",
+          "caption": "Skincare ✨ Nuevo post #makeup #skincare #belleza",
+          "hashtags": ["makeup", "skincare", "belleza"],
+          "likes": 395,
+          "comments": 21,
+          "views": null,
+          "postedAt": "2026-11-02T20:00:00Z"
+        },
+        {
+          "id": "diego.belleza.demo-8",
+          "type": "carousel",
+          "caption": "Salud mental ✨ Cuéntenme en comentarios #bienestar #mindfulness #salud",
+          "hashtags": ["bienestar", "mindfulness", "salud"],
+          "likes": 540,
+          "comments": 14,
+          "views": null,
+          "postedAt": "2026-11-06T20:00:00Z"
+        },
+        {
+          "id": "diego.belleza.demo-9",
+          "type": "carousel",
+          "caption": "Salud mental ✨ Cuéntenme en comentarios #bienestar #mindfulness #salud",
+          "hashtags": ["bienestar", "mindfulness", "salud"],
+          "likes": 245,
+          "comments": 8,
+          "views": null,
+          "postedAt": "2026-10-19T20:00:00Z"
+        },
+        {
+          "id": "diego.belleza.demo-10",
+          "type": "image",
+          "caption": "Maquillaje ✨ Guárdalo para después #makeup #skincare #belleza",
+          "hashtags": ["makeup", "skincare", "belleza"],
+          "likes": 522,
+          "comments": 26,
+          "views": null,
+          "postedAt": "2026-11-02T20:00:00Z"
+        },
+        {
+          "id": "diego.belleza.demo-11",
+          "type": "image",
+          "caption": "Skincare ✨ Cuéntenme en comentarios #makeup #skincare #belleza",
+          "hashtags": ["makeup", "skincare", "belleza"],
+          "likes": 309,
+          "comments": 11,
+          "views": null,
+          "postedAt": "2026-10-11T20:00:00Z"
+        },
+        {
+          "id": "diego.belleza.demo-12",
+          "type": "carousel",
+          "caption": "Meditación ✨ Nuevo post #bienestar #mindfulness #salud",
+          "hashtags": ["bienestar", "mindfulness", "salud"],
+          "likes": 239,
+          "comments": 13,
+          "views": null,
+          "postedAt": "2026-10-18T20:00:00Z"
+        }
+      ],
+      "fetchedAt": "2026-11-20T20:00:00Z",
+      "source": "mock"
+    },
+    "declared": null,
+    "services": []
+  },
+  {
+    "id": "78f291ac-69d6-42f2-ab98-aec001e0080b",
+    "role": "creator",
+    "status": "verified",
+    "ownerUserId": "7d2f2bb3-62a5-4ae5-a62d-50baee39720b",
+    "snapshot": {
+      "handle": "valeria.fitness.demo",
+      "fullName": "Valeria · fitness",
+      "biography": "Rutina de entrenamiento y bienestar 📍Piura · colaboraciones por DM",
+      "followers": 32087,
+      "following": 617,
+      "postsCount": 302,
+      "isBusiness": false,
+      "businessCategory": "Fitness Model",
+      "isPrivate": false,
+      "isVerified": false,
+      "profilePicUrl": null,
+      "externalUrl": null,
+      "posts": [
+        {
+          "id": "valeria.fitness.demo-1",
+          "type": "carousel",
+          "caption": "Hábitos saludables ✨ Nuevo post #fitness #gym #entrenamiento",
+          "hashtags": ["fitness", "gym", "entrenamiento"],
+          "likes": 1416,
+          "comments": 52,
+          "views": null,
+          "postedAt": "2026-11-20T20:00:00Z"
+        },
+        {
+          "id": "valeria.fitness.demo-2",
+          "type": "video",
+          "caption": "Rutina de entrenamiento ✨ Nuevo post #fitness #gym #entrenamiento",
+          "hashtags": ["fitness", "gym", "entrenamiento"],
+          "likes": 2372,
+          "comments": 117,
+          "views": 26092,
+          "postedAt": "2026-11-16T20:00:00Z"
+        },
+        {
+          "id": "valeria.fitness.demo-3",
+          "type": "image",
+          "caption": "Bienestar ✨ Cuéntenme en comentarios #bienestar #mindfulness #salud",
+          "hashtags": ["bienestar", "mindfulness", "salud"],
+          "likes": 2090,
+          "comments": 116,
+          "views": null,
+          "postedAt": "2026-11-12T20:00:00Z"
+        },
+        {
+          "id": "valeria.fitness.demo-4",
+          "type": "carousel",
+          "caption": "Rutina de entrenamiento ✨ ¿Qué opinan? #fitness #gym #entrenamiento",
+          "hashtags": ["fitness", "gym", "entrenamiento"],
+          "likes": 2936,
+          "comments": 96,
+          "views": null,
+          "postedAt": "2026-11-08T20:00:00Z"
+        },
+        {
+          "id": "valeria.fitness.demo-5",
+          "type": "video",
+          "caption": "Gym ✨ Nuevo post #fitness #gym #entrenamiento",
+          "hashtags": ["fitness", "gym", "entrenamiento"],
+          "likes": 3054,
+          "comments": 182,
+          "views": 33594,
+          "postedAt": "2026-11-04T20:00:00Z"
+        },
+        {
+          "id": "valeria.fitness.demo-6",
+          "type": "video",
+          "caption": "Gym ✨ Guárdalo para después #fitness #gym #entrenamiento",
+          "hashtags": ["fitness", "gym", "entrenamiento"],
+          "likes": 3001,
+          "comments": 86,
+          "views": 33011,
+          "postedAt": "2026-10-31T20:00:00Z"
+        },
+        {
+          "id": "valeria.fitness.demo-7",
+          "type": "image",
+          "caption": "Gym ✨ ¿Qué opinan? #fitness #gym #entrenamiento",
+          "hashtags": ["fitness", "gym", "entrenamiento"],
+          "likes": 1886,
+          "comments": 81,
+          "views": null,
+          "postedAt": "2026-10-27T20:00:00Z"
+        },
+        {
+          "id": "valeria.fitness.demo-8",
+          "type": "carousel",
+          "caption": "Hábitos saludables ✨ Guárdalo para después #fitness #gym #entrenamiento",
+          "hashtags": ["fitness", "gym", "entrenamiento"],
+          "likes": 2284,
+          "comments": 103,
+          "views": null,
+          "postedAt": "2026-10-30T20:00:00Z"
+        },
+        {
+          "id": "valeria.fitness.demo-9",
+          "type": "image",
+          "caption": "Rutina de entrenamiento ✨ ¿Qué opinan? #fitness #gym #entrenamiento",
+          "hashtags": ["fitness", "gym", "entrenamiento"],
+          "likes": 2496,
+          "comments": 121,
+          "views": null,
+          "postedAt": "2026-10-27T20:00:00Z"
+        },
+        {
+          "id": "valeria.fitness.demo-10",
+          "type": "video",
+          "caption": "Gym ✨ Guárdalo para después #fitness #gym #entrenamiento",
+          "hashtags": ["fitness", "gym", "entrenamiento"],
+          "likes": 1361,
+          "comments": 30,
+          "views": 17693,
+          "postedAt": "2026-10-15T20:00:00Z"
+        },
+        {
+          "id": "valeria.fitness.demo-11",
+          "type": "video",
+          "caption": "Rutina de entrenamiento ✨ Nuevo post #fitness #gym #entrenamiento",
+          "hashtags": ["fitness", "gym", "entrenamiento"],
+          "likes": 2581,
+          "comments": 87,
+          "views": 30972,
+          "postedAt": "2026-10-21T20:00:00Z"
+        },
+        {
+          "id": "valeria.fitness.demo-12",
+          "type": "video",
+          "caption": "Rutina de entrenamiento ✨ Guárdalo para después #fitness #gym #entrenamiento",
+          "hashtags": ["fitness", "gym", "entrenamiento"],
+          "likes": 2771,
+          "comments": 153,
+          "views": 52649,
+          "postedAt": "2026-10-07T20:00:00Z"
+        }
+      ],
+      "fetchedAt": "2026-11-20T20:00:00Z",
+      "source": "mock"
+    },
+    "declared": {
+      "role": "creator",
+      "niches": ["fitness", "salud-bienestar"],
+      "city": "Trujillo",
+      "shortBio": "Creo contenido de fitness para una comunidad real.",
+      "accountType": "creator"
+    },
+    "services": [
+      {
+        "id": "a9cf662e-920d-4889-a8a8-ee13e6b87555",
+        "type": "publicacion-patrocinada",
+        "format": "combo",
+        "pricePen": 1370,
+        "description": "Publicación patrocinada con brief previo"
+      }
+    ]
+  },
+  {
+    "id": "b96f3602-015c-476f-a75b-4941d61f0c91",
+    "role": "creator",
+    "status": "unclaimed",
+    "ownerUserId": null,
+    "snapshot": {
+      "handle": "mateo.deportes.demo",
+      "fullName": "Mateo · deportes",
+      "biography": "Maratón y tips de estudio 📍Piura · colaboraciones por DM",
+      "followers": 13193,
+      "following": 446,
+      "postsCount": 1169,
+      "isBusiness": true,
+      "businessCategory": "Athlete",
+      "isPrivate": false,
+      "isVerified": false,
+      "profilePicUrl": null,
+      "externalUrl": null,
+      "posts": [
+        {
+          "id": "mateo.deportes.demo-1",
+          "type": "video",
+          "caption": "Fútbol ✨ Guárdalo para después #running #futbol #deporte",
+          "hashtags": ["running", "futbol", "deporte"],
+          "likes": 417,
+          "comments": 16,
+          "views": 5421,
+          "postedAt": "2026-11-20T20:00:00Z"
+        },
+        {
+          "id": "mateo.deportes.demo-2",
+          "type": "video",
+          "caption": "Tips de estudio ✨ ¿Qué opinan? #educacion #aprende #tips",
+          "hashtags": ["educacion", "aprende", "tips"],
+          "likes": 820,
+          "comments": 39,
+          "views": 14760,
+          "postedAt": "2026-11-16T20:00:00Z"
+        },
+        {
+          "id": "mateo.deportes.demo-3",
+          "type": "video",
+          "caption": "Clases ✨ Nuevo post #educacion #aprende #tips",
+          "hashtags": ["educacion", "aprende", "tips"],
+          "likes": 886,
+          "comments": 47,
+          "views": 8860,
+          "postedAt": "2026-11-16T20:00:00Z"
+        },
+        {
+          "id": "mateo.deportes.demo-4",
+          "type": "image",
+          "caption": "Tips de estudio ✨ ¿Qué opinan? #educacion #aprende #tips",
+          "hashtags": ["educacion", "aprende", "tips"],
+          "likes": 897,
+          "comments": 52,
+          "views": null,
+          "postedAt": "2026-11-08T20:00:00Z"
+        },
+        {
+          "id": "mateo.deportes.demo-5",
+          "type": "carousel",
+          "caption": "Maratón ✨ ¿Qué opinan? #running #futbol #deporte",
+          "hashtags": ["running", "futbol", "deporte"],
+          "likes": 455,
+          "comments": 25,
+          "views": null,
+          "postedAt": "2026-11-12T20:00:00Z"
+        },
+        {
+          "id": "mateo.deportes.demo-6",
+          "type": "video",
+          "caption": "Fútbol ✨ Cuéntenme en comentarios #running #futbol #deporte",
+          "hashtags": ["running", "futbol", "deporte"],
+          "likes": 606,
+          "comments": 36,
+          "views": 9090,
+          "postedAt": "2026-11-10T20:00:00Z"
+        },
+        {
+          "id": "mateo.deportes.demo-7",
+          "type": "video",
+          "caption": "Maratón ✨ Guárdalo para después #running #futbol #deporte",
+          "hashtags": ["running", "futbol", "deporte"],
+          "likes": 845,
+          "comments": 49,
+          "views": 16900,
+          "postedAt": "2026-10-27T20:00:00Z"
+        },
+        {
+          "id": "mateo.deportes.demo-8",
+          "type": "video",
+          "caption": "Fútbol ✨ Nuevo post #running #futbol #deporte",
+          "hashtags": ["running", "futbol", "deporte"],
+          "likes": 601,
+          "comments": 25,
+          "views": 9015,
+          "postedAt": "2026-10-30T20:00:00Z"
+        },
+        {
+          "id": "mateo.deportes.demo-9",
+          "type": "carousel",
+          "caption": "Running ✨ Guárdalo para después #running #futbol #deporte",
+          "hashtags": ["running", "futbol", "deporte"],
+          "likes": 441,
+          "comments": 23,
+          "views": null,
+          "postedAt": "2026-11-04T20:00:00Z"
+        },
+        {
+          "id": "mateo.deportes.demo-10",
+          "type": "image",
+          "caption": "Fútbol ✨ Nuevo post #running #futbol #deporte",
+          "hashtags": ["running", "futbol", "deporte"],
+          "likes": 461,
+          "comments": 20,
+          "views": null,
+          "postedAt": "2026-10-24T20:00:00Z"
+        },
+        {
+          "id": "mateo.deportes.demo-11",
+          "type": "video",
+          "caption": "Running ✨ Nuevo post #running #futbol #deporte",
+          "hashtags": ["running", "futbol", "deporte"],
+          "likes": 625,
+          "comments": 15,
+          "views": 10000,
+          "postedAt": "2026-10-21T20:00:00Z"
+        },
+        {
+          "id": "mateo.deportes.demo-12",
+          "type": "image",
+          "caption": "Maratón ✨ ¿Qué opinan? #running #futbol #deporte",
+          "hashtags": ["running", "futbol", "deporte"],
+          "likes": 881,
+          "comments": 34,
+          "views": null,
+          "postedAt": "2026-10-18T20:00:00Z"
+        }
+      ],
+      "fetchedAt": "2026-11-20T20:00:00Z",
+      "source": "mock"
+    },
+    "declared": null,
+    "services": []
+  },
+  {
+    "id": "6ee17d47-c5b5-40fb-9445-430b240c1b87",
+    "role": "creator",
+    "status": "verified",
+    "ownerUserId": "c5700893-a34b-4834-b1aa-be1f6f210579",
+    "snapshot": {
+      "handle": "camila.gastronomia.demo",
+      "fullName": "Camila · gastronomia",
+      "biography": "Cocina peruana y rutina 📍Arequipa · colaboraciones por DM",
+      "followers": 36104,
+      "following": 1206,
+      "postsCount": 1058,
+      "isBusiness": true,
+      "businessCategory": "Chef",
+      "isPrivate": false,
+      "isVerified": false,
+      "profilePicUrl": null,
+      "externalUrl": null,
+      "posts": [
+        {
+          "id": "camila.gastronomia.demo-1",
+          "type": "video",
+          "caption": "Cocina peruana ✨ Cuéntenme en comentarios #comidaperuana #receta #foodie",
+          "hashtags": ["comidaperuana", "receta", "foodie"],
+          "likes": 840,
+          "comments": 27,
+          "views": 10920,
+          "postedAt": "2026-11-20T20:00:00Z"
+        },
+        {
+          "id": "camila.gastronomia.demo-2",
+          "type": "video",
+          "caption": "Receta ✨ Nuevo post #comidaperuana #receta #foodie",
+          "hashtags": ["comidaperuana", "receta", "foodie"],
+          "likes": 976,
+          "comments": 50,
+          "views": 14640,
+          "postedAt": "2026-11-16T20:00:00Z"
+        },
+        {
+          "id": "camila.gastronomia.demo-3",
+          "type": "carousel",
+          "caption": "Rutina ✨ Cuéntenme en comentarios #lifestyle #lima #vlog",
+          "hashtags": ["lifestyle", "lima", "vlog"],
+          "likes": 1130,
+          "comments": 34,
+          "views": null,
+          "postedAt": "2026-11-16T20:00:00Z"
+        },
+        {
+          "id": "camila.gastronomia.demo-4",
+          "type": "video",
+          "caption": "Restaurante ✨ ¿Qué opinan? #comidaperuana #receta #foodie",
+          "hashtags": ["comidaperuana", "receta", "foodie"],
+          "likes": 525,
+          "comments": 16,
+          "views": 5250,
+          "postedAt": "2026-11-11T20:00:00Z"
+        },
+        {
+          "id": "camila.gastronomia.demo-5",
+          "type": "carousel",
+          "caption": "Vida en Lima ✨ Guárdalo para después #lifestyle #lima #vlog",
+          "hashtags": ["lifestyle", "lima", "vlog"],
+          "likes": 840,
+          "comments": 45,
+          "views": null,
+          "postedAt": "2026-11-08T20:00:00Z"
+        },
+        {
+          "id": "camila.gastronomia.demo-6",
+          "type": "carousel",
+          "caption": "Restaurante ✨ Guárdalo para después #comidaperuana #receta #foodie",
+          "hashtags": ["comidaperuana", "receta", "foodie"],
+          "likes": 552,
+          "comments": 17,
+          "views": null,
+          "postedAt": "2026-11-05T20:00:00Z"
+        },
+        {
+          "id": "camila.gastronomia.demo-7",
+          "type": "carousel",
+          "caption": "Cocina peruana ✨ Nuevo post #comidaperuana #receta #foodie",
+          "hashtags": ["comidaperuana", "receta", "foodie"],
+          "likes": 699,
+          "comments": 28,
+          "views": null,
+          "postedAt": "2026-10-27T20:00:00Z"
+        },
+        {
+          "id": "camila.gastronomia.demo-8",
+          "type": "image",
+          "caption": "Restaurante ✨ Nuevo post #comidaperuana #receta #foodie",
+          "hashtags": ["comidaperuana", "receta", "foodie"],
+          "likes": 1166,
+          "comments": 62,
+          "views": null,
+          "postedAt": "2026-11-06T20:00:00Z"
+        },
+        {
+          "id": "camila.gastronomia.demo-9",
+          "type": "video",
+          "caption": "Cocina peruana ✨ Cuéntenme en comentarios #comidaperuana #receta #foodie",
+          "hashtags": ["comidaperuana", "receta", "foodie"],
+          "likes": 1084,
+          "comments": 39,
+          "views": 13008,
+          "postedAt": "2026-10-27T20:00:00Z"
+        },
+        {
+          "id": "camila.gastronomia.demo-10",
+          "type": "carousel",
+          "caption": "Cocina peruana ✨ Nuevo post #comidaperuana #receta #foodie",
+          "hashtags": ["comidaperuana", "receta", "foodie"],
+          "likes": 708,
+          "comments": 20,
+          "views": null,
+          "postedAt": "2026-11-02T20:00:00Z"
+        },
+        {
+          "id": "camila.gastronomia.demo-11",
+          "type": "video",
+          "caption": "Vida en Lima ✨ Nuevo post #lifestyle #lima #vlog",
+          "hashtags": ["lifestyle", "lima", "vlog"],
+          "likes": 707,
+          "comments": 21,
+          "views": 7777,
+          "postedAt": "2026-10-31T20:00:00Z"
+        },
+        {
+          "id": "camila.gastronomia.demo-12",
+          "type": "carousel",
+          "caption": "Cocina peruana ✨ Cuéntenme en comentarios #comidaperuana #receta #foodie",
+          "hashtags": ["comidaperuana", "receta", "foodie"],
+          "likes": 1123,
+          "comments": 30,
+          "views": null,
+          "postedAt": "2026-10-18T20:00:00Z"
+        }
+      ],
+      "fetchedAt": "2026-11-20T20:00:00Z",
+      "source": "mock"
+    },
+    "declared": {
+      "role": "creator",
+      "niches": ["gastronomia", "lifestyle"],
+      "city": "Trujillo",
+      "shortBio": "Creo contenido de gastronomia para una comunidad real.",
+      "accountType": "business"
+    },
+    "services": [
+      {
+        "id": "5777a3ac-9252-418c-a071-c73988df20dc",
+        "type": "publicacion-patrocinada",
+        "format": "post",
+        "pricePen": 699,
+        "description": "Publicación patrocinada con brief previo"
+      },
+      {
+        "id": "3c7249bb-f7de-4d53-a894-ffbf3c148afc",
+        "type": "canje",
+        "format": "combo",
+        "pricePen": 1494,
+        "description": "Canje de producto con brief previo"
+      }
+    ]
+  },
+  {
+    "id": "58053b3a-3c40-43ff-95eb-3529ebcdbb34",
+    "role": "creator",
+    "status": "unclaimed",
+    "ownerUserId": null,
+    "snapshot": {
+      "handle": "andres.viajes.demo",
+      "fullName": "Andrés · viajes",
+      "biography": "Viaje y salud mental 📍Lima · colaboraciones por DM",
+      "followers": 442397,
+      "following": 909,
+      "postsCount": 1001,
+      "isBusiness": true,
+      "businessCategory": "Travel Company",
+      "isPrivate": false,
+      "isVerified": false,
+      "profilePicUrl": null,
+      "externalUrl": "https://example.com/andres",
+      "posts": [
+        {
+          "id": "andres.viajes.demo-1",
+          "type": "image",
+          "caption": "Meditación ✨ Nuevo post #bienestar #mindfulness #salud",
+          "hashtags": ["bienestar", "mindfulness", "salud"],
+          "likes": 42124,
+          "comments": 2337,
+          "views": null,
+          "postedAt": "2026-11-20T20:00:00Z"
+        },
+        {
+          "id": "andres.viajes.demo-2",
+          "type": "video",
+          "caption": "Bienestar ✨ Guárdalo para después #bienestar #mindfulness #salud",
+          "hashtags": ["bienestar", "mindfulness", "salud"],
+          "likes": 20200,
+          "comments": 509,
+          "views": 323200,
+          "postedAt": "2026-11-16T20:00:00Z"
+        },
+        {
+          "id": "andres.viajes.demo-3",
+          "type": "video",
+          "caption": "Viaje ✨ ¿Qué opinan? #viajes #travel #peru",
+          "hashtags": ["viajes", "travel", "peru"],
+          "likes": 20516,
+          "comments": 1180,
+          "views": 389804,
+          "postedAt": "2026-11-14T20:00:00Z"
+        },
+        {
+          "id": "andres.viajes.demo-4",
+          "type": "image",
+          "caption": "Viaje ✨ Nuevo post #viajes #travel #peru",
+          "hashtags": ["viajes", "travel", "peru"],
+          "likes": 26883,
+          "comments": 1046,
+          "views": null,
+          "postedAt": "2026-11-11T20:00:00Z"
+        },
+        {
+          "id": "andres.viajes.demo-5",
+          "type": "video",
+          "caption": "Salud mental ✨ Nuevo post #bienestar #mindfulness #salud",
+          "hashtags": ["bienestar", "mindfulness", "salud"],
+          "likes": 31907,
+          "comments": 1470,
+          "views": 287163,
+          "postedAt": "2026-11-12T20:00:00Z"
+        },
+        {
+          "id": "andres.viajes.demo-6",
+          "type": "video",
+          "caption": "Viaje ✨ ¿Qué opinan? #viajes #travel #peru",
+          "hashtags": ["viajes", "travel", "peru"],
+          "likes": 42855,
+          "comments": 1681,
+          "views": 557115,
+          "postedAt": "2026-11-05T20:00:00Z"
+        },
+        {
+          "id": "andres.viajes.demo-7",
+          "type": "video",
+          "caption": "Destino ✨ Nuevo post #viajes #travel #peru",
+          "hashtags": ["viajes", "travel", "peru"],
+          "likes": 29734,
+          "comments": 753,
+          "views": 237872,
+          "postedAt": "2026-11-08T20:00:00Z"
+        },
+        {
+          "id": "andres.viajes.demo-8",
+          "type": "carousel",
+          "caption": "Destino ✨ Guárdalo para después #viajes #travel #peru",
+          "hashtags": ["viajes", "travel", "peru"],
+          "likes": 29389,
+          "comments": 1333,
+          "views": null,
+          "postedAt": "2026-11-06T20:00:00Z"
+        },
+        {
+          "id": "andres.viajes.demo-9",
+          "type": "carousel",
+          "caption": "Bienestar ✨ Nuevo post #bienestar #mindfulness #salud",
+          "hashtags": ["bienestar", "mindfulness", "salud"],
+          "likes": 23551,
+          "comments": 794,
+          "views": null,
+          "postedAt": "2026-10-27T20:00:00Z"
+        },
+        {
+          "id": "andres.viajes.demo-10",
+          "type": "image",
+          "caption": "Destino ✨ Guárdalo para después #viajes #travel #peru",
+          "hashtags": ["viajes", "travel", "peru"],
+          "likes": 24912,
+          "comments": 633,
+          "views": null,
+          "postedAt": "2026-10-24T20:00:00Z"
+        },
+        {
+          "id": "andres.viajes.demo-11",
+          "type": "video",
+          "caption": "Viaje ✨ ¿Qué opinan? #viajes #travel #peru",
+          "hashtags": ["viajes", "travel", "peru"],
+          "likes": 24550,
+          "comments": 1258,
+          "views": 196400,
+          "postedAt": "2026-10-21T20:00:00Z"
+        },
+        {
+          "id": "andres.viajes.demo-12",
+          "type": "image",
+          "caption": "Bienestar ✨ ¿Qué opinan? #bienestar #mindfulness #salud",
+          "hashtags": ["bienestar", "mindfulness", "salud"],
+          "likes": 35051,
+          "comments": 961,
+          "views": null,
+          "postedAt": "2026-10-07T20:00:00Z"
+        }
+      ],
+      "fetchedAt": "2026-11-20T20:00:00Z",
+      "source": "mock"
+    },
+    "declared": null,
+    "services": []
+  },
+  {
+    "id": "97d963be-ecca-421e-8784-9d56feb08e31",
+    "role": "creator",
+    "status": "verified",
+    "ownerUserId": "7d2f2bb3-62a5-4ae5-a62d-50baee39720b",
+    "snapshot": {
+      "handle": "lucia.tecnologia.demo",
+      "fullName": "Lucía · tecnologia",
+      "biography": "Gadgets y cover 📍Piura · colaboraciones por DM",
+      "followers": 12025,
+      "following": 1306,
+      "postsCount": 757,
+      "isBusiness": true,
+      "businessCategory": "Digital creator",
+      "isPrivate": false,
+      "isVerified": false,
+      "profilePicUrl": null,
+      "externalUrl": "https://example.com/lucia",
+      "posts": [
+        {
+          "id": "lucia.tecnologia.demo-1",
+          "type": "image",
+          "caption": "Canción ✨ Cuéntenme en comentarios #musica #cover #livemusic",
+          "hashtags": ["musica", "cover", "livemusic"],
+          "likes": 515,
+          "comments": 25,
+          "views": null,
+          "postedAt": "2026-11-20T20:00:00Z"
+        },
+        {
+          "id": "lucia.tecnologia.demo-2",
+          "type": "video",
+          "caption": "Gadgets ✨ ¿Qué opinan? #tech #gadgets #unboxing",
+          "hashtags": ["tech", "gadgets", "unboxing"],
+          "likes": 441,
+          "comments": 23,
+          "views": 6615,
+          "postedAt": "2026-11-17T20:00:00Z"
+        },
+        {
+          "id": "lucia.tecnologia.demo-3",
+          "type": "image",
+          "caption": "Cover ✨ ¿Qué opinan? #musica #cover #livemusic",
+          "hashtags": ["musica", "cover", "livemusic"],
+          "likes": 656,
+          "comments": 14,
+          "views": null,
+          "postedAt": "2026-11-12T20:00:00Z"
+        },
+        {
+          "id": "lucia.tecnologia.demo-4",
+          "type": "video",
+          "caption": "Review de celulares ✨ Guárdalo para después #tech #gadgets #unboxing",
+          "hashtags": ["tech", "gadgets", "unboxing"],
+          "likes": 377,
+          "comments": 14,
+          "views": 3393,
+          "postedAt": "2026-11-08T20:00:00Z"
+        },
+        {
+          "id": "lucia.tecnologia.demo-5",
+          "type": "image",
+          "caption": "Cover ✨ Cuéntenme en comentarios #musica #cover #livemusic",
+          "hashtags": ["musica", "cover", "livemusic"],
+          "likes": 583,
+          "comments": 25,
+          "views": null,
+          "postedAt": "2026-11-12T20:00:00Z"
+        },
+        {
+          "id": "lucia.tecnologia.demo-6",
+          "type": "video",
+          "caption": "Review de celulares ✨ Nuevo post #tech #gadgets #unboxing",
+          "hashtags": ["tech", "gadgets", "unboxing"],
+          "likes": 393,
+          "comments": 19,
+          "views": 4716,
+          "postedAt": "2026-11-10T20:00:00Z"
+        },
+        {
+          "id": "lucia.tecnologia.demo-7",
+          "type": "video",
+          "caption": "Review de celulares ✨ Guárdalo para después #tech #gadgets #unboxing",
+          "hashtags": ["tech", "gadgets", "unboxing"],
+          "likes": 713,
+          "comments": 41,
+          "views": 9269,
+          "postedAt": "2026-11-08T20:00:00Z"
+        },
+        {
+          "id": "lucia.tecnologia.demo-8",
+          "type": "carousel",
+          "caption": "Gadgets ✨ Guárdalo para después #tech #gadgets #unboxing",
+          "hashtags": ["tech", "gadgets", "unboxing"],
+          "likes": 814,
+          "comments": 30,
+          "views": null,
+          "postedAt": "2026-11-06T20:00:00Z"
+        },
+        {
+          "id": "lucia.tecnologia.demo-9",
+          "type": "video",
+          "caption": "Concierto ✨ Cuéntenme en comentarios #musica #cover #livemusic",
+          "hashtags": ["musica", "cover", "livemusic"],
+          "likes": 673,
+          "comments": 30,
+          "views": 8749,
+          "postedAt": "2026-11-04T20:00:00Z"
+        },
+        {
+          "id": "lucia.tecnologia.demo-10",
+          "type": "video",
+          "caption": "Canción ✨ Cuéntenme en comentarios #musica #cover #livemusic",
+          "hashtags": ["musica", "cover", "livemusic"],
+          "likes": 456,
+          "comments": 16,
+          "views": 9120,
+          "postedAt": "2026-11-02T20:00:00Z"
+        },
+        {
+          "id": "lucia.tecnologia.demo-11",
+          "type": "video",
+          "caption": "Canción ✨ Guárdalo para después #musica #cover #livemusic",
+          "hashtags": ["musica", "cover", "livemusic"],
+          "likes": 527,
+          "comments": 21,
+          "views": 10540,
+          "postedAt": "2026-10-11T20:00:00Z"
+        },
+        {
+          "id": "lucia.tecnologia.demo-12",
+          "type": "video",
+          "caption": "Review de celulares ✨ Cuéntenme en comentarios #tech #gadgets #unboxing",
+          "hashtags": ["tech", "gadgets", "unboxing"],
+          "likes": 376,
+          "comments": 15,
+          "views": 3008,
+          "postedAt": "2026-10-07T20:00:00Z"
+        }
+      ],
+      "fetchedAt": "2026-11-20T20:00:00Z",
+      "source": "mock"
+    },
+    "declared": {
+      "role": "creator",
+      "niches": ["tecnologia", "musica"],
+      "city": "Cusco",
+      "shortBio": "Creo contenido de tecnologia para una comunidad real.",
+      "accountType": "business"
+    },
+    "services": [
+      {
+        "id": "7abe2c68-fc93-42ef-9f42-b81282ff8477",
+        "type": "publicacion-patrocinada",
+        "format": "reel",
+        "pricePen": 725,
+        "description": "Publicación patrocinada con brief previo"
+      },
+      {
+        "id": "1f2712e6-8af6-4870-a1ec-c8449b2fe05d",
+        "type": "canje",
+        "format": "post",
+        "pricePen": 434,
+        "description": "Canje de producto con brief previo"
+      },
+      {
+        "id": "cfc24534-f152-433f-b5b3-e8b2e82ca111",
+        "type": "contenido-ugc",
+        "format": "story",
+        "pricePen": 809,
+        "description": "Contenido UGC con brief previo"
+      }
+    ]
+  },
+  {
+    "id": "d54b7529-9bb0-47b1-89c9-8f30b1fd80ed",
+    "role": "creator",
+    "status": "unclaimed",
+    "ownerUserId": null,
+    "snapshot": {
+      "handle": "joaquin.gaming.demo",
+      "fullName": "Joaquín · gaming",
+      "biography": "Stream y mochilero 📍Trujillo · colaboraciones por DM",
+      "followers": 314549,
+      "following": 358,
+      "postsCount": 825,
+      "isBusiness": false,
+      "businessCategory": "Gamer",
+      "isPrivate": false,
+      "isVerified": false,
+      "profilePicUrl": null,
+      "externalUrl": "https://example.com/joaquin",
+      "posts": [
+        {
+          "id": "joaquin.gaming.demo-1",
+          "type": "carousel",
+          "caption": "Stream ✨ Cuéntenme en comentarios #gaming #gamer #twitch",
+          "hashtags": ["gaming", "gamer", "twitch"],
+          "likes": 5133,
+          "comments": 174,
+          "views": null,
+          "postedAt": "2026-11-20T20:00:00Z"
+        },
+        {
+          "id": "joaquin.gaming.demo-2",
+          "type": "carousel",
+          "caption": "Viaje ✨ Cuéntenme en comentarios #viajes #travel #peru",
+          "hashtags": ["viajes", "travel", "peru"],
+          "likes": 9278,
+          "comments": 548,
+          "views": null,
+          "postedAt": "2026-11-16T20:00:00Z"
+        },
+        {
+          "id": "joaquin.gaming.demo-3",
+          "type": "carousel",
+          "caption": "Gameplay ✨ Guárdalo para después #gaming #gamer #twitch",
+          "hashtags": ["gaming", "gamer", "twitch"],
+          "likes": 8596,
+          "comments": 205,
+          "views": null,
+          "postedAt": "2026-11-12T20:00:00Z"
+        },
+        {
+          "id": "joaquin.gaming.demo-4",
+          "type": "carousel",
+          "caption": "Destino ✨ Nuevo post #viajes #travel #peru",
+          "hashtags": ["viajes", "travel", "peru"],
+          "likes": 4290,
+          "comments": 110,
+          "views": null,
+          "postedAt": "2026-11-11T20:00:00Z"
+        },
+        {
+          "id": "joaquin.gaming.demo-5",
+          "type": "video",
+          "caption": "Stream ✨ ¿Qué opinan? #gaming #gamer #twitch",
+          "hashtags": ["gaming", "gamer", "twitch"],
+          "likes": 7638,
+          "comments": 292,
+          "views": 68742,
+          "postedAt": "2026-11-08T20:00:00Z"
+        },
+        {
+          "id": "joaquin.gaming.demo-6",
+          "type": "image",
+          "caption": "Viaje ✨ Cuéntenme en comentarios #viajes #travel #peru",
+          "hashtags": ["viajes", "travel", "peru"],
+          "likes": 4773,
+          "comments": 104,
+          "views": null,
+          "postedAt": "2026-10-31T20:00:00Z"
+        },
+        {
+          "id": "joaquin.gaming.demo-7",
+          "type": "video",
+          "caption": "Gameplay ✨ Nuevo post #gaming #gamer #twitch",
+          "hashtags": ["gaming", "gamer", "twitch"],
+          "likes": 5509,
+          "comments": 328,
+          "views": 88144,
+          "postedAt": "2026-10-27T20:00:00Z"
+        },
+        {
+          "id": "joaquin.gaming.demo-8",
+          "type": "image",
+          "caption": "Gameplay ✨ Cuéntenme en comentarios #gaming #gamer #twitch",
+          "hashtags": ["gaming", "gamer", "twitch"],
+          "likes": 7542,
+          "comments": 203,
+          "views": null,
+          "postedAt": "2026-11-06T20:00:00Z"
+        },
+        {
+          "id": "joaquin.gaming.demo-9",
+          "type": "video",
+          "caption": "Viaje ✨ Nuevo post #viajes #travel #peru",
+          "hashtags": ["viajes", "travel", "peru"],
+          "likes": 8565,
+          "comments": 400,
+          "views": 119910,
+          "postedAt": "2026-10-19T20:00:00Z"
+        },
+        {
+          "id": "joaquin.gaming.demo-10",
+          "type": "image",
+          "caption": "Videojuegos ✨ Cuéntenme en comentarios #gaming #gamer #twitch",
+          "hashtags": ["gaming", "gamer", "twitch"],
+          "likes": 8708,
+          "comments": 412,
+          "views": null,
+          "postedAt": "2026-10-15T20:00:00Z"
+        },
+        {
+          "id": "joaquin.gaming.demo-11",
+          "type": "video",
+          "caption": "Stream ✨ Cuéntenme en comentarios #gaming #gamer #twitch",
+          "hashtags": ["gaming", "gamer", "twitch"],
+          "likes": 6435,
+          "comments": 191,
+          "views": 102960,
+          "postedAt": "2026-10-11T20:00:00Z"
+        },
+        {
+          "id": "joaquin.gaming.demo-12",
+          "type": "carousel",
+          "caption": "Videojuegos ✨ Cuéntenme en comentarios #gaming #gamer #twitch",
+          "hashtags": ["gaming", "gamer", "twitch"],
+          "likes": 5036,
+          "comments": 150,
+          "views": null,
+          "postedAt": "2026-10-07T20:00:00Z"
+        }
+      ],
+      "fetchedAt": "2026-11-20T20:00:00Z",
+      "source": "mock"
+    },
+    "declared": null,
+    "services": []
+  },
+  {
+    "id": "e485a148-123d-42b7-909a-b29c2c065951",
+    "role": "creator",
+    "status": "verified",
+    "ownerUserId": "c5700893-a34b-4834-b1aa-be1f6f210579",
+    "snapshot": {
+      "handle": "daniela.musica.demo",
+      "fullName": "Daniela · musica",
+      "biography": "Canción y maratón 📍Trujillo · colaboraciones por DM",
+      "followers": 109912,
+      "following": 1482,
+      "postsCount": 754,
+      "isBusiness": true,
+      "businessCategory": "Musician/band",
+      "isPrivate": false,
+      "isVerified": false,
+      "profilePicUrl": null,
+      "externalUrl": null,
+      "posts": [
+        {
+          "id": "daniela.musica.demo-1",
+          "type": "image",
+          "caption": "Concierto ✨ Cuéntenme en comentarios #musica #cover #livemusic",
+          "hashtags": ["musica", "cover", "livemusic"],
+          "likes": 1814,
+          "comments": 39,
+          "views": null,
+          "postedAt": "2026-11-20T20:00:00Z"
+        },
+        {
+          "id": "daniela.musica.demo-2",
+          "type": "image",
+          "caption": "Fútbol ✨ Nuevo post #running #futbol #deporte",
+          "hashtags": ["running", "futbol", "deporte"],
+          "likes": 1285,
+          "comments": 43,
+          "views": null,
+          "postedAt": "2026-11-16T20:00:00Z"
+        },
+        {
+          "id": "daniela.musica.demo-3",
+          "type": "carousel",
+          "caption": "Cover ✨ Nuevo post #musica #cover #livemusic",
+          "hashtags": ["musica", "cover", "livemusic"],
+          "likes": 1097,
+          "comments": 36,
+          "views": null,
+          "postedAt": "2026-11-12T20:00:00Z"
+        },
+        {
+          "id": "daniela.musica.demo-4",
+          "type": "image",
+          "caption": "Canción ✨ Guárdalo para después #musica #cover #livemusic",
+          "hashtags": ["musica", "cover", "livemusic"],
+          "likes": 1810,
+          "comments": 90,
+          "views": null,
+          "postedAt": "2026-11-08T20:00:00Z"
+        },
+        {
+          "id": "daniela.musica.demo-5",
+          "type": "video",
+          "caption": "Cover ✨ Nuevo post #musica #cover #livemusic",
+          "hashtags": ["musica", "cover", "livemusic"],
+          "likes": 1760,
+          "comments": 99,
+          "views": 24640,
+          "postedAt": "2026-11-08T20:00:00Z"
+        },
+        {
+          "id": "daniela.musica.demo-6",
+          "type": "image",
+          "caption": "Running ✨ Guárdalo para después #running #futbol #deporte",
+          "hashtags": ["running", "futbol", "deporte"],
+          "likes": 1517,
+          "comments": 83,
+          "views": null,
+          "postedAt": "2026-11-10T20:00:00Z"
+        },
+        {
+          "id": "daniela.musica.demo-7",
+          "type": "video",
+          "caption": "Concierto ✨ Nuevo post #musica #cover #livemusic",
+          "hashtags": ["musica", "cover", "livemusic"],
+          "likes": 1597,
+          "comments": 58,
+          "views": 22358,
+          "postedAt": "2026-11-08T20:00:00Z"
+        },
+        {
+          "id": "daniela.musica.demo-8",
+          "type": "carousel",
+          "caption": "Cover ✨ Cuéntenme en comentarios #musica #cover #livemusic",
+          "hashtags": ["musica", "cover", "livemusic"],
+          "likes": 1162,
+          "comments": 25,
+          "views": null,
+          "postedAt": "2026-10-23T20:00:00Z"
+        },
+        {
+          "id": "daniela.musica.demo-9",
+          "type": "video",
+          "caption": "Maratón ✨ ¿Qué opinan? #running #futbol #deporte",
+          "hashtags": ["running", "futbol", "deporte"],
+          "likes": 1509,
+          "comments": 34,
+          "views": 15090,
+          "postedAt": "2026-11-04T20:00:00Z"
+        },
+        {
+          "id": "daniela.musica.demo-10",
+          "type": "video",
+          "caption": "Fútbol ✨ ¿Qué opinan? #running #futbol #deporte",
+          "hashtags": ["running", "futbol", "deporte"],
+          "likes": 1735,
+          "comments": 104,
+          "views": 29495,
+          "postedAt": "2026-10-15T20:00:00Z"
+        },
+        {
+          "id": "daniela.musica.demo-11",
+          "type": "carousel",
+          "caption": "Maratón ✨ ¿Qué opinan? #running #futbol #deporte",
+          "hashtags": ["running", "futbol", "deporte"],
+          "likes": 1224,
+          "comments": 63,
+          "views": null,
+          "postedAt": "2026-10-31T20:00:00Z"
+        },
+        {
+          "id": "daniela.musica.demo-12",
+          "type": "video",
+          "caption": "Canción ✨ Guárdalo para después #musica #cover #livemusic",
+          "hashtags": ["musica", "cover", "livemusic"],
+          "likes": 1409,
+          "comments": 51,
+          "views": 14090,
+          "postedAt": "2026-10-07T20:00:00Z"
+        }
+      ],
+      "fetchedAt": "2026-11-20T20:00:00Z",
+      "source": "mock"
+    },
+    "declared": {
+      "role": "creator",
+      "niches": ["musica", "deportes"],
+      "city": "Piura",
+      "shortBio": "Creo contenido de musica para una comunidad real.",
+      "accountType": "business"
+    },
+    "services": [
+      {
+        "id": "a8a88131-5231-46ab-9dd1-ffd3757a84a6",
+        "type": "publicacion-patrocinada",
+        "format": "post",
+        "pricePen": 1702,
+        "description": "Publicación patrocinada con brief previo"
+      },
+      {
+        "id": "371f5390-a224-4af5-972d-312449b3354e",
+        "type": "canje",
+        "format": "post",
+        "pricePen": 2134,
+        "description": "Canje de producto con brief previo"
+      },
+      {
+        "id": "3c4f27da-a6e0-49bf-8e3f-5431f72b73d9",
+        "type": "contenido-ugc",
+        "format": "combo",
+        "pricePen": 4574,
+        "description": "Contenido UGC con brief previo"
+      }
+    ]
+  },
+  {
+    "id": "271980a5-2e23-44c0-8ef9-3938036bf0a2",
+    "role": "creator",
+    "status": "unclaimed",
+    "ownerUserId": null,
+    "snapshot": {
+      "handle": "renzo.entretenimiento.demo",
+      "fullName": "Renzo · entretenimiento",
+      "biography": "Humor y cover 📍Trujillo · colaboraciones por DM",
+      "followers": 59483,
+      "following": 157,
+      "postsCount": 869,
+      "isBusiness": false,
+      "businessCategory": "Entertainer",
+      "isPrivate": false,
+      "isVerified": false,
+      "profilePicUrl": null,
+      "externalUrl": null,
+      "posts": [
+        {
+          "id": "renzo.entretenimiento.demo-1",
+          "type": "carousel",
+          "caption": "Humor ✨ ¿Qué opinan? #humor #comedia #reels",
+          "hashtags": ["humor", "comedia", "reels"],
+          "likes": 4007,
+          "comments": 221,
+          "views": null,
+          "postedAt": "2026-11-20T20:00:00Z"
+        },
+        {
+          "id": "renzo.entretenimiento.demo-2",
+          "type": "image",
+          "caption": "Sketch ✨ Guárdalo para después #humor #comedia #reels",
+          "hashtags": ["humor", "comedia", "reels"],
+          "likes": 3351,
+          "comments": 200,
+          "views": null,
+          "postedAt": "2026-11-16T20:00:00Z"
+        },
+        {
+          "id": "renzo.entretenimiento.demo-3",
+          "type": "image",
+          "caption": "Sketch ✨ ¿Qué opinan? #humor #comedia #reels",
+          "hashtags": ["humor", "comedia", "reels"],
+          "likes": 3014,
+          "comments": 78,
+          "views": null,
+          "postedAt": "2026-11-12T20:00:00Z"
+        },
+        {
+          "id": "renzo.entretenimiento.demo-4",
+          "type": "video",
+          "caption": "Sketch ✨ Cuéntenme en comentarios #humor #comedia #reels",
+          "hashtags": ["humor", "comedia", "reels"],
+          "likes": 3849,
+          "comments": 79,
+          "views": 50037,
+          "postedAt": "2026-11-14T20:00:00Z"
+        },
+        {
+          "id": "renzo.entretenimiento.demo-5",
+          "type": "video",
+          "caption": "Canción ✨ Guárdalo para después #musica #cover #livemusic",
+          "hashtags": ["musica", "cover", "livemusic"],
+          "likes": 2872,
+          "comments": 88,
+          "views": 25848,
+          "postedAt": "2026-11-04T20:00:00Z"
+        },
+        {
+          "id": "renzo.entretenimiento.demo-6",
+          "type": "image",
+          "caption": "Comedia ✨ ¿Qué opinan? #humor #comedia #reels",
+          "hashtags": ["humor", "comedia", "reels"],
+          "likes": 3378,
+          "comments": 168,
+          "views": null,
+          "postedAt": "2026-11-10T20:00:00Z"
+        },
+        {
+          "id": "renzo.entretenimiento.demo-7",
+          "type": "video",
+          "caption": "Concierto ✨ Nuevo post #musica #cover #livemusic",
+          "hashtags": ["musica", "cover", "livemusic"],
+          "likes": 2455,
+          "comments": 81,
+          "views": 46645,
+          "postedAt": "2026-10-27T20:00:00Z"
+        },
+        {
+          "id": "renzo.entretenimiento.demo-8",
+          "type": "carousel",
+          "caption": "Humor ✨ ¿Qué opinan? #humor #comedia #reels",
+          "hashtags": ["humor", "comedia", "reels"],
+          "likes": 3579,
+          "comments": 139,
+          "views": null,
+          "postedAt": "2026-11-06T20:00:00Z"
+        },
+        {
+          "id": "renzo.entretenimiento.demo-9",
+          "type": "image",
+          "caption": "Sketch ✨ Cuéntenme en comentarios #humor #comedia #reels",
+          "hashtags": ["humor", "comedia", "reels"],
+          "likes": 3347,
+          "comments": 86,
+          "views": null,
+          "postedAt": "2026-10-19T20:00:00Z"
+        },
+        {
+          "id": "renzo.entretenimiento.demo-10",
+          "type": "video",
+          "caption": "Concierto ✨ Guárdalo para después #musica #cover #livemusic",
+          "hashtags": ["musica", "cover", "livemusic"],
+          "likes": 2647,
+          "comments": 157,
+          "views": 21176,
+          "postedAt": "2026-11-02T20:00:00Z"
+        },
+        {
+          "id": "renzo.entretenimiento.demo-11",
+          "type": "video",
+          "caption": "Comedia ✨ Nuevo post #humor #comedia #reels",
+          "hashtags": ["humor", "comedia", "reels"],
+          "likes": 3186,
+          "comments": 129,
+          "views": 38232,
+          "postedAt": "2026-10-21T20:00:00Z"
+        },
+        {
+          "id": "renzo.entretenimiento.demo-12",
+          "type": "carousel",
+          "caption": "Humor ✨ Guárdalo para después #humor #comedia #reels",
+          "hashtags": ["humor", "comedia", "reels"],
+          "likes": 3803,
+          "comments": 87,
+          "views": null,
+          "postedAt": "2026-10-18T20:00:00Z"
+        }
+      ],
+      "fetchedAt": "2026-11-20T20:00:00Z",
+      "source": "mock"
+    },
+    "declared": null,
+    "services": []
+  },
+  {
+    "id": "8ebd14a8-b7d7-463f-8aaa-e7430830d957",
+    "role": "creator",
+    "status": "verified",
+    "ownerUserId": "7d2f2bb3-62a5-4ae5-a62d-50baee39720b",
+    "snapshot": {
+      "handle": "ximena.educacion.demo",
+      "fullName": "Ximena · educacion",
+      "biography": "Tips de estudio y rutina 📍Lima · colaboraciones por DM",
+      "followers": 255577,
+      "following": 355,
+      "postsCount": 118,
+      "isBusiness": true,
+      "businessCategory": "Education",
+      "isPrivate": false,
+      "isVerified": false,
+      "profilePicUrl": null,
+      "externalUrl": "https://example.com/ximena",
+      "posts": [
+        {
+          "id": "ximena.educacion.demo-1",
+          "type": "image",
+          "caption": "Clases ✨ Guárdalo para después #educacion #aprende #tips",
+          "hashtags": ["educacion", "aprende", "tips"],
+          "likes": 8922,
+          "comments": 489,
+          "views": null,
+          "postedAt": "2026-11-20T20:00:00Z"
+        },
+        {
+          "id": "ximena.educacion.demo-2",
+          "type": "carousel",
+          "caption": "Tips de estudio ✨ Cuéntenme en comentarios #educacion #aprende #tips",
+          "hashtags": ["educacion", "aprende", "tips"],
+          "likes": 12950,
+          "comments": 720,
+          "views": null,
+          "postedAt": "2026-11-18T20:00:00Z"
+        },
+        {
+          "id": "ximena.educacion.demo-3",
+          "type": "video",
+          "caption": "Clases ✨ ¿Qué opinan? #educacion #aprende #tips",
+          "hashtags": ["educacion", "aprende", "tips"],
+          "likes": 12172,
+          "comments": 379,
+          "views": 182580,
+          "postedAt": "2026-11-14T20:00:00Z"
+        },
+        {
+          "id": "ximena.educacion.demo-4",
+          "type": "video",
+          "caption": "Rutina ✨ ¿Qué opinan? #lifestyle #lima #vlog",
+          "hashtags": ["lifestyle", "lima", "vlog"],
+          "likes": 17139,
+          "comments": 977,
+          "views": 137112,
+          "postedAt": "2026-11-08T20:00:00Z"
+        },
+        {
+          "id": "ximena.educacion.demo-5",
+          "type": "carousel",
+          "caption": "Mi día ✨ Cuéntenme en comentarios #lifestyle #lima #vlog",
+          "hashtags": ["lifestyle", "lima", "vlog"],
+          "likes": 13363,
+          "comments": 575,
+          "views": null,
+          "postedAt": "2026-11-12T20:00:00Z"
+        },
+        {
+          "id": "ximena.educacion.demo-6",
+          "type": "video",
+          "caption": "Aprende ✨ Guárdalo para después #educacion #aprende #tips",
+          "hashtags": ["educacion", "aprende", "tips"],
+          "likes": 10964,
+          "comments": 502,
+          "views": 109640,
+          "postedAt": "2026-11-10T20:00:00Z"
+        },
+        {
+          "id": "ximena.educacion.demo-7",
+          "type": "image",
+          "caption": "Clases ✨ Cuéntenme en comentarios #educacion #aprende #tips",
+          "hashtags": ["educacion", "aprende", "tips"],
+          "likes": 10497,
+          "comments": 584,
+          "views": null,
+          "postedAt": "2026-11-02T20:00:00Z"
+        },
+        {
+          "id": "ximena.educacion.demo-8",
+          "type": "image",
+          "caption": "Tips de estudio ✨ Cuéntenme en comentarios #educacion #aprende #tips",
+          "hashtags": ["educacion", "aprende", "tips"],
+          "likes": 9388,
+          "comments": 321,
+          "views": null,
+          "postedAt": "2026-10-30T20:00:00Z"
+        },
+        {
+          "id": "ximena.educacion.demo-9",
+          "type": "image",
+          "caption": "Clases ✨ Cuéntenme en comentarios #educacion #aprende #tips",
+          "hashtags": ["educacion", "aprende", "tips"],
+          "likes": 16972,
+          "comments": 724,
+          "views": null,
+          "postedAt": "2026-10-19T20:00:00Z"
+        },
+        {
+          "id": "ximena.educacion.demo-10",
+          "type": "image",
+          "caption": "Clases ✨ Guárdalo para después #educacion #aprende #tips",
+          "hashtags": ["educacion", "aprende", "tips"],
+          "likes": 12967,
+          "comments": 759,
+          "views": null,
+          "postedAt": "2026-10-15T20:00:00Z"
+        },
+        {
+          "id": "ximena.educacion.demo-11",
+          "type": "video",
+          "caption": "Rutina ✨ ¿Qué opinan? #lifestyle #lima #vlog",
+          "hashtags": ["lifestyle", "lima", "vlog"],
+          "likes": 16973,
+          "comments": 884,
+          "views": 305514,
+          "postedAt": "2026-10-31T20:00:00Z"
+        },
+        {
+          "id": "ximena.educacion.demo-12",
+          "type": "image",
+          "caption": "Vida en Lima ✨ Cuéntenme en comentarios #lifestyle #lima #vlog",
+          "hashtags": ["lifestyle", "lima", "vlog"],
+          "likes": 10354,
+          "comments": 562,
+          "views": null,
+          "postedAt": "2026-10-18T20:00:00Z"
+        }
+      ],
+      "fetchedAt": "2026-11-20T20:00:00Z",
+      "source": "mock"
+    },
+    "declared": {
+      "role": "creator",
+      "niches": ["educacion", "lifestyle"],
+      "city": "Cusco",
+      "shortBio": "Creo contenido de educacion para una comunidad real.",
+      "accountType": "business"
+    },
+    "services": [
+      {
+        "id": "3aae14ba-6bc1-4f41-9be8-590abdfea28c",
+        "type": "publicacion-patrocinada",
+        "format": "post",
+        "pricePen": 4385,
+        "description": "Publicación patrocinada con brief previo"
+      },
+      {
+        "id": "574b11b9-60cb-4b54-b2d8-2f60516216c1",
+        "type": "canje",
+        "format": "combo",
+        "pricePen": 3494,
+        "description": "Canje de producto con brief previo"
+      }
+    ]
+  },
+  {
+    "id": "b959b9d5-b5fa-49f1-99f0-92fb64ad7f16",
+    "role": "creator",
+    "status": "unclaimed",
+    "ownerUserId": null,
+    "snapshot": {
+      "handle": "bruno.finanzas.demo",
+      "fullName": "Bruno · finanzas",
+      "biography": "Finanzas personales y destino 📍Cusco · colaboraciones por DM",
+      "followers": 5037,
+      "following": 1059,
+      "postsCount": 192,
+      "isBusiness": true,
+      "businessCategory": "Personal blog",
+      "isPrivate": false,
+      "isVerified": false,
+      "profilePicUrl": null,
+      "externalUrl": null,
+      "posts": [
+        {
+          "id": "bruno.finanzas.demo-1",
+          "type": "image",
+          "caption": "Viaje ✨ Guárdalo para después #viajes #travel #peru",
+          "hashtags": ["viajes", "travel", "peru"],
+          "likes": 68,
+          "comments": 3,
+          "views": null,
+          "postedAt": "2026-11-20T20:00:00Z"
+        },
+        {
+          "id": "bruno.finanzas.demo-2",
+          "type": "carousel",
+          "caption": "Finanzas personales ✨ Guárdalo para después #finanzas #ahorro #inversion",
+          "hashtags": ["finanzas", "ahorro", "inversion"],
+          "likes": 41,
+          "comments": 1,
+          "views": null,
+          "postedAt": "2026-11-16T20:00:00Z"
+        },
+        {
+          "id": "bruno.finanzas.demo-3",
+          "type": "video",
+          "caption": "Ahorro ✨ Cuéntenme en comentarios #finanzas #ahorro #inversion",
+          "hashtags": ["finanzas", "ahorro", "inversion"],
+          "likes": 47,
+          "comments": 2,
+          "views": 611,
+          "postedAt": "2026-11-14T20:00:00Z"
+        },
+        {
+          "id": "bruno.finanzas.demo-4",
+          "type": "image",
+          "caption": "Inversiones ✨ ¿Qué opinan? #finanzas #ahorro #inversion",
+          "hashtags": ["finanzas", "ahorro", "inversion"],
+          "likes": 57,
+          "comments": 1,
+          "views": null,
+          "postedAt": "2026-11-14T20:00:00Z"
+        },
+        {
+          "id": "bruno.finanzas.demo-5",
+          "type": "video",
+          "caption": "Finanzas personales ✨ ¿Qué opinan? #finanzas #ahorro #inversion",
+          "hashtags": ["finanzas", "ahorro", "inversion"],
+          "likes": 46,
+          "comments": 2,
+          "views": 506,
+          "postedAt": "2026-11-12T20:00:00Z"
+        },
+        {
+          "id": "bruno.finanzas.demo-6",
+          "type": "image",
+          "caption": "Destino ✨ Guárdalo para después #viajes #travel #peru",
+          "hashtags": ["viajes", "travel", "peru"],
+          "likes": 42,
+          "comments": 1,
+          "views": null,
+          "postedAt": "2026-11-05T20:00:00Z"
+        },
+        {
+          "id": "bruno.finanzas.demo-7",
+          "type": "carousel",
+          "caption": "Ahorro ✨ ¿Qué opinan? #finanzas #ahorro #inversion",
+          "hashtags": ["finanzas", "ahorro", "inversion"],
+          "likes": 77,
+          "comments": 4,
+          "views": null,
+          "postedAt": "2026-10-27T20:00:00Z"
+        },
+        {
+          "id": "bruno.finanzas.demo-8",
+          "type": "carousel",
+          "caption": "Destino ✨ Cuéntenme en comentarios #viajes #travel #peru",
+          "hashtags": ["viajes", "travel", "peru"],
+          "likes": 47,
+          "comments": 1,
+          "views": null,
+          "postedAt": "2026-11-06T20:00:00Z"
+        },
+        {
+          "id": "bruno.finanzas.demo-9",
+          "type": "video",
+          "caption": "Viaje ✨ Cuéntenme en comentarios #viajes #travel #peru",
+          "hashtags": ["viajes", "travel", "peru"],
+          "likes": 62,
+          "comments": 3,
+          "views": 620,
+          "postedAt": "2026-10-27T20:00:00Z"
+        },
+        {
+          "id": "bruno.finanzas.demo-10",
+          "type": "carousel",
+          "caption": "Destino ✨ Cuéntenme en comentarios #viajes #travel #peru",
+          "hashtags": ["viajes", "travel", "peru"],
+          "likes": 55,
+          "comments": 3,
+          "views": null,
+          "postedAt": "2026-10-15T20:00:00Z"
+        },
+        {
+          "id": "bruno.finanzas.demo-11",
+          "type": "carousel",
+          "caption": "Finanzas personales ✨ Nuevo post #finanzas #ahorro #inversion",
+          "hashtags": ["finanzas", "ahorro", "inversion"],
+          "likes": 39,
+          "comments": 1,
+          "views": null,
+          "postedAt": "2026-10-31T20:00:00Z"
+        },
+        {
+          "id": "bruno.finanzas.demo-12",
+          "type": "image",
+          "caption": "Destino ✨ Guárdalo para después #viajes #travel #peru",
+          "hashtags": ["viajes", "travel", "peru"],
+          "likes": 54,
+          "comments": 1,
+          "views": null,
+          "postedAt": "2026-10-29T20:00:00Z"
+        }
+      ],
+      "fetchedAt": "2026-11-20T20:00:00Z",
+      "source": "mock"
+    },
+    "declared": null,
+    "services": []
+  },
+  {
+    "id": "a59183e8-1b56-405a-beb6-3f2341a3b782",
+    "role": "creator",
+    "status": "verified",
+    "ownerUserId": "c5700893-a34b-4834-b1aa-be1f6f210579",
+    "snapshot": {
+      "handle": "fiorella.salud.demo",
+      "fullName": "Fiorella · salud y bienestar",
+      "biography": "Salud mental y familia 📍Piura · colaboraciones por DM",
+      "followers": 259823,
+      "following": 1337,
+      "postsCount": 232,
+      "isBusiness": false,
+      "businessCategory": "Health/beauty",
+      "isPrivate": false,
+      "isVerified": false,
+      "profilePicUrl": null,
+      "externalUrl": "https://example.com/fiorella",
+      "posts": [
+        {
+          "id": "fiorella.salud.demo-1",
+          "type": "video",
+          "caption": "Meditación ✨ Guárdalo para después #bienestar #mindfulness #salud",
+          "hashtags": ["bienestar", "mindfulness", "salud"],
+          "likes": 10097,
+          "comments": 538,
+          "views": 151455,
+          "postedAt": "2026-11-20T20:00:00Z"
+        },
+        {
+          "id": "fiorella.salud.demo-2",
+          "type": "image",
+          "caption": "Bienestar ✨ Guárdalo para después #bienestar #mindfulness #salud",
+          "hashtags": ["bienestar", "mindfulness", "salud"],
+          "likes": 12609,
+          "comments": 399,
+          "views": null,
+          "postedAt": "2026-11-17T20:00:00Z"
+        },
+        {
+          "id": "fiorella.salud.demo-3",
+          "type": "image",
+          "caption": "Meditación ✨ ¿Qué opinan? #bienestar #mindfulness #salud",
+          "hashtags": ["bienestar", "mindfulness", "salud"],
+          "likes": 7307,
+          "comments": 349,
+          "views": null,
+          "postedAt": "2026-11-12T20:00:00Z"
+        },
+        {
+          "id": "fiorella.salud.demo-4",
+          "type": "image",
+          "caption": "Salud mental ✨ Guárdalo para después #bienestar #mindfulness #salud",
+          "hashtags": ["bienestar", "mindfulness", "salud"],
+          "likes": 8892,
+          "comments": 316,
+          "views": null,
+          "postedAt": "2026-11-14T20:00:00Z"
+        },
+        {
+          "id": "fiorella.salud.demo-5",
+          "type": "video",
+          "caption": "Salud mental ✨ Guárdalo para después #bienestar #mindfulness #salud",
+          "hashtags": ["bienestar", "mindfulness", "salud"],
+          "likes": 12004,
+          "comments": 505,
+          "views": 228076,
+          "postedAt": "2026-11-04T20:00:00Z"
+        },
+        {
+          "id": "fiorella.salud.demo-6",
+          "type": "carousel",
+          "caption": "Salud mental ✨ Cuéntenme en comentarios #bienestar #mindfulness #salud",
+          "hashtags": ["bienestar", "mindfulness", "salud"],
+          "likes": 12239,
+          "comments": 365,
+          "views": null,
+          "postedAt": "2026-11-10T20:00:00Z"
+        },
+        {
+          "id": "fiorella.salud.demo-7",
+          "type": "video",
+          "caption": "Maternidad ✨ Cuéntenme en comentarios #mama #crianza #familia",
+          "hashtags": ["mama", "crianza", "familia"],
+          "likes": 8789,
+          "comments": 269,
+          "views": 114257,
+          "postedAt": "2026-11-08T20:00:00Z"
+        },
+        {
+          "id": "fiorella.salud.demo-8",
+          "type": "carousel",
+          "caption": "Meditación ✨ Nuevo post #bienestar #mindfulness #salud",
+          "hashtags": ["bienestar", "mindfulness", "salud"],
+          "likes": 8276,
+          "comments": 368,
+          "views": null,
+          "postedAt": "2026-10-23T20:00:00Z"
+        },
+        {
+          "id": "fiorella.salud.demo-9",
+          "type": "video",
+          "caption": "Familia ✨ Nuevo post #mama #crianza #familia",
+          "hashtags": ["mama", "crianza", "familia"],
+          "likes": 11933,
+          "comments": 362,
+          "views": 214794,
+          "postedAt": "2026-10-19T20:00:00Z"
+        },
+        {
+          "id": "fiorella.salud.demo-10",
+          "type": "video",
+          "caption": "Salud mental ✨ Guárdalo para después #bienestar #mindfulness #salud",
+          "hashtags": ["bienestar", "mindfulness", "salud"],
+          "likes": 6199,
+          "comments": 267,
+          "views": 123980,
+          "postedAt": "2026-10-24T20:00:00Z"
+        },
+        {
+          "id": "fiorella.salud.demo-11",
+          "type": "image",
+          "caption": "Bienestar ✨ Guárdalo para después #bienestar #mindfulness #salud",
+          "hashtags": ["bienestar", "mindfulness", "salud"],
+          "likes": 12915,
+          "comments": 677,
+          "views": null,
+          "postedAt": "2026-10-31T20:00:00Z"
+        },
+        {
+          "id": "fiorella.salud.demo-12",
+          "type": "image",
+          "caption": "Salud mental ✨ Cuéntenme en comentarios #bienestar #mindfulness #salud",
+          "hashtags": ["bienestar", "mindfulness", "salud"],
+          "likes": 10139,
+          "comments": 237,
+          "views": null,
+          "postedAt": "2026-10-18T20:00:00Z"
+        }
+      ],
+      "fetchedAt": "2026-11-20T20:00:00Z",
+      "source": "mock"
+    },
+    "declared": {
+      "role": "creator",
+      "niches": ["salud-bienestar", "familia-maternidad"],
+      "city": "Piura",
+      "shortBio": "Creo contenido de salud y bienestar para una comunidad real.",
+      "accountType": "creator"
+    },
+    "services": [
+      {
+        "id": "433aed8c-0163-4b07-8323-c66f03a2ded0",
+        "type": "publicacion-patrocinada",
+        "format": "story",
+        "pricePen": 4426,
+        "description": "Publicación patrocinada con brief previo"
+      }
+    ]
+  },
+  {
+    "id": "26173a2e-15f8-42ac-92a5-cd35d3fe3fc3",
+    "role": "creator",
+    "status": "unclaimed",
+    "ownerUserId": null,
+    "snapshot": {
+      "handle": "gonzalo.familia.demo",
+      "fullName": "Gonzalo · familia y maternidad",
+      "biography": "Maternidad y review de celulares 📍Lima · colaboraciones por DM",
+      "followers": 1002577,
+      "following": 282,
+      "postsCount": 1162,
+      "isBusiness": true,
+      "businessCategory": "Personal blog",
+      "isPrivate": false,
+      "isVerified": true,
+      "profilePicUrl": null,
+      "externalUrl": "https://example.com/gonzalo",
+      "posts": [
+        {
+          "id": "gonzalo.familia.demo-1",
+          "type": "carousel",
+          "caption": "Crianza ✨ ¿Qué opinan? #mama #crianza #familia",
+          "hashtags": ["mama", "crianza", "familia"],
+          "likes": 22455,
+          "comments": 1034,
+          "views": null,
+          "postedAt": "2026-11-20T20:00:00Z"
+        },
+        {
+          "id": "gonzalo.familia.demo-2",
+          "type": "video",
+          "caption": "Gadgets ✨ ¿Qué opinan? #tech #gadgets #unboxing",
+          "hashtags": ["tech", "gadgets", "unboxing"],
+          "likes": 18408,
+          "comments": 793,
+          "views": 165672,
+          "postedAt": "2026-11-18T20:00:00Z"
+        },
+        {
+          "id": "gonzalo.familia.demo-3",
+          "type": "video",
+          "caption": "Tecnología ✨ ¿Qué opinan? #tech #gadgets #unboxing",
+          "hashtags": ["tech", "gadgets", "unboxing"],
+          "likes": 16015,
+          "comments": 942,
+          "views": 144135,
+          "postedAt": "2026-11-14T20:00:00Z"
+        },
+        {
+          "id": "gonzalo.familia.demo-4",
+          "type": "video",
+          "caption": "Familia ✨ Guárdalo para después #mama #crianza #familia",
+          "hashtags": ["mama", "crianza", "familia"],
+          "likes": 10976,
+          "comments": 224,
+          "views": 219520,
+          "postedAt": "2026-11-08T20:00:00Z"
+        },
+        {
+          "id": "gonzalo.familia.demo-5",
+          "type": "image",
+          "caption": "Maternidad ✨ ¿Qué opinan? #mama #crianza #familia",
+          "hashtags": ["mama", "crianza", "familia"],
+          "likes": 19968,
+          "comments": 887,
+          "views": null,
+          "postedAt": "2026-11-04T20:00:00Z"
+        },
+        {
+          "id": "gonzalo.familia.demo-6",
+          "type": "video",
+          "caption": "Review de celulares ✨ Nuevo post #tech #gadgets #unboxing",
+          "hashtags": ["tech", "gadgets", "unboxing"],
+          "likes": 24330,
+          "comments": 988,
+          "views": 413610,
+          "postedAt": "2026-11-05T20:00:00Z"
+        },
+        {
+          "id": "gonzalo.familia.demo-7",
+          "type": "video",
+          "caption": "Review de celulares ✨ Nuevo post #tech #gadgets #unboxing",
+          "hashtags": ["tech", "gadgets", "unboxing"],
+          "likes": 24516,
+          "comments": 1467,
+          "views": 318708,
+          "postedAt": "2026-11-08T20:00:00Z"
+        },
+        {
+          "id": "gonzalo.familia.demo-8",
+          "type": "video",
+          "caption": "Review de celulares ✨ ¿Qué opinan? #tech #gadgets #unboxing",
+          "hashtags": ["tech", "gadgets", "unboxing"],
+          "likes": 12531,
+          "comments": 572,
+          "views": 125310,
+          "postedAt": "2026-11-06T20:00:00Z"
+        },
+        {
+          "id": "gonzalo.familia.demo-9",
+          "type": "carousel",
+          "caption": "Crianza ✨ Nuevo post #mama #crianza #familia",
+          "hashtags": ["mama", "crianza", "familia"],
+          "likes": 20744,
+          "comments": 1226,
+          "views": null,
+          "postedAt": "2026-10-27T20:00:00Z"
+        },
+        {
+          "id": "gonzalo.familia.demo-10",
+          "type": "video",
+          "caption": "Tecnología ✨ Nuevo post #tech #gadgets #unboxing",
+          "hashtags": ["tech", "gadgets", "unboxing"],
+          "likes": 18403,
+          "comments": 445,
+          "views": 349657,
+          "postedAt": "2026-11-02T20:00:00Z"
+        },
+        {
+          "id": "gonzalo.familia.demo-11",
+          "type": "carousel",
+          "caption": "Tecnología ✨ Cuéntenme en comentarios #tech #gadgets #unboxing",
+          "hashtags": ["tech", "gadgets", "unboxing"],
+          "likes": 23761,
+          "comments": 793,
+          "views": null,
+          "postedAt": "2026-10-31T20:00:00Z"
+        },
+        {
+          "id": "gonzalo.familia.demo-12",
+          "type": "video",
+          "caption": "Tecnología ✨ Nuevo post #tech #gadgets #unboxing",
+          "hashtags": ["tech", "gadgets", "unboxing"],
+          "likes": 17760,
+          "comments": 567,
+          "views": 355200,
+          "postedAt": "2026-10-18T20:00:00Z"
+        }
+      ],
+      "fetchedAt": "2026-11-20T20:00:00Z",
+      "source": "mock"
+    },
+    "declared": null,
+    "services": []
+  },
+  {
+    "id": "540a5f63-cde3-4d5a-9ff7-9d379d019695",
+    "role": "creator",
+    "status": "verified",
+    "ownerUserId": "7d2f2bb3-62a5-4ae5-a62d-50baee39720b",
+    "snapshot": {
+      "handle": "majo.mascotas.demo",
+      "fullName": "María José · mascotas",
+      "biography": "Adopción y tips de estudio 📍Arequipa · colaboraciones por DM",
+      "followers": 301484,
+      "following": 614,
+      "postsCount": 620,
+      "isBusiness": false,
+      "businessCategory": "Pet Service",
+      "isPrivate": false,
+      "isVerified": false,
+      "profilePicUrl": null,
+      "externalUrl": null,
+      "posts": [
+        {
+          "id": "majo.mascotas.demo-1",
+          "type": "video",
+          "caption": "Perrito ✨ Guárdalo para después #mascotas #perros #gatos",
+          "hashtags": ["mascotas", "perros", "gatos"],
+          "likes": 18854,
+          "comments": 820,
+          "views": 282810,
+          "postedAt": "2026-11-20T20:00:00Z"
+        },
+        {
+          "id": "majo.mascotas.demo-2",
+          "type": "video",
+          "caption": "Perrito ✨ Guárdalo para después #mascotas #perros #gatos",
+          "hashtags": ["mascotas", "perros", "gatos"],
+          "likes": 20368,
+          "comments": 1036,
+          "views": 224048,
+          "postedAt": "2026-11-16T20:00:00Z"
+        },
+        {
+          "id": "majo.mascotas.demo-3",
+          "type": "carousel",
+          "caption": "Adopción ✨ Guárdalo para después #mascotas #perros #gatos",
+          "hashtags": ["mascotas", "perros", "gatos"],
+          "likes": 14891,
+          "comments": 578,
+          "views": null,
+          "postedAt": "2026-11-12T20:00:00Z"
+        },
+        {
+          "id": "majo.mascotas.demo-4",
+          "type": "video",
+          "caption": "Perrito ✨ ¿Qué opinan? #mascotas #perros #gatos",
+          "hashtags": ["mascotas", "perros", "gatos"],
+          "likes": 21161,
+          "comments": 859,
+          "views": 359737,
+          "postedAt": "2026-11-11T20:00:00Z"
+        },
+        {
+          "id": "majo.mascotas.demo-5",
+          "type": "video",
+          "caption": "Aprende ✨ ¿Qué opinan? #educacion #aprende #tips",
+          "hashtags": ["educacion", "aprende", "tips"],
+          "likes": 20433,
+          "comments": 656,
+          "views": 245196,
+          "postedAt": "2026-11-12T20:00:00Z"
+        },
+        {
+          "id": "majo.mascotas.demo-6",
+          "type": "carousel",
+          "caption": "Perrito ✨ Guárdalo para después #mascotas #perros #gatos",
+          "hashtags": ["mascotas", "perros", "gatos"],
+          "likes": 15834,
+          "comments": 912,
+          "views": null,
+          "postedAt": "2026-10-31T20:00:00Z"
+        },
+        {
+          "id": "majo.mascotas.demo-7",
+          "type": "carousel",
+          "caption": "Aprende ✨ Guárdalo para después #educacion #aprende #tips",
+          "hashtags": ["educacion", "aprende", "tips"],
+          "likes": 19468,
+          "comments": 1013,
+          "views": null,
+          "postedAt": "2026-10-27T20:00:00Z"
+        },
+        {
+          "id": "majo.mascotas.demo-8",
+          "type": "carousel",
+          "caption": "Adopción ✨ Nuevo post #mascotas #perros #gatos",
+          "hashtags": ["mascotas", "perros", "gatos"],
+          "likes": 18999,
+          "comments": 731,
+          "views": null,
+          "postedAt": "2026-10-30T20:00:00Z"
+        },
+        {
+          "id": "majo.mascotas.demo-9",
+          "type": "carousel",
+          "caption": "Gatos ✨ Nuevo post #mascotas #perros #gatos",
+          "hashtags": ["mascotas", "perros", "gatos"],
+          "likes": 19673,
+          "comments": 661,
+          "views": null,
+          "postedAt": "2026-10-27T20:00:00Z"
+        },
+        {
+          "id": "majo.mascotas.demo-10",
+          "type": "image",
+          "caption": "Perrito ✨ ¿Qué opinan? #mascotas #perros #gatos",
+          "hashtags": ["mascotas", "perros", "gatos"],
+          "likes": 11828,
+          "comments": 688,
+          "views": null,
+          "postedAt": "2026-10-24T20:00:00Z"
+        },
+        {
+          "id": "majo.mascotas.demo-11",
+          "type": "video",
+          "caption": "Adopción ✨ Guárdalo para después #mascotas #perros #gatos",
+          "hashtags": ["mascotas", "perros", "gatos"],
+          "likes": 18244,
+          "comments": 987,
+          "views": 291904,
+          "postedAt": "2026-10-11T20:00:00Z"
+        },
+        {
+          "id": "majo.mascotas.demo-12",
+          "type": "image",
+          "caption": "Gatos ✨ Guárdalo para después #mascotas #perros #gatos",
+          "hashtags": ["mascotas", "perros", "gatos"],
+          "likes": 20316,
+          "comments": 642,
+          "views": null,
+          "postedAt": "2026-10-18T20:00:00Z"
+        }
+      ],
+      "fetchedAt": "2026-11-20T20:00:00Z",
+      "source": "mock"
+    },
+    "declared": {
+      "role": "creator",
+      "niches": ["mascotas", "educacion"],
+      "city": "Trujillo",
+      "shortBio": "Creo contenido de mascotas para una comunidad real.",
+      "accountType": "creator"
+    },
+    "services": [
+      {
+        "id": "f046dc0a-8a7e-4f2a-8767-4c34c02a3763",
+        "type": "publicacion-patrocinada",
+        "format": "post",
+        "pricePen": 4080,
+        "description": "Publicación patrocinada con brief previo"
+      },
+      {
+        "id": "cf29ef8e-dd7e-49f5-9b04-9ed17e2bf71c",
+        "type": "canje",
+        "format": "story",
+        "pricePen": 4862,
+        "description": "Canje de producto con brief previo"
+      },
+      {
+        "id": "a6651999-533a-4f64-9e23-6c785655cf2c",
+        "type": "contenido-ugc",
+        "format": "story",
+        "pricePen": 3618,
+        "description": "Contenido UGC con brief previo"
+      }
+    ]
+  },
+  {
+    "id": "9ed67cfa-6566-4866-8c14-330e3ffbf556",
+    "role": "creator",
+    "status": "unclaimed",
+    "ownerUserId": null,
+    "snapshot": {
+      "handle": "piero.arte.demo",
+      "fullName": "Piero · arte y diseno",
+      "biography": "Arte y destino 📍Piura · colaboraciones por DM",
+      "followers": 133599,
+      "following": 204,
+      "postsCount": 259,
+      "isBusiness": true,
+      "businessCategory": "Artist",
+      "isPrivate": false,
+      "isVerified": false,
+      "profilePicUrl": null,
+      "externalUrl": null,
+      "posts": [
+        {
+          "id": "piero.arte.demo-1",
+          "type": "carousel",
+          "caption": "Diseño gráfico ✨ Nuevo post #ilustracion #arte #diseno",
+          "hashtags": ["ilustracion", "arte", "diseno"],
+          "likes": 3216,
+          "comments": 105,
+          "views": null,
+          "postedAt": "2026-11-20T20:00:00Z"
+        },
+        {
+          "id": "piero.arte.demo-2",
+          "type": "video",
+          "caption": "Ilustración ✨ Cuéntenme en comentarios #ilustracion #arte #diseno",
+          "hashtags": ["ilustracion", "arte", "diseno"],
+          "likes": 2783,
+          "comments": 152,
+          "views": 36179,
+          "postedAt": "2026-11-16T20:00:00Z"
+        },
+        {
+          "id": "piero.arte.demo-3",
+          "type": "image",
+          "caption": "Diseño gráfico ✨ Cuéntenme en comentarios #ilustracion #arte #diseno",
+          "hashtags": ["ilustracion", "arte", "diseno"],
+          "likes": 3555,
+          "comments": 82,
+          "views": null,
+          "postedAt": "2026-11-14T20:00:00Z"
+        },
+        {
+          "id": "piero.arte.demo-4",
+          "type": "carousel",
+          "caption": "Destino ✨ Guárdalo para después #viajes #travel #peru",
+          "hashtags": ["viajes", "travel", "peru"],
+          "likes": 2944,
+          "comments": 134,
+          "views": null,
+          "postedAt": "2026-11-14T20:00:00Z"
+        },
+        {
+          "id": "piero.arte.demo-5",
+          "type": "image",
+          "caption": "Destino ✨ Guárdalo para después #viajes #travel #peru",
+          "hashtags": ["viajes", "travel", "peru"],
+          "likes": 1764,
+          "comments": 89,
+          "views": null,
+          "postedAt": "2026-11-12T20:00:00Z"
+        },
+        {
+          "id": "piero.arte.demo-6",
+          "type": "image",
+          "caption": "Destino ✨ ¿Qué opinan? #viajes #travel #peru",
+          "hashtags": ["viajes", "travel", "peru"],
+          "likes": 2278,
+          "comments": 73,
+          "views": null,
+          "postedAt": "2026-11-10T20:00:00Z"
+        },
+        {
+          "id": "piero.arte.demo-7",
+          "type": "video",
+          "caption": "Ilustración ✨ Nuevo post #ilustracion #arte #diseno",
+          "hashtags": ["ilustracion", "arte", "diseno"],
+          "likes": 2001,
+          "comments": 105,
+          "views": 32016,
+          "postedAt": "2026-11-02T20:00:00Z"
+        },
+        {
+          "id": "piero.arte.demo-8",
+          "type": "video",
+          "caption": "Destino ✨ Guárdalo para después #viajes #travel #peru",
+          "hashtags": ["viajes", "travel", "peru"],
+          "likes": 3424,
+          "comments": 85,
+          "views": 44512,
+          "postedAt": "2026-10-30T20:00:00Z"
+        },
+        {
+          "id": "piero.arte.demo-9",
+          "type": "video",
+          "caption": "Diseño gráfico ✨ ¿Qué opinan? #ilustracion #arte #diseno",
+          "hashtags": ["ilustracion", "arte", "diseno"],
+          "likes": 3334,
+          "comments": 74,
+          "views": 63346,
+          "postedAt": "2026-10-19T20:00:00Z"
+        },
+        {
+          "id": "piero.arte.demo-10",
+          "type": "image",
+          "caption": "Arte ✨ ¿Qué opinan? #ilustracion #arte #diseno",
+          "hashtags": ["ilustracion", "arte", "diseno"],
+          "likes": 3532,
+          "comments": 130,
+          "views": null,
+          "postedAt": "2026-10-15T20:00:00Z"
+        },
+        {
+          "id": "piero.arte.demo-11",
+          "type": "carousel",
+          "caption": "Viaje ✨ Guárdalo para después #viajes #travel #peru",
+          "hashtags": ["viajes", "travel", "peru"],
+          "likes": 2516,
+          "comments": 112,
+          "views": null,
+          "postedAt": "2026-10-11T20:00:00Z"
+        },
+        {
+          "id": "piero.arte.demo-12",
+          "type": "carousel",
+          "caption": "Ilustración ✨ Guárdalo para después #ilustracion #arte #diseno",
+          "hashtags": ["ilustracion", "arte", "diseno"],
+          "likes": 2564,
+          "comments": 97,
+          "views": null,
+          "postedAt": "2026-10-07T20:00:00Z"
+        }
+      ],
+      "fetchedAt": "2026-11-20T20:00:00Z",
+      "source": "mock"
+    },
+    "declared": null,
+    "services": []
+  },
+  {
+    "id": "50bd30b1-1ef7-4412-b68d-b50f70f40bd9",
+    "role": "creator",
+    "status": "verified",
+    "ownerUserId": "c5700893-a34b-4834-b1aa-be1f6f210579",
+    "snapshot": {
+      "handle": "alessandra.emprendimiento.demo",
+      "fullName": "Alessandra · emprendimiento",
+      "biography": "Marketing digital y skincare 📍Cusco · colaboraciones por DM",
+      "followers": 73094,
+      "following": 687,
+      "postsCount": 108,
+      "isBusiness": true,
+      "businessCategory": "Entrepreneur",
+      "isPrivate": false,
+      "isVerified": false,
+      "profilePicUrl": null,
+      "externalUrl": null,
+      "posts": [
+        {
+          "id": "alessandra.emprendimiento.demo-1",
+          "type": "video",
+          "caption": "Negocio ✨ Guárdalo para después #emprendimiento #negocios #marketing",
+          "hashtags": ["emprendimiento", "negocios", "marketing"],
+          "likes": 3772,
+          "comments": 100,
+          "views": 56580,
+          "postedAt": "2026-11-20T20:00:00Z"
+        },
+        {
+          "id": "alessandra.emprendimiento.demo-2",
+          "type": "video",
+          "caption": "Emprender ✨ Cuéntenme en comentarios #emprendimiento #negocios #marketing",
+          "hashtags": ["emprendimiento", "negocios", "marketing"],
+          "likes": 3929,
+          "comments": 195,
+          "views": 66793,
+          "postedAt": "2026-11-17T20:00:00Z"
+        },
+        {
+          "id": "alessandra.emprendimiento.demo-3",
+          "type": "carousel",
+          "caption": "Marketing digital ✨ ¿Qué opinan? #emprendimiento #negocios #marketing",
+          "hashtags": ["emprendimiento", "negocios", "marketing"],
+          "likes": 2180,
+          "comments": 85,
+          "views": null,
+          "postedAt": "2026-11-12T20:00:00Z"
+        },
+        {
+          "id": "alessandra.emprendimiento.demo-4",
+          "type": "carousel",
+          "caption": "Marketing digital ✨ ¿Qué opinan? #emprendimiento #negocios #marketing",
+          "hashtags": ["emprendimiento", "negocios", "marketing"],
+          "likes": 4051,
+          "comments": 155,
+          "views": null,
+          "postedAt": "2026-11-11T20:00:00Z"
+        },
+        {
+          "id": "alessandra.emprendimiento.demo-5",
+          "type": "video",
+          "caption": "Negocio ✨ Cuéntenme en comentarios #emprendimiento #negocios #marketing",
+          "hashtags": ["emprendimiento", "negocios", "marketing"],
+          "likes": 4403,
+          "comments": 146,
+          "views": 66045,
+          "postedAt": "2026-11-08T20:00:00Z"
+        },
+        {
+          "id": "alessandra.emprendimiento.demo-6",
+          "type": "video",
+          "caption": "Rutina de belleza ✨ Guárdalo para después #makeup #skincare #belleza",
+          "hashtags": ["makeup", "skincare", "belleza"],
+          "likes": 2158,
+          "comments": 52,
+          "views": 30212,
+          "postedAt": "2026-11-05T20:00:00Z"
+        },
+        {
+          "id": "alessandra.emprendimiento.demo-7",
+          "type": "carousel",
+          "caption": "Negocio ✨ Guárdalo para después #emprendimiento #negocios #marketing",
+          "hashtags": ["emprendimiento", "negocios", "marketing"],
+          "likes": 3948,
+          "comments": 136,
+          "views": null,
+          "postedAt": "2026-10-27T20:00:00Z"
+        },
+        {
+          "id": "alessandra.emprendimiento.demo-8",
+          "type": "image",
+          "caption": "Negocio ✨ Guárdalo para después #emprendimiento #negocios #marketing",
+          "hashtags": ["emprendimiento", "negocios", "marketing"],
+          "likes": 3608,
+          "comments": 91,
+          "views": null,
+          "postedAt": "2026-10-30T20:00:00Z"
+        },
+        {
+          "id": "alessandra.emprendimiento.demo-9",
+          "type": "carousel",
+          "caption": "Emprender ✨ Cuéntenme en comentarios #emprendimiento #negocios #marketing",
+          "hashtags": ["emprendimiento", "negocios", "marketing"],
+          "likes": 3382,
+          "comments": 93,
+          "views": null,
+          "postedAt": "2026-11-04T20:00:00Z"
+        },
+        {
+          "id": "alessandra.emprendimiento.demo-10",
+          "type": "carousel",
+          "caption": "Negocio ✨ Guárdalo para después #emprendimiento #negocios #marketing",
+          "hashtags": ["emprendimiento", "negocios", "marketing"],
+          "likes": 4340,
+          "comments": 196,
+          "views": null,
+          "postedAt": "2026-10-24T20:00:00Z"
+        },
+        {
+          "id": "alessandra.emprendimiento.demo-11",
+          "type": "video",
+          "caption": "Emprender ✨ ¿Qué opinan? #emprendimiento #negocios #marketing",
+          "hashtags": ["emprendimiento", "negocios", "marketing"],
+          "likes": 3953,
+          "comments": 175,
+          "views": 67201,
+          "postedAt": "2026-10-21T20:00:00Z"
+        },
+        {
+          "id": "alessandra.emprendimiento.demo-12",
+          "type": "image",
+          "caption": "Negocio ✨ Nuevo post #emprendimiento #negocios #marketing",
+          "hashtags": ["emprendimiento", "negocios", "marketing"],
+          "likes": 2925,
+          "comments": 63,
+          "views": null,
+          "postedAt": "2026-10-29T20:00:00Z"
+        }
+      ],
+      "fetchedAt": "2026-11-20T20:00:00Z",
+      "source": "mock"
+    },
+    "declared": {
+      "role": "creator",
+      "niches": ["emprendimiento", "belleza"],
+      "city": "Arequipa",
+      "shortBio": "Creo contenido de emprendimiento para una comunidad real.",
+      "accountType": "business"
+    },
+    "services": [
+      {
+        "id": "07a8b150-e7ff-4cea-8f93-c6b15b064d27",
+        "type": "publicacion-patrocinada",
+        "format": "combo",
+        "pricePen": 1371,
+        "description": "Publicación patrocinada con brief previo"
+      },
+      {
+        "id": "e3d9fe44-840c-48df-9c55-980a6ea19d6f",
+        "type": "canje",
+        "format": "post",
+        "pricePen": 571,
+        "description": "Canje de producto con brief previo"
+      }
+    ]
+  },
+  {
+    "id": "3e5da463-5943-4ed3-9c79-8ae9d98c08e3",
+    "role": "creator",
+    "status": "unclaimed",
+    "ownerUserId": null,
+    "snapshot": {
+      "handle": "rodrigo.hogar.demo",
+      "fullName": "Rodrigo · hogar y deco",
+      "biography": "Decoración y rutina de belleza 📍Trujillo · colaboraciones por DM",
+      "followers": 211068,
+      "following": 382,
+      "postsCount": 642,
+      "isBusiness": false,
+      "businessCategory": "Interior Design Studio",
+      "isPrivate": false,
+      "isVerified": false,
+      "profilePicUrl": null,
+      "externalUrl": "https://example.com/rodrigo",
+      "posts": [
+        {
+          "id": "rodrigo.hogar.demo-1",
+          "type": "image",
+          "caption": "Organización ✨ Guárdalo para después #deco #hogar #interiorismo",
+          "hashtags": ["deco", "hogar", "interiorismo"],
+          "likes": 15963,
+          "comments": 824,
+          "views": null,
+          "postedAt": "2026-11-20T20:00:00Z"
+        },
+        {
+          "id": "rodrigo.hogar.demo-2",
+          "type": "carousel",
+          "caption": "Decoración ✨ Guárdalo para después #deco #hogar #interiorismo",
+          "hashtags": ["deco", "hogar", "interiorismo"],
+          "likes": 15971,
+          "comments": 755,
+          "views": null,
+          "postedAt": "2026-11-16T20:00:00Z"
+        },
+        {
+          "id": "rodrigo.hogar.demo-3",
+          "type": "image",
+          "caption": "Decoración ✨ ¿Qué opinan? #deco #hogar #interiorismo",
+          "hashtags": ["deco", "hogar", "interiorismo"],
+          "likes": 7757,
+          "comments": 261,
+          "views": null,
+          "postedAt": "2026-11-12T20:00:00Z"
+        },
+        {
+          "id": "rodrigo.hogar.demo-4",
+          "type": "carousel",
+          "caption": "Organización ✨ ¿Qué opinan? #deco #hogar #interiorismo",
+          "hashtags": ["deco", "hogar", "interiorismo"],
+          "likes": 15898,
+          "comments": 408,
+          "views": null,
+          "postedAt": "2026-11-14T20:00:00Z"
+        },
+        {
+          "id": "rodrigo.hogar.demo-5",
+          "type": "image",
+          "caption": "Organización ✨ Cuéntenme en comentarios #deco #hogar #interiorismo",
+          "hashtags": ["deco", "hogar", "interiorismo"],
+          "likes": 16020,
+          "comments": 322,
+          "views": null,
+          "postedAt": "2026-11-12T20:00:00Z"
+        },
+        {
+          "id": "rodrigo.hogar.demo-6",
+          "type": "video",
+          "caption": "Hogar ✨ Cuéntenme en comentarios #deco #hogar #interiorismo",
+          "hashtags": ["deco", "hogar", "interiorismo"],
+          "likes": 12329,
+          "comments": 491,
+          "views": 209593,
+          "postedAt": "2026-11-10T20:00:00Z"
+        },
+        {
+          "id": "rodrigo.hogar.demo-7",
+          "type": "video",
+          "caption": "Decoración ✨ Nuevo post #deco #hogar #interiorismo",
+          "hashtags": ["deco", "hogar", "interiorismo"],
+          "likes": 9985,
+          "comments": 215,
+          "views": 99850,
+          "postedAt": "2026-11-08T20:00:00Z"
+        },
+        {
+          "id": "rodrigo.hogar.demo-8",
+          "type": "carousel",
+          "caption": "Hogar ✨ Nuevo post #deco #hogar #interiorismo",
+          "hashtags": ["deco", "hogar", "interiorismo"],
+          "likes": 16148,
+          "comments": 524,
+          "views": null,
+          "postedAt": "2026-10-23T20:00:00Z"
+        },
+        {
+          "id": "rodrigo.hogar.demo-9",
+          "type": "carousel",
+          "caption": "Organización ✨ Guárdalo para después #deco #hogar #interiorismo",
+          "hashtags": ["deco", "hogar", "interiorismo"],
+          "likes": 12791,
+          "comments": 703,
+          "views": null,
+          "postedAt": "2026-10-27T20:00:00Z"
+        },
+        {
+          "id": "rodrigo.hogar.demo-10",
+          "type": "video",
+          "caption": "Maquillaje ✨ Cuéntenme en comentarios #makeup #skincare #belleza",
+          "hashtags": ["makeup", "skincare", "belleza"],
+          "likes": 16198,
+          "comments": 787,
+          "views": 259168,
+          "postedAt": "2026-10-24T20:00:00Z"
+        },
+        {
+          "id": "rodrigo.hogar.demo-11",
+          "type": "video",
+          "caption": "Skincare ✨ Nuevo post #makeup #skincare #belleza",
+          "hashtags": ["makeup", "skincare", "belleza"],
+          "likes": 7328,
+          "comments": 287,
+          "views": 73280,
+          "postedAt": "2026-10-31T20:00:00Z"
+        },
+        {
+          "id": "rodrigo.hogar.demo-12",
+          "type": "image",
+          "caption": "Hogar ✨ Nuevo post #deco #hogar #interiorismo",
+          "hashtags": ["deco", "hogar", "interiorismo"],
+          "likes": 13827,
+          "comments": 765,
+          "views": null,
+          "postedAt": "2026-10-07T20:00:00Z"
+        }
+      ],
+      "fetchedAt": "2026-11-20T20:00:00Z",
+      "source": "mock"
+    },
+    "declared": null,
+    "services": []
+  },
+  {
+    "id": "14485fae-a78f-478e-a678-2c6136e16a79",
+    "role": "creator",
+    "status": "verified",
+    "ownerUserId": "7d2f2bb3-62a5-4ae5-a62d-50baee39720b",
+    "snapshot": {
+      "handle": "micaela.automotriz.demo",
+      "fullName": "Micaela · automotriz",
+      "biography": "Test drive y rutina de belleza 📍Cusco · colaboraciones por DM",
+      "followers": 19777,
+      "following": 645,
+      "postsCount": 1092,
+      "isBusiness": false,
+      "businessCategory": "Automotive",
+      "isPrivate": false,
+      "isVerified": false,
+      "profilePicUrl": null,
+      "externalUrl": null,
+      "posts": [
+        {
+          "id": "micaela.automotriz.demo-1",
+          "type": "video",
+          "caption": "Test drive ✨ Guárdalo para después #autos #motor #cars",
+          "hashtags": ["autos", "motor", "cars"],
+          "likes": 357,
+          "comments": 19,
+          "views": 4284,
+          "postedAt": "2026-11-20T20:00:00Z"
+        },
+        {
+          "id": "micaela.automotriz.demo-2",
+          "type": "video",
+          "caption": "Test drive ✨ ¿Qué opinan? #autos #motor #cars",
+          "hashtags": ["autos", "motor", "cars"],
+          "likes": 567,
+          "comments": 24,
+          "views": 10206,
+          "postedAt": "2026-11-18T20:00:00Z"
+        },
+        {
+          "id": "micaela.automotriz.demo-3",
+          "type": "video",
+          "caption": "Motor ✨ ¿Qué opinan? #autos #motor #cars",
+          "hashtags": ["autos", "motor", "cars"],
+          "likes": 268,
+          "comments": 13,
+          "views": 2144,
+          "postedAt": "2026-11-14T20:00:00Z"
+        },
+        {
+          "id": "micaela.automotriz.demo-4",
+          "type": "video",
+          "caption": "Motor ✨ Guárdalo para después #autos #motor #cars",
+          "hashtags": ["autos", "motor", "cars"],
+          "likes": 370,
+          "comments": 12,
+          "views": 5920,
+          "postedAt": "2026-11-11T20:00:00Z"
+        },
+        {
+          "id": "micaela.automotriz.demo-5",
+          "type": "video",
+          "caption": "Maquillaje ✨ ¿Qué opinan? #makeup #skincare #belleza",
+          "hashtags": ["makeup", "skincare", "belleza"],
+          "likes": 549,
+          "comments": 27,
+          "views": 10431,
+          "postedAt": "2026-11-04T20:00:00Z"
+        },
+        {
+          "id": "micaela.automotriz.demo-6",
+          "type": "carousel",
+          "caption": "Motor ✨ ¿Qué opinan? #autos #motor #cars",
+          "hashtags": ["autos", "motor", "cars"],
+          "likes": 443,
+          "comments": 16,
+          "views": null,
+          "postedAt": "2026-11-05T20:00:00Z"
+        },
+        {
+          "id": "micaela.automotriz.demo-7",
+          "type": "image",
+          "caption": "Autos ✨ ¿Qué opinan? #autos #motor #cars",
+          "hashtags": ["autos", "motor", "cars"],
+          "likes": 446,
+          "comments": 23,
+          "views": null,
+          "postedAt": "2026-11-02T20:00:00Z"
+        },
+        {
+          "id": "micaela.automotriz.demo-8",
+          "type": "video",
+          "caption": "Autos ✨ Nuevo post #autos #motor #cars",
+          "hashtags": ["autos", "motor", "cars"],
+          "likes": 357,
+          "comments": 12,
+          "views": 6069,
+          "postedAt": "2026-10-23T20:00:00Z"
+        },
+        {
+          "id": "micaela.automotriz.demo-9",
+          "type": "video",
+          "caption": "Maquillaje ✨ Guárdalo para después #makeup #skincare #belleza",
+          "hashtags": ["makeup", "skincare", "belleza"],
+          "likes": 517,
+          "comments": 14,
+          "views": 9306,
+          "postedAt": "2026-10-27T20:00:00Z"
+        },
+        {
+          "id": "micaela.automotriz.demo-10",
+          "type": "carousel",
+          "caption": "Skincare ✨ Cuéntenme en comentarios #makeup #skincare #belleza",
+          "hashtags": ["makeup", "skincare", "belleza"],
+          "likes": 365,
+          "comments": 20,
+          "views": null,
+          "postedAt": "2026-10-15T20:00:00Z"
+        },
+        {
+          "id": "micaela.automotriz.demo-11",
+          "type": "image",
+          "caption": "Autos ✨ Nuevo post #autos #motor #cars",
+          "hashtags": ["autos", "motor", "cars"],
+          "likes": 522,
+          "comments": 24,
+          "views": null,
+          "postedAt": "2026-10-11T20:00:00Z"
+        },
+        {
+          "id": "micaela.automotriz.demo-12",
+          "type": "image",
+          "caption": "Skincare ✨ Nuevo post #makeup #skincare #belleza",
+          "hashtags": ["makeup", "skincare", "belleza"],
+          "likes": 549,
+          "comments": 13,
+          "views": null,
+          "postedAt": "2026-10-07T20:00:00Z"
+        }
+      ],
+      "fetchedAt": "2026-11-20T20:00:00Z",
+      "source": "mock"
+    },
+    "declared": {
+      "role": "creator",
+      "niches": ["automotriz", "belleza"],
+      "city": "Lima",
+      "shortBio": "Creo contenido de automotriz para una comunidad real.",
+      "accountType": "creator"
+    },
+    "services": [
+      {
+        "id": "734d3c6f-81be-412a-b35a-4fd462696897",
+        "type": "publicacion-patrocinada",
+        "format": "post",
+        "pricePen": 811,
+        "description": "Publicación patrocinada con brief previo"
+      },
+      {
+        "id": "89fe6ca7-f791-427f-a8eb-333767db7bd6",
+        "type": "canje",
+        "format": "post",
+        "pricePen": 1136,
+        "description": "Canje de producto con brief previo"
+      },
+      {
+        "id": "e1bfbca1-82be-467f-a499-a24456f93938",
+        "type": "contenido-ugc",
+        "format": "combo",
+        "pricePen": 1373,
+        "description": "Contenido UGC con brief previo"
+      }
+    ]
+  },
+  {
+    "id": "973962e3-80d2-43f3-9c77-1972eff1bf4d",
+    "role": "creator",
+    "status": "unclaimed",
+    "ownerUserId": null,
+    "snapshot": {
+      "handle": "sebastian.lifestyle.demo",
+      "fullName": "Sebastián · lifestyle",
+      "biography": "Mi día y rutina de belleza 📍Lima · colaboraciones por DM",
+      "followers": 767439,
+      "following": 548,
+      "postsCount": 192,
+      "isBusiness": true,
+      "businessCategory": "Blogger",
+      "isPrivate": false,
+      "isVerified": false,
+      "profilePicUrl": null,
+      "externalUrl": "https://example.com/sebastian",
+      "posts": [
+        {
+          "id": "sebastian.lifestyle.demo-1",
+          "type": "carousel",
+          "caption": "Mi día ✨ Cuéntenme en comentarios #lifestyle #lima #vlog",
+          "hashtags": ["lifestyle", "lima", "vlog"],
+          "likes": 9605,
+          "comments": 329,
+          "views": null,
+          "postedAt": "2026-11-20T20:00:00Z"
+        },
+        {
+          "id": "sebastian.lifestyle.demo-2",
+          "type": "carousel",
+          "caption": "Rutina ✨ Nuevo post #lifestyle #lima #vlog",
+          "hashtags": ["lifestyle", "lima", "vlog"],
+          "likes": 11972,
+          "comments": 709,
+          "views": null,
+          "postedAt": "2026-11-16T20:00:00Z"
+        },
+        {
+          "id": "sebastian.lifestyle.demo-3",
+          "type": "carousel",
+          "caption": "Vida en Lima ✨ Guárdalo para después #lifestyle #lima #vlog",
+          "hashtags": ["lifestyle", "lima", "vlog"],
+          "likes": 12349,
+          "comments": 592,
+          "views": null,
+          "postedAt": "2026-11-12T20:00:00Z"
+        },
+        {
+          "id": "sebastian.lifestyle.demo-4",
+          "type": "carousel",
+          "caption": "Rutina ✨ ¿Qué opinan? #lifestyle #lima #vlog",
+          "hashtags": ["lifestyle", "lima", "vlog"],
+          "likes": 16076,
+          "comments": 750,
+          "views": null,
+          "postedAt": "2026-11-11T20:00:00Z"
+        },
+        {
+          "id": "sebastian.lifestyle.demo-5",
+          "type": "image",
+          "caption": "Rutina ✨ Nuevo post #lifestyle #lima #vlog",
+          "hashtags": ["lifestyle", "lima", "vlog"],
+          "likes": 14724,
+          "comments": 629,
+          "views": null,
+          "postedAt": "2026-11-08T20:00:00Z"
+        },
+        {
+          "id": "sebastian.lifestyle.demo-6",
+          "type": "image",
+          "caption": "Rutina ✨ Guárdalo para después #lifestyle #lima #vlog",
+          "hashtags": ["lifestyle", "lima", "vlog"],
+          "likes": 16524,
+          "comments": 434,
+          "views": null,
+          "postedAt": "2026-11-10T20:00:00Z"
+        },
+        {
+          "id": "sebastian.lifestyle.demo-7",
+          "type": "video",
+          "caption": "Rutina ✨ Nuevo post #lifestyle #lima #vlog",
+          "hashtags": ["lifestyle", "lima", "vlog"],
+          "likes": 11047,
+          "comments": 442,
+          "views": 165705,
+          "postedAt": "2026-10-27T20:00:00Z"
+        },
+        {
+          "id": "sebastian.lifestyle.demo-8",
+          "type": "video",
+          "caption": "Rutina ✨ Guárdalo para después #lifestyle #lima #vlog",
+          "hashtags": ["lifestyle", "lima", "vlog"],
+          "likes": 10200,
+          "comments": 370,
+          "views": 102000,
+          "postedAt": "2026-10-30T20:00:00Z"
+        },
+        {
+          "id": "sebastian.lifestyle.demo-9",
+          "type": "image",
+          "caption": "Mi día ✨ ¿Qué opinan? #lifestyle #lima #vlog",
+          "hashtags": ["lifestyle", "lima", "vlog"],
+          "likes": 11047,
+          "comments": 567,
+          "views": null,
+          "postedAt": "2026-10-19T20:00:00Z"
+        },
+        {
+          "id": "sebastian.lifestyle.demo-10",
+          "type": "carousel",
+          "caption": "Vida en Lima ✨ ¿Qué opinan? #lifestyle #lima #vlog",
+          "hashtags": ["lifestyle", "lima", "vlog"],
+          "likes": 7975,
+          "comments": 354,
+          "views": null,
+          "postedAt": "2026-10-15T20:00:00Z"
+        },
+        {
+          "id": "sebastian.lifestyle.demo-11",
+          "type": "image",
+          "caption": "Mi día ✨ Cuéntenme en comentarios #lifestyle #lima #vlog",
+          "hashtags": ["lifestyle", "lima", "vlog"],
+          "likes": 10360,
+          "comments": 556,
+          "views": null,
+          "postedAt": "2026-10-31T20:00:00Z"
+        },
+        {
+          "id": "sebastian.lifestyle.demo-12",
+          "type": "video",
+          "caption": "Rutina ✨ ¿Qué opinan? #lifestyle #lima #vlog",
+          "hashtags": ["lifestyle", "lima", "vlog"],
+          "likes": 13464,
+          "comments": 741,
+          "views": 188496,
+          "postedAt": "2026-10-18T20:00:00Z"
+        }
+      ],
+      "fetchedAt": "2026-11-20T20:00:00Z",
+      "source": "mock"
+    },
+    "declared": null,
+    "services": []
+  },
+  {
+    "id": "716609b8-f757-4303-b401-64e4414ac24c",
+    "role": "brand",
+    "status": "verified",
+    "ownerUserId": "97da2849-d73e-4438-9907-d090402c802d",
+    "snapshot": {
+      "handle": "andina.snacks.demo",
+      "fullName": "Andina Snacks",
+      "biography": "Andina Snacks · alimentos bebidas · Envíos a todo el Perú",
+      "followers": 152478,
+      "following": 118,
+      "postsCount": 322,
+      "isBusiness": true,
+      "businessCategory": "alimentos-bebidas",
+      "isPrivate": false,
+      "isVerified": false,
+      "profilePicUrl": null,
+      "externalUrl": "https://example.com/andina",
+      "posts": [
+        {
+          "id": "andina.snacks.demo-1",
+          "type": "video",
+          "caption": "Mi día ✨ Nuevo post #lifestyle #lima #vlog",
+          "hashtags": ["lifestyle", "lima", "vlog"],
+          "likes": 2227,
+          "comments": 83,
+          "views": 40086,
+          "postedAt": "2026-11-20T20:00:00Z"
+        },
+        {
+          "id": "andina.snacks.demo-2",
+          "type": "image",
+          "caption": "Mi día ✨ Nuevo post #lifestyle #lima #vlog",
+          "hashtags": ["lifestyle", "lima", "vlog"],
+          "likes": 2554,
+          "comments": 119,
+          "views": null,
+          "postedAt": "2026-11-17T20:00:00Z"
+        },
+        {
+          "id": "andina.snacks.demo-3",
+          "type": "video",
+          "caption": "Vida en Lima ✨ Cuéntenme en comentarios #lifestyle #lima #vlog",
+          "hashtags": ["lifestyle", "lima", "vlog"],
+          "likes": 2877,
+          "comments": 162,
+          "views": 51786,
+          "postedAt": "2026-11-14T20:00:00Z"
+        },
+        {
+          "id": "andina.snacks.demo-4",
+          "type": "image",
+          "caption": "Mi día ✨ ¿Qué opinan? #lifestyle #lima #vlog",
+          "hashtags": ["lifestyle", "lima", "vlog"],
+          "likes": 2725,
+          "comments": 155,
+          "views": null,
+          "postedAt": "2026-11-14T20:00:00Z"
+        },
+        {
+          "id": "andina.snacks.demo-5",
+          "type": "video",
+          "caption": "Restaurante ✨ Nuevo post #comidaperuana #receta #foodie",
+          "hashtags": ["comidaperuana", "receta", "foodie"],
+          "likes": 3437,
+          "comments": 100,
+          "views": 30933,
+          "postedAt": "2026-11-12T20:00:00Z"
+        },
+        {
+          "id": "andina.snacks.demo-6",
+          "type": "carousel",
+          "caption": "Vida en Lima ✨ Guárdalo para después #lifestyle #lima #vlog",
+          "hashtags": ["lifestyle", "lima", "vlog"],
+          "likes": 3361,
+          "comments": 169,
+          "views": null,
+          "postedAt": "2026-11-10T20:00:00Z"
+        },
+        {
+          "id": "andina.snacks.demo-7",
+          "type": "carousel",
+          "caption": "Mi día ✨ ¿Qué opinan? #lifestyle #lima #vlog",
+          "hashtags": ["lifestyle", "lima", "vlog"],
+          "likes": 2822,
+          "comments": 124,
+          "views": null,
+          "postedAt": "2026-10-27T20:00:00Z"
+        },
+        {
+          "id": "andina.snacks.demo-8",
+          "type": "image",
+          "caption": "Mi día ✨ Guárdalo para después #lifestyle #lima #vlog",
+          "hashtags": ["lifestyle", "lima", "vlog"],
+          "likes": 3292,
+          "comments": 99,
+          "views": null,
+          "postedAt": "2026-10-23T20:00:00Z"
+        },
+        {
+          "id": "andina.snacks.demo-9",
+          "type": "video",
+          "caption": "Running ✨ Cuéntenme en comentarios #running #futbol #deporte",
+          "hashtags": ["running", "futbol", "deporte"],
+          "likes": 2995,
+          "comments": 120,
+          "views": 53910,
+          "postedAt": "2026-11-04T20:00:00Z"
+        },
+        {
+          "id": "andina.snacks.demo-10",
+          "type": "carousel",
+          "caption": "Running ✨ ¿Qué opinan? #running #futbol #deporte",
+          "hashtags": ["running", "futbol", "deporte"],
+          "likes": 3115,
+          "comments": 89,
+          "views": null,
+          "postedAt": "2026-10-15T20:00:00Z"
+        },
+        {
+          "id": "andina.snacks.demo-11",
+          "type": "carousel",
+          "caption": "Rutina ✨ Nuevo post #lifestyle #lima #vlog",
+          "hashtags": ["lifestyle", "lima", "vlog"],
+          "likes": 2039,
+          "comments": 62,
+          "views": null,
+          "postedAt": "2026-10-31T20:00:00Z"
+        },
+        {
+          "id": "andina.snacks.demo-12",
+          "type": "video",
+          "caption": "Cocina peruana ✨ Guárdalo para después #comidaperuana #receta #foodie",
+          "hashtags": ["comidaperuana", "receta", "foodie"],
+          "likes": 1747,
+          "comments": 95,
+          "views": 33193,
+          "postedAt": "2026-10-18T20:00:00Z"
+        }
+      ],
+      "fetchedAt": "2026-11-20T20:00:00Z",
+      "source": "mock"
+    },
+    "declared": {
+      "role": "brand",
+      "sector": "alimentos-bebidas",
+      "objectives": ["ventas", "lanzamiento"],
+      "targetNiches": ["gastronomia", "lifestyle", "deportes"],
+      "budgetMinPen": 1800,
+      "budgetMaxPen": 10800,
+      "shortBio": "Andina Snacks busca creadores de gastronomia, lifestyle, deportes.",
+      "accountType": "business"
+    },
+    "services": []
+  },
+  {
+    "id": "362fc880-4315-4b02-a261-09d67c1a1bcb",
+    "role": "brand",
+    "status": "verified",
+    "ownerUserId": "1be4b28d-1f9e-4959-8b47-dbfe6841b5ce",
+    "snapshot": {
+      "handle": "kallpa.sport.demo",
+      "fullName": "Kallpa Sport",
+      "biography": "Kallpa Sport · deporte · Envíos a todo el Perú",
+      "followers": 174991,
+      "following": 524,
+      "postsCount": 402,
+      "isBusiness": true,
+      "businessCategory": "deporte",
+      "isPrivate": false,
+      "isVerified": false,
+      "profilePicUrl": null,
+      "externalUrl": "https://example.com/kallpa",
+      "posts": [
+        {
+          "id": "kallpa.sport.demo-1",
+          "type": "carousel",
+          "caption": "Running ✨ ¿Qué opinan? #running #futbol #deporte",
+          "hashtags": ["running", "futbol", "deporte"],
+          "likes": 1752,
+          "comments": 104,
+          "views": null,
+          "postedAt": "2026-11-20T20:00:00Z"
+        },
+        {
+          "id": "kallpa.sport.demo-2",
+          "type": "carousel",
+          "caption": "Fútbol ✨ Guárdalo para después #running #futbol #deporte",
+          "hashtags": ["running", "futbol", "deporte"],
+          "likes": 1674,
+          "comments": 99,
+          "views": null,
+          "postedAt": "2026-11-18T20:00:00Z"
+        },
+        {
+          "id": "kallpa.sport.demo-3",
+          "type": "carousel",
+          "caption": "Running ✨ Guárdalo para después #running #futbol #deporte",
+          "hashtags": ["running", "futbol", "deporte"],
+          "likes": 2116,
+          "comments": 114,
+          "views": null,
+          "postedAt": "2026-11-14T20:00:00Z"
+        },
+        {
+          "id": "kallpa.sport.demo-4",
+          "type": "image",
+          "caption": "Maratón ✨ ¿Qué opinan? #running #futbol #deporte",
+          "hashtags": ["running", "futbol", "deporte"],
+          "likes": 1840,
+          "comments": 92,
+          "views": null,
+          "postedAt": "2026-11-14T20:00:00Z"
+        },
+        {
+          "id": "kallpa.sport.demo-5",
+          "type": "video",
+          "caption": "Hábitos saludables ✨ Guárdalo para después #fitness #gym #entrenamiento",
+          "hashtags": ["fitness", "gym", "entrenamiento"],
+          "likes": 1228,
+          "comments": 66,
+          "views": 22104,
+          "postedAt": "2026-11-08T20:00:00Z"
+        },
+        {
+          "id": "kallpa.sport.demo-6",
+          "type": "carousel",
+          "caption": "Rutina de entrenamiento ✨ Nuevo post #fitness #gym #entrenamiento",
+          "hashtags": ["fitness", "gym", "entrenamiento"],
+          "likes": 1627,
+          "comments": 56,
+          "views": null,
+          "postedAt": "2026-10-31T20:00:00Z"
+        },
+        {
+          "id": "kallpa.sport.demo-7",
+          "type": "video",
+          "caption": "Hábitos saludables ✨ Cuéntenme en comentarios #fitness #gym #entrenamiento",
+          "hashtags": ["fitness", "gym", "entrenamiento"],
+          "likes": 1210,
+          "comments": 50,
+          "views": 13310,
+          "postedAt": "2026-10-27T20:00:00Z"
+        },
+        {
+          "id": "kallpa.sport.demo-8",
+          "type": "video",
+          "caption": "Running ✨ Nuevo post #running #futbol #deporte",
+          "hashtags": ["running", "futbol", "deporte"],
+          "likes": 1884,
+          "comments": 95,
+          "views": 30144,
+          "postedAt": "2026-10-30T20:00:00Z"
+        },
+        {
+          "id": "kallpa.sport.demo-9",
+          "type": "carousel",
+          "caption": "Rutina de entrenamiento ✨ ¿Qué opinan? #fitness #gym #entrenamiento",
+          "hashtags": ["fitness", "gym", "entrenamiento"],
+          "likes": 1043,
+          "comments": 60,
+          "views": null,
+          "postedAt": "2026-10-19T20:00:00Z"
+        },
+        {
+          "id": "kallpa.sport.demo-10",
+          "type": "video",
+          "caption": "Hábitos saludables ✨ ¿Qué opinan? #fitness #gym #entrenamiento",
+          "hashtags": ["fitness", "gym", "entrenamiento"],
+          "likes": 2105,
+          "comments": 43,
+          "views": 29470,
+          "postedAt": "2026-10-15T20:00:00Z"
+        },
+        {
+          "id": "kallpa.sport.demo-11",
+          "type": "carousel",
+          "caption": "Hábitos saludables ✨ Nuevo post #fitness #gym #entrenamiento",
+          "hashtags": ["fitness", "gym", "entrenamiento"],
+          "likes": 2076,
+          "comments": 86,
+          "views": null,
+          "postedAt": "2026-10-31T20:00:00Z"
+        },
+        {
+          "id": "kallpa.sport.demo-12",
+          "type": "image",
+          "caption": "Gym ✨ ¿Qué opinan? #fitness #gym #entrenamiento",
+          "hashtags": ["fitness", "gym", "entrenamiento"],
+          "likes": 1506,
+          "comments": 81,
+          "views": null,
+          "postedAt": "2026-10-18T20:00:00Z"
+        }
+      ],
+      "fetchedAt": "2026-11-20T20:00:00Z",
+      "source": "mock"
+    },
+    "declared": {
+      "role": "brand",
+      "sector": "deporte",
+      "objectives": ["reconocimiento", "ventas"],
+      "targetNiches": ["fitness", "deportes"],
+      "budgetMinPen": 1500,
+      "budgetMaxPen": 7500,
+      "shortBio": "Kallpa Sport busca creadores de fitness, deportes.",
+      "accountType": "business"
+    },
+    "services": []
+  },
+  {
+    "id": "70e1b8f0-f1b6-440c-9f80-914707f04f30",
+    "role": "brand",
+    "status": "verified",
+    "ownerUserId": "7d2f2bb3-62a5-4ae5-a62d-50baee39720b",
+    "snapshot": {
+      "handle": "nube.tech.demo",
+      "fullName": "Nube Tech",
+      "biography": "Nube Tech · tecnologia · Envíos a todo el Perú",
+      "followers": 97379,
+      "following": 378,
+      "postsCount": 649,
+      "isBusiness": true,
+      "businessCategory": "tecnologia",
+      "isPrivate": false,
+      "isVerified": false,
+      "profilePicUrl": null,
+      "externalUrl": "https://example.com/nube",
+      "posts": [
+        {
+          "id": "nube.tech.demo-1",
+          "type": "carousel",
+          "caption": "Videojuegos ✨ Nuevo post #gaming #gamer #twitch",
+          "hashtags": ["gaming", "gamer", "twitch"],
+          "likes": 1502,
+          "comments": 44,
+          "views": null,
+          "postedAt": "2026-11-20T20:00:00Z"
+        },
+        {
+          "id": "nube.tech.demo-2",
+          "type": "carousel",
+          "caption": "Videojuegos ✨ Guárdalo para después #gaming #gamer #twitch",
+          "hashtags": ["gaming", "gamer", "twitch"],
+          "likes": 2862,
+          "comments": 70,
+          "views": null,
+          "postedAt": "2026-11-16T20:00:00Z"
+        },
+        {
+          "id": "nube.tech.demo-3",
+          "type": "image",
+          "caption": "Stream ✨ Guárdalo para después #gaming #gamer #twitch",
+          "hashtags": ["gaming", "gamer", "twitch"],
+          "likes": 1449,
+          "comments": 38,
+          "views": null,
+          "postedAt": "2026-11-16T20:00:00Z"
+        },
+        {
+          "id": "nube.tech.demo-4",
+          "type": "carousel",
+          "caption": "Gameplay ✨ ¿Qué opinan? #gaming #gamer #twitch",
+          "hashtags": ["gaming", "gamer", "twitch"],
+          "likes": 1602,
+          "comments": 64,
+          "views": null,
+          "postedAt": "2026-11-08T20:00:00Z"
+        },
+        {
+          "id": "nube.tech.demo-5",
+          "type": "video",
+          "caption": "Stream ✨ Cuéntenme en comentarios #gaming #gamer #twitch",
+          "hashtags": ["gaming", "gamer", "twitch"],
+          "likes": 2375,
+          "comments": 80,
+          "views": 23750,
+          "postedAt": "2026-11-04T20:00:00Z"
+        },
+        {
+          "id": "nube.tech.demo-6",
+          "type": "carousel",
+          "caption": "Tecnología ✨ Cuéntenme en comentarios #tech #gadgets #unboxing",
+          "hashtags": ["tech", "gadgets", "unboxing"],
+          "likes": 1912,
+          "comments": 99,
+          "views": null,
+          "postedAt": "2026-11-10T20:00:00Z"
+        },
+        {
+          "id": "nube.tech.demo-7",
+          "type": "carousel",
+          "caption": "Review de celulares ✨ ¿Qué opinan? #tech #gadgets #unboxing",
+          "hashtags": ["tech", "gadgets", "unboxing"],
+          "likes": 1572,
+          "comments": 83,
+          "views": null,
+          "postedAt": "2026-11-08T20:00:00Z"
+        },
+        {
+          "id": "nube.tech.demo-8",
+          "type": "image",
+          "caption": "Gadgets ✨ Nuevo post #tech #gadgets #unboxing",
+          "hashtags": ["tech", "gadgets", "unboxing"],
+          "likes": 2164,
+          "comments": 112,
+          "views": null,
+          "postedAt": "2026-10-30T20:00:00Z"
+        },
+        {
+          "id": "nube.tech.demo-9",
+          "type": "video",
+          "caption": "Review de celulares ✨ Cuéntenme en comentarios #tech #gadgets #unboxing",
+          "hashtags": ["tech", "gadgets", "unboxing"],
+          "likes": 2744,
+          "comments": 95,
+          "views": 35672,
+          "postedAt": "2026-10-19T20:00:00Z"
+        },
+        {
+          "id": "nube.tech.demo-10",
+          "type": "image",
+          "caption": "Stream ✨ ¿Qué opinan? #gaming #gamer #twitch",
+          "hashtags": ["gaming", "gamer", "twitch"],
+          "likes": 2080,
+          "comments": 123,
+          "views": null,
+          "postedAt": "2026-11-02T20:00:00Z"
+        },
+        {
+          "id": "nube.tech.demo-11",
+          "type": "video",
+          "caption": "Review de celulares ✨ ¿Qué opinan? #tech #gadgets #unboxing",
+          "hashtags": ["tech", "gadgets", "unboxing"],
+          "likes": 2958,
+          "comments": 146,
+          "views": 29580,
+          "postedAt": "2026-10-21T20:00:00Z"
+        },
+        {
+          "id": "nube.tech.demo-12",
+          "type": "carousel",
+          "caption": "Tecnología ✨ Nuevo post #tech #gadgets #unboxing",
+          "hashtags": ["tech", "gadgets", "unboxing"],
+          "likes": 2696,
+          "comments": 98,
+          "views": null,
+          "postedAt": "2026-10-07T20:00:00Z"
+        }
+      ],
+      "fetchedAt": "2026-11-20T20:00:00Z",
+      "source": "mock"
+    },
+    "declared": {
+      "role": "brand",
+      "sector": "tecnologia",
+      "objectives": ["lanzamiento", "trafico-web"],
+      "targetNiches": ["tecnologia", "gaming"],
+      "budgetMinPen": 2300,
+      "budgetMaxPen": 16100,
+      "shortBio": "Nube Tech busca creadores de tecnologia, gaming.",
+      "accountType": "business"
+    },
+    "services": []
+  },
+  {
+    "id": "bd7518db-7974-46d1-93dd-ac5925945d0d",
+    "role": "brand",
+    "status": "verified",
+    "ownerUserId": "44503f9f-2284-466a-95e5-79893545a32b",
+    "snapshot": {
+      "handle": "flor.cosmetica.demo",
+      "fullName": "Flor Cosmética",
+      "biography": "Flor Cosmética · belleza cuidado personal · Envíos a todo el Perú",
+      "followers": 81617,
+      "following": 293,
+      "postsCount": 749,
+      "isBusiness": true,
+      "businessCategory": "belleza-cuidado-personal",
+      "isPrivate": false,
+      "isVerified": false,
+      "profilePicUrl": null,
+      "externalUrl": "https://example.com/flor",
+      "posts": [
+        {
+          "id": "flor.cosmetica.demo-1",
+          "type": "video",
+          "caption": "Meditación ✨ Guárdalo para después #bienestar #mindfulness #salud",
+          "hashtags": ["bienestar", "mindfulness", "salud"],
+          "likes": 2152,
+          "comments": 56,
+          "views": 27976,
+          "postedAt": "2026-11-20T20:00:00Z"
+        },
+        {
+          "id": "flor.cosmetica.demo-2",
+          "type": "video",
+          "caption": "Salud mental ✨ Cuéntenme en comentarios #bienestar #mindfulness #salud",
+          "hashtags": ["bienestar", "mindfulness", "salud"],
+          "likes": 2668,
+          "comments": 79,
+          "views": 34684,
+          "postedAt": "2026-11-17T20:00:00Z"
+        },
+        {
+          "id": "flor.cosmetica.demo-3",
+          "type": "carousel",
+          "caption": "Maquillaje ✨ Guárdalo para después #makeup #skincare #belleza",
+          "hashtags": ["makeup", "skincare", "belleza"],
+          "likes": 2511,
+          "comments": 148,
+          "views": null,
+          "postedAt": "2026-11-14T20:00:00Z"
+        },
+        {
+          "id": "flor.cosmetica.demo-4",
+          "type": "video",
+          "caption": "Bienestar ✨ Guárdalo para después #bienestar #mindfulness #salud",
+          "hashtags": ["bienestar", "mindfulness", "salud"],
+          "likes": 2240,
+          "comments": 68,
+          "views": 31360,
+          "postedAt": "2026-11-14T20:00:00Z"
+        },
+        {
+          "id": "flor.cosmetica.demo-5",
+          "type": "carousel",
+          "caption": "Rutina de belleza ✨ Cuéntenme en comentarios #makeup #skincare #belleza",
+          "hashtags": ["makeup", "skincare", "belleza"],
+          "likes": 2640,
+          "comments": 82,
+          "views": null,
+          "postedAt": "2026-11-04T20:00:00Z"
+        },
+        {
+          "id": "flor.cosmetica.demo-6",
+          "type": "video",
+          "caption": "Meditación ✨ Nuevo post #bienestar #mindfulness #salud",
+          "hashtags": ["bienestar", "mindfulness", "salud"],
+          "likes": 2584,
+          "comments": 82,
+          "views": 33592,
+          "postedAt": "2026-11-05T20:00:00Z"
+        },
+        {
+          "id": "flor.cosmetica.demo-7",
+          "type": "image",
+          "caption": "Skincare ✨ Nuevo post #makeup #skincare #belleza",
+          "hashtags": ["makeup", "skincare", "belleza"],
+          "likes": 2022,
+          "comments": 85,
+          "views": null,
+          "postedAt": "2026-11-02T20:00:00Z"
+        },
+        {
+          "id": "flor.cosmetica.demo-8",
+          "type": "carousel",
+          "caption": "Tendencias ✨ Cuéntenme en comentarios #moda #outfit #ootd #modaperu",
+          "hashtags": ["moda", "outfit", "ootd", "modaperu"],
+          "likes": 2287,
+          "comments": 77,
+          "views": null,
+          "postedAt": "2026-10-30T20:00:00Z"
+        },
+        {
+          "id": "flor.cosmetica.demo-9",
+          "type": "carousel",
+          "caption": "Outfit ✨ Guárdalo para después #moda #outfit #ootd #modaperu",
+          "hashtags": ["moda", "outfit", "ootd", "modaperu"],
+          "likes": 1236,
+          "comments": 43,
+          "views": null,
+          "postedAt": "2026-10-27T20:00:00Z"
+        },
+        {
+          "id": "flor.cosmetica.demo-10",
+          "type": "image",
+          "caption": "Rutina de belleza ✨ ¿Qué opinan? #makeup #skincare #belleza",
+          "hashtags": ["makeup", "skincare", "belleza"],
+          "likes": 2397,
+          "comments": 91,
+          "views": null,
+          "postedAt": "2026-10-15T20:00:00Z"
+        },
+        {
+          "id": "flor.cosmetica.demo-11",
+          "type": "image",
+          "caption": "Outfit ✨ Nuevo post #moda #outfit #ootd #modaperu",
+          "hashtags": ["moda", "outfit", "ootd", "modaperu"],
+          "likes": 1599,
+          "comments": 54,
+          "views": null,
+          "postedAt": "2026-10-21T20:00:00Z"
+        },
+        {
+          "id": "flor.cosmetica.demo-12",
+          "type": "image",
+          "caption": "Meditación ✨ Nuevo post #bienestar #mindfulness #salud",
+          "hashtags": ["bienestar", "mindfulness", "salud"],
+          "likes": 1549,
+          "comments": 38,
+          "views": null,
+          "postedAt": "2026-10-07T20:00:00Z"
+        }
+      ],
+      "fetchedAt": "2026-11-20T20:00:00Z",
+      "source": "mock"
+    },
+    "declared": {
+      "role": "brand",
+      "sector": "belleza-cuidado-personal",
+      "objectives": ["reconocimiento", "interaccion"],
+      "targetNiches": ["belleza", "moda", "salud-bienestar"],
+      "budgetMinPen": 2000,
+      "budgetMaxPen": 10000,
+      "shortBio": "Flor Cosmética busca creadores de belleza, moda, salud-bienestar.",
+      "accountType": "business"
+    },
+    "services": []
+  },
+  {
+    "id": "46b50b9d-10de-4ba7-815d-217d7900c4e0",
+    "role": "brand",
+    "status": "verified",
+    "ownerUserId": "c5700893-a34b-4834-b1aa-be1f6f210579",
+    "snapshot": {
+      "handle": "rumbo.viajes.demo",
+      "fullName": "Rumbo Viajes",
+      "biography": "Rumbo Viajes · turismo hoteleria · Envíos a todo el Perú",
+      "followers": 98626,
+      "following": 248,
+      "postsCount": 869,
+      "isBusiness": true,
+      "businessCategory": "turismo-hoteleria",
+      "isPrivate": false,
+      "isVerified": false,
+      "profilePicUrl": null,
+      "externalUrl": "https://example.com/rumbo",
+      "posts": [
+        {
+          "id": "rumbo.viajes.demo-1",
+          "type": "carousel",
+          "caption": "Mi día ✨ Guárdalo para después #lifestyle #lima #vlog",
+          "hashtags": ["lifestyle", "lima", "vlog"],
+          "likes": 540,
+          "comments": 29,
+          "views": null,
+          "postedAt": "2026-11-20T20:00:00Z"
+        },
+        {
+          "id": "rumbo.viajes.demo-2",
+          "type": "carousel",
+          "caption": "Mi día ✨ ¿Qué opinan? #lifestyle #lima #vlog",
+          "hashtags": ["lifestyle", "lima", "vlog"],
+          "likes": 667,
+          "comments": 15,
+          "views": null,
+          "postedAt": "2026-11-16T20:00:00Z"
+        },
+        {
+          "id": "rumbo.viajes.demo-3",
+          "type": "carousel",
+          "caption": "Destino ✨ Cuéntenme en comentarios #viajes #travel #peru",
+          "hashtags": ["viajes", "travel", "peru"],
+          "likes": 653,
+          "comments": 22,
+          "views": null,
+          "postedAt": "2026-11-12T20:00:00Z"
+        },
+        {
+          "id": "rumbo.viajes.demo-4",
+          "type": "carousel",
+          "caption": "Vida en Lima ✨ ¿Qué opinan? #lifestyle #lima #vlog",
+          "hashtags": ["lifestyle", "lima", "vlog"],
+          "likes": 555,
+          "comments": 18,
+          "views": null,
+          "postedAt": "2026-11-14T20:00:00Z"
+        },
+        {
+          "id": "rumbo.viajes.demo-5",
+          "type": "carousel",
+          "caption": "Rutina ✨ Guárdalo para después #lifestyle #lima #vlog",
+          "hashtags": ["lifestyle", "lima", "vlog"],
+          "likes": 448,
+          "comments": 18,
+          "views": null,
+          "postedAt": "2026-11-12T20:00:00Z"
+        },
+        {
+          "id": "rumbo.viajes.demo-6",
+          "type": "carousel",
+          "caption": "Destino ✨ Nuevo post #viajes #travel #peru",
+          "hashtags": ["viajes", "travel", "peru"],
+          "likes": 454,
+          "comments": 10,
+          "views": null,
+          "postedAt": "2026-10-31T20:00:00Z"
+        },
+        {
+          "id": "rumbo.viajes.demo-7",
+          "type": "image",
+          "caption": "Viaje ✨ Cuéntenme en comentarios #viajes #travel #peru",
+          "hashtags": ["viajes", "travel", "peru"],
+          "likes": 486,
+          "comments": 29,
+          "views": null,
+          "postedAt": "2026-11-08T20:00:00Z"
+        },
+        {
+          "id": "rumbo.viajes.demo-8",
+          "type": "carousel",
+          "caption": "Mi día ✨ Guárdalo para después #lifestyle #lima #vlog",
+          "hashtags": ["lifestyle", "lima", "vlog"],
+          "likes": 680,
+          "comments": 39,
+          "views": null,
+          "postedAt": "2026-10-30T20:00:00Z"
+        },
+        {
+          "id": "rumbo.viajes.demo-9",
+          "type": "image",
+          "caption": "Vida en Lima ✨ ¿Qué opinan? #lifestyle #lima #vlog",
+          "hashtags": ["lifestyle", "lima", "vlog"],
+          "likes": 384,
+          "comments": 22,
+          "views": null,
+          "postedAt": "2026-10-19T20:00:00Z"
+        },
+        {
+          "id": "rumbo.viajes.demo-10",
+          "type": "video",
+          "caption": "Mi día ✨ Guárdalo para después #lifestyle #lima #vlog",
+          "hashtags": ["lifestyle", "lima", "vlog"],
+          "likes": 628,
+          "comments": 30,
+          "views": 7536,
+          "postedAt": "2026-11-02T20:00:00Z"
+        },
+        {
+          "id": "rumbo.viajes.demo-11",
+          "type": "carousel",
+          "caption": "Rutina ✨ Guárdalo para después #lifestyle #lima #vlog",
+          "hashtags": ["lifestyle", "lima", "vlog"],
+          "likes": 750,
+          "comments": 21,
+          "views": null,
+          "postedAt": "2026-10-31T20:00:00Z"
+        },
+        {
+          "id": "rumbo.viajes.demo-12",
+          "type": "video",
+          "caption": "Destino ✨ Guárdalo para después #viajes #travel #peru",
+          "hashtags": ["viajes", "travel", "peru"],
+          "likes": 578,
+          "comments": 22,
+          "views": 8670,
+          "postedAt": "2026-10-07T20:00:00Z"
+        }
+      ],
+      "fetchedAt": "2026-11-20T20:00:00Z",
+      "source": "mock"
+    },
+    "declared": {
+      "role": "brand",
+      "sector": "turismo-hoteleria",
+      "objectives": ["ventas", "trafico-web"],
+      "targetNiches": ["viajes", "lifestyle"],
+      "budgetMinPen": 2400,
+      "budgetMaxPen": 19200,
+      "shortBio": "Rumbo Viajes busca creadores de viajes, lifestyle.",
+      "accountType": "business"
+    },
+    "services": []
+  },
+  {
+    "id": "33c5a6e4-c34e-4b03-8054-778d88420ce2",
+    "role": "brand",
+    "status": "verified",
+    "ownerUserId": "1be4b28d-1f9e-4959-8b47-dbfe6841b5ce",
+    "snapshot": {
+      "handle": "pata.feliz.demo",
+      "fullName": "Pata Feliz",
+      "biography": "Pata Feliz · servicios · Envíos a todo el Perú",
+      "followers": 383896,
+      "following": 136,
+      "postsCount": 787,
+      "isBusiness": true,
+      "businessCategory": "servicios",
+      "isPrivate": false,
+      "isVerified": false,
+      "profilePicUrl": null,
+      "externalUrl": "https://example.com/pata",
+      "posts": [
+        {
+          "id": "pata.feliz.demo-1",
+          "type": "carousel",
+          "caption": "Adopción ✨ Cuéntenme en comentarios #mascotas #perros #gatos",
+          "hashtags": ["mascotas", "perros", "gatos"],
+          "likes": 5993,
+          "comments": 244,
+          "views": null,
+          "postedAt": "2026-11-20T20:00:00Z"
+        },
+        {
+          "id": "pata.feliz.demo-2",
+          "type": "video",
+          "caption": "Perrito ✨ ¿Qué opinan? #mascotas #perros #gatos",
+          "hashtags": ["mascotas", "perros", "gatos"],
+          "likes": 6380,
+          "comments": 245,
+          "views": 51040,
+          "postedAt": "2026-11-16T20:00:00Z"
+        },
+        {
+          "id": "pata.feliz.demo-3",
+          "type": "video",
+          "caption": "Crianza ✨ Nuevo post #mama #crianza #familia",
+          "hashtags": ["mama", "crianza", "familia"],
+          "likes": 5892,
+          "comments": 310,
+          "views": 117840,
+          "postedAt": "2026-11-16T20:00:00Z"
+        },
+        {
+          "id": "pata.feliz.demo-4",
+          "type": "video",
+          "caption": "Crianza ✨ Nuevo post #mama #crianza #familia",
+          "hashtags": ["mama", "crianza", "familia"],
+          "likes": 6223,
+          "comments": 218,
+          "views": 99568,
+          "postedAt": "2026-11-14T20:00:00Z"
+        },
+        {
+          "id": "pata.feliz.demo-5",
+          "type": "video",
+          "caption": "Crianza ✨ Cuéntenme en comentarios #mama #crianza #familia",
+          "hashtags": ["mama", "crianza", "familia"],
+          "likes": 3629,
+          "comments": 149,
+          "views": 47177,
+          "postedAt": "2026-11-04T20:00:00Z"
+        },
+        {
+          "id": "pata.feliz.demo-6",
+          "type": "carousel",
+          "caption": "Maternidad ✨ ¿Qué opinan? #mama #crianza #familia",
+          "hashtags": ["mama", "crianza", "familia"],
+          "likes": 8117,
+          "comments": 398,
+          "views": null,
+          "postedAt": "2026-11-05T20:00:00Z"
+        },
+        {
+          "id": "pata.feliz.demo-7",
+          "type": "carousel",
+          "caption": "Crianza ✨ Nuevo post #mama #crianza #familia",
+          "hashtags": ["mama", "crianza", "familia"],
+          "likes": 7339,
+          "comments": 348,
+          "views": null,
+          "postedAt": "2026-11-08T20:00:00Z"
+        },
+        {
+          "id": "pata.feliz.demo-8",
+          "type": "image",
+          "caption": "Familia ✨ Cuéntenme en comentarios #mama #crianza #familia",
+          "hashtags": ["mama", "crianza", "familia"],
+          "likes": 5457,
+          "comments": 279,
+          "views": null,
+          "postedAt": "2026-10-30T20:00:00Z"
+        },
+        {
+          "id": "pata.feliz.demo-9",
+          "type": "carousel",
+          "caption": "Crianza ✨ ¿Qué opinan? #mama #crianza #familia",
+          "hashtags": ["mama", "crianza", "familia"],
+          "likes": 4230,
+          "comments": 195,
+          "views": null,
+          "postedAt": "2026-10-27T20:00:00Z"
+        },
+        {
+          "id": "pata.feliz.demo-10",
+          "type": "video",
+          "caption": "Perrito ✨ Cuéntenme en comentarios #mascotas #perros #gatos",
+          "hashtags": ["mascotas", "perros", "gatos"],
+          "likes": 5491,
+          "comments": 149,
+          "views": 43928,
+          "postedAt": "2026-10-24T20:00:00Z"
+        },
+        {
+          "id": "pata.feliz.demo-11",
+          "type": "video",
+          "caption": "Perrito ✨ ¿Qué opinan? #mascotas #perros #gatos",
+          "hashtags": ["mascotas", "perros", "gatos"],
+          "likes": 4128,
+          "comments": 241,
+          "views": 66048,
+          "postedAt": "2026-10-31T20:00:00Z"
+        },
+        {
+          "id": "pata.feliz.demo-12",
+          "type": "video",
+          "caption": "Adopción ✨ ¿Qué opinan? #mascotas #perros #gatos",
+          "hashtags": ["mascotas", "perros", "gatos"],
+          "likes": 5163,
+          "comments": 164,
+          "views": 103260,
+          "postedAt": "2026-10-18T20:00:00Z"
+        }
+      ],
+      "fetchedAt": "2026-11-20T20:00:00Z",
+      "source": "mock"
+    },
+    "declared": {
+      "role": "brand",
+      "sector": "servicios",
+      "objectives": ["comunidad", "ventas"],
+      "targetNiches": ["mascotas", "familia-maternidad"],
+      "budgetMinPen": 3500,
+      "budgetMaxPen": 28000,
+      "shortBio": "Pata Feliz busca creadores de mascotas, familia-maternidad.",
+      "accountType": "business"
+    },
+    "services": []
+  },
+  {
+    "id": "0b90855a-8369-4488-ba52-d8d01ae011db",
+    "role": "brand",
+    "status": "unclaimed",
+    "ownerUserId": null,
+    "snapshot": {
+      "handle": "casa.nativa.demo",
+      "fullName": "Casa Nativa",
+      "biography": "Casa Nativa · hogar · Envíos a todo el Perú",
+      "followers": 196933,
+      "following": 102,
+      "postsCount": 141,
+      "isBusiness": true,
+      "businessCategory": "hogar",
+      "isPrivate": false,
+      "isVerified": false,
+      "profilePicUrl": null,
+      "externalUrl": "https://example.com/casa",
+      "posts": [
+        {
+          "id": "casa.nativa.demo-1",
+          "type": "image",
+          "caption": "Ilustración ✨ Cuéntenme en comentarios #ilustracion #arte #diseno",
+          "hashtags": ["ilustracion", "arte", "diseno"],
+          "likes": 1340,
+          "comments": 45,
+          "views": null,
+          "postedAt": "2026-11-20T20:00:00Z"
+        },
+        {
+          "id": "casa.nativa.demo-2",
+          "type": "image",
+          "caption": "Arte ✨ Guárdalo para después #ilustracion #arte #diseno",
+          "hashtags": ["ilustracion", "arte", "diseno"],
+          "likes": 1860,
+          "comments": 90,
+          "views": null,
+          "postedAt": "2026-11-17T20:00:00Z"
+        },
+        {
+          "id": "casa.nativa.demo-3",
+          "type": "video",
+          "caption": "Arte ✨ Cuéntenme en comentarios #ilustracion #arte #diseno",
+          "hashtags": ["ilustracion", "arte", "diseno"],
+          "likes": 1799,
+          "comments": 47,
+          "views": 26985,
+          "postedAt": "2026-11-16T20:00:00Z"
+        },
+        {
+          "id": "casa.nativa.demo-4",
+          "type": "video",
+          "caption": "Decoración ✨ Nuevo post #deco #hogar #interiorismo",
+          "hashtags": ["deco", "hogar", "interiorismo"],
+          "likes": 1271,
+          "comments": 39,
+          "views": 10168,
+          "postedAt": "2026-11-14T20:00:00Z"
+        },
+        {
+          "id": "casa.nativa.demo-5",
+          "type": "video",
+          "caption": "Arte ✨ ¿Qué opinan? #ilustracion #arte #diseno",
+          "hashtags": ["ilustracion", "arte", "diseno"],
+          "likes": 1375,
+          "comments": 68,
+          "views": 16500,
+          "postedAt": "2026-11-08T20:00:00Z"
+        },
+        {
+          "id": "casa.nativa.demo-6",
+          "type": "video",
+          "caption": "Ilustración ✨ ¿Qué opinan? #ilustracion #arte #diseno",
+          "hashtags": ["ilustracion", "arte", "diseno"],
+          "likes": 1476,
+          "comments": 86,
+          "views": 11808,
+          "postedAt": "2026-10-31T20:00:00Z"
+        },
+        {
+          "id": "casa.nativa.demo-7",
+          "type": "image",
+          "caption": "Hogar ✨ Guárdalo para después #deco #hogar #interiorismo",
+          "hashtags": ["deco", "hogar", "interiorismo"],
+          "likes": 1787,
+          "comments": 106,
+          "views": null,
+          "postedAt": "2026-10-27T20:00:00Z"
+        },
+        {
+          "id": "casa.nativa.demo-8",
+          "type": "image",
+          "caption": "Decoración ✨ Cuéntenme en comentarios #deco #hogar #interiorismo",
+          "hashtags": ["deco", "hogar", "interiorismo"],
+          "likes": 1096,
+          "comments": 26,
+          "views": null,
+          "postedAt": "2026-10-30T20:00:00Z"
+        },
+        {
+          "id": "casa.nativa.demo-9",
+          "type": "video",
+          "caption": "Diseño gráfico ✨ Nuevo post #ilustracion #arte #diseno",
+          "hashtags": ["ilustracion", "arte", "diseno"],
+          "likes": 1652,
+          "comments": 99,
+          "views": 18172,
+          "postedAt": "2026-10-27T20:00:00Z"
+        },
+        {
+          "id": "casa.nativa.demo-10",
+          "type": "image",
+          "caption": "Organización ✨ Nuevo post #deco #hogar #interiorismo",
+          "hashtags": ["deco", "hogar", "interiorismo"],
+          "likes": 1069,
+          "comments": 29,
+          "views": null,
+          "postedAt": "2026-10-15T20:00:00Z"
+        },
+        {
+          "id": "casa.nativa.demo-11",
+          "type": "video",
+          "caption": "Hogar ✨ Guárdalo para después #deco #hogar #interiorismo",
+          "hashtags": ["deco", "hogar", "interiorismo"],
+          "likes": 1783,
+          "comments": 66,
+          "views": 28528,
+          "postedAt": "2026-10-11T20:00:00Z"
+        },
+        {
+          "id": "casa.nativa.demo-12",
+          "type": "carousel",
+          "caption": "Diseño gráfico ✨ ¿Qué opinan? #ilustracion #arte #diseno",
+          "hashtags": ["ilustracion", "arte", "diseno"],
+          "likes": 1595,
+          "comments": 35,
+          "views": null,
+          "postedAt": "2026-10-29T20:00:00Z"
+        }
+      ],
+      "fetchedAt": "2026-11-20T20:00:00Z",
+      "source": "mock"
+    },
+    "declared": null,
+    "services": []
+  },
+  {
+    "id": "8fd95e95-36c2-4d05-b357-80df83f4bf26",
+    "role": "brand",
+    "status": "unclaimed",
+    "ownerUserId": null,
+    "snapshot": {
+      "handle": "ahorra.ya.demo",
+      "fullName": "AhorraYa",
+      "biography": "AhorraYa · finanzas seguros · Envíos a todo el Perú",
+      "followers": 221923,
+      "following": 355,
+      "postsCount": 764,
+      "isBusiness": true,
+      "businessCategory": "finanzas-seguros",
+      "isPrivate": false,
+      "isVerified": false,
+      "profilePicUrl": null,
+      "externalUrl": "https://example.com/ahorra",
+      "posts": [
+        {
+          "id": "ahorra.ya.demo-1",
+          "type": "video",
+          "caption": "Clases ✨ Guárdalo para después #educacion #aprende #tips",
+          "hashtags": ["educacion", "aprende", "tips"],
+          "likes": 3309,
+          "comments": 195,
+          "views": 43017,
+          "postedAt": "2026-11-20T20:00:00Z"
+        },
+        {
+          "id": "ahorra.ya.demo-2",
+          "type": "video",
+          "caption": "Tips de estudio ✨ ¿Qué opinan? #educacion #aprende #tips",
+          "hashtags": ["educacion", "aprende", "tips"],
+          "likes": 4198,
+          "comments": 147,
+          "views": 83960,
+          "postedAt": "2026-11-16T20:00:00Z"
+        },
+        {
+          "id": "ahorra.ya.demo-3",
+          "type": "carousel",
+          "caption": "Aprende ✨ Cuéntenme en comentarios #educacion #aprende #tips",
+          "hashtags": ["educacion", "aprende", "tips"],
+          "likes": 3898,
+          "comments": 233,
+          "views": null,
+          "postedAt": "2026-11-16T20:00:00Z"
+        },
+        {
+          "id": "ahorra.ya.demo-4",
+          "type": "video",
+          "caption": "Tips de estudio ✨ ¿Qué opinan? #educacion #aprende #tips",
+          "hashtags": ["educacion", "aprende", "tips"],
+          "likes": 4214,
+          "comments": 180,
+          "views": 63210,
+          "postedAt": "2026-11-14T20:00:00Z"
+        },
+        {
+          "id": "ahorra.ya.demo-5",
+          "type": "image",
+          "caption": "Ahorro ✨ ¿Qué opinan? #finanzas #ahorro #inversion",
+          "hashtags": ["finanzas", "ahorro", "inversion"],
+          "likes": 5587,
+          "comments": 140,
+          "views": null,
+          "postedAt": "2026-11-08T20:00:00Z"
+        },
+        {
+          "id": "ahorra.ya.demo-6",
+          "type": "carousel",
+          "caption": "Clases ✨ Cuéntenme en comentarios #educacion #aprende #tips",
+          "hashtags": ["educacion", "aprende", "tips"],
+          "likes": 4553,
+          "comments": 193,
+          "views": null,
+          "postedAt": "2026-10-31T20:00:00Z"
+        },
+        {
+          "id": "ahorra.ya.demo-7",
+          "type": "carousel",
+          "caption": "Clases ✨ Guárdalo para después #educacion #aprende #tips",
+          "hashtags": ["educacion", "aprende", "tips"],
+          "likes": 5664,
+          "comments": 254,
+          "views": null,
+          "postedAt": "2026-10-27T20:00:00Z"
+        },
+        {
+          "id": "ahorra.ya.demo-8",
+          "type": "image",
+          "caption": "Tips de estudio ✨ Cuéntenme en comentarios #educacion #aprende #tips",
+          "hashtags": ["educacion", "aprende", "tips"],
+          "likes": 3038,
+          "comments": 171,
+          "views": null,
+          "postedAt": "2026-11-06T20:00:00Z"
+        },
+        {
+          "id": "ahorra.ya.demo-9",
+          "type": "video",
+          "caption": "Negocio ✨ Cuéntenme en comentarios #emprendimiento #negocios #marketing",
+          "hashtags": ["emprendimiento", "negocios", "marketing"],
+          "likes": 4117,
+          "comments": 92,
+          "views": 49404,
+          "postedAt": "2026-10-19T20:00:00Z"
+        },
+        {
+          "id": "ahorra.ya.demo-10",
+          "type": "carousel",
+          "caption": "Clases ✨ Nuevo post #educacion #aprende #tips",
+          "hashtags": ["educacion", "aprende", "tips"],
+          "likes": 4487,
+          "comments": 269,
+          "views": null,
+          "postedAt": "2026-10-15T20:00:00Z"
+        },
+        {
+          "id": "ahorra.ya.demo-11",
+          "type": "image",
+          "caption": "Tips de estudio ✨ Nuevo post #educacion #aprende #tips",
+          "hashtags": ["educacion", "aprende", "tips"],
+          "likes": 2584,
+          "comments": 52,
+          "views": null,
+          "postedAt": "2026-10-21T20:00:00Z"
+        },
+        {
+          "id": "ahorra.ya.demo-12",
+          "type": "carousel",
+          "caption": "Marketing digital ✨ Cuéntenme en comentarios #emprendimiento #negocios #marketing",
+          "hashtags": ["emprendimiento", "negocios", "marketing"],
+          "likes": 3451,
+          "comments": 207,
+          "views": null,
+          "postedAt": "2026-10-18T20:00:00Z"
+        }
+      ],
+      "fetchedAt": "2026-11-20T20:00:00Z",
+      "source": "mock"
+    },
+    "declared": null,
+    "services": []
+  },
+  {
+    "id": "f2313791-bc38-4138-baf1-dc9395a8edf1",
+    "role": "brand",
+    "status": "unclaimed",
+    "ownerUserId": null,
+    "snapshot": {
+      "handle": "sabor.costa.demo",
+      "fullName": "Sabor de la Costa",
+      "biography": "Sabor de la Costa · restaurantes · Envíos a todo el Perú",
+      "followers": 13296,
+      "following": 504,
+      "postsCount": 164,
+      "isBusiness": true,
+      "businessCategory": "restaurantes",
+      "isPrivate": false,
+      "isVerified": false,
+      "profilePicUrl": null,
+      "externalUrl": "https://example.com/sabor",
+      "posts": [
+        {
+          "id": "sabor.costa.demo-1",
+          "type": "video",
+          "caption": "Cocina peruana ✨ Cuéntenme en comentarios #comidaperuana #receta #foodie",
+          "hashtags": ["comidaperuana", "receta", "foodie"],
+          "likes": 352,
+          "comments": 10,
+          "views": 3520,
+          "postedAt": "2026-11-20T20:00:00Z"
+        },
+        {
+          "id": "sabor.costa.demo-2",
+          "type": "image",
+          "caption": "Cocina peruana ✨ Cuéntenme en comentarios #comidaperuana #receta #foodie",
+          "hashtags": ["comidaperuana", "receta", "foodie"],
+          "likes": 367,
+          "comments": 11,
+          "views": null,
+          "postedAt": "2026-11-17T20:00:00Z"
+        },
+        {
+          "id": "sabor.costa.demo-3",
+          "type": "video",
+          "caption": "Viaje ✨ ¿Qué opinan? #viajes #travel #peru",
+          "hashtags": ["viajes", "travel", "peru"],
+          "likes": 218,
+          "comments": 5,
+          "views": 3706,
+          "postedAt": "2026-11-12T20:00:00Z"
+        },
+        {
+          "id": "sabor.costa.demo-4",
+          "type": "carousel",
+          "caption": "Viaje ✨ Cuéntenme en comentarios #viajes #travel #peru",
+          "hashtags": ["viajes", "travel", "peru"],
+          "likes": 384,
+          "comments": 9,
+          "views": null,
+          "postedAt": "2026-11-08T20:00:00Z"
+        },
+        {
+          "id": "sabor.costa.demo-5",
+          "type": "carousel",
+          "caption": "Mochilero ✨ Nuevo post #viajes #travel #peru",
+          "hashtags": ["viajes", "travel", "peru"],
+          "likes": 196,
+          "comments": 5,
+          "views": null,
+          "postedAt": "2026-11-12T20:00:00Z"
+        },
+        {
+          "id": "sabor.costa.demo-6",
+          "type": "video",
+          "caption": "Receta ✨ Cuéntenme en comentarios #comidaperuana #receta #foodie",
+          "hashtags": ["comidaperuana", "receta", "foodie"],
+          "likes": 193,
+          "comments": 4,
+          "views": 1737,
+          "postedAt": "2026-10-31T20:00:00Z"
+        },
+        {
+          "id": "sabor.costa.demo-7",
+          "type": "video",
+          "caption": "Restaurante ✨ Guárdalo para después #comidaperuana #receta #foodie",
+          "hashtags": ["comidaperuana", "receta", "foodie"],
+          "likes": 266,
+          "comments": 15,
+          "views": 3192,
+          "postedAt": "2026-11-02T20:00:00Z"
+        },
+        {
+          "id": "sabor.costa.demo-8",
+          "type": "carousel",
+          "caption": "Cocina peruana ✨ Nuevo post #comidaperuana #receta #foodie",
+          "hashtags": ["comidaperuana", "receta", "foodie"],
+          "likes": 212,
+          "comments": 7,
+          "views": null,
+          "postedAt": "2026-10-23T20:00:00Z"
+        },
+        {
+          "id": "sabor.costa.demo-9",
+          "type": "video",
+          "caption": "Cocina peruana ✨ Cuéntenme en comentarios #comidaperuana #receta #foodie",
+          "hashtags": ["comidaperuana", "receta", "foodie"],
+          "likes": 329,
+          "comments": 17,
+          "views": 5264,
+          "postedAt": "2026-11-04T20:00:00Z"
+        },
+        {
+          "id": "sabor.costa.demo-10",
+          "type": "video",
+          "caption": "Destino ✨ Cuéntenme en comentarios #viajes #travel #peru",
+          "hashtags": ["viajes", "travel", "peru"],
+          "likes": 236,
+          "comments": 7,
+          "views": 4484,
+          "postedAt": "2026-10-15T20:00:00Z"
+        },
+        {
+          "id": "sabor.costa.demo-11",
+          "type": "video",
+          "caption": "Destino ✨ Nuevo post #viajes #travel #peru",
+          "hashtags": ["viajes", "travel", "peru"],
+          "likes": 219,
+          "comments": 5,
+          "views": 2628,
+          "postedAt": "2026-10-11T20:00:00Z"
+        },
+        {
+          "id": "sabor.costa.demo-12",
+          "type": "carousel",
+          "caption": "Destino ✨ Guárdalo para después #viajes #travel #peru",
+          "hashtags": ["viajes", "travel", "peru"],
+          "likes": 331,
+          "comments": 9,
+          "views": null,
+          "postedAt": "2026-10-07T20:00:00Z"
+        }
+      ],
+      "fetchedAt": "2026-11-20T20:00:00Z",
+      "source": "mock"
+    },
+    "declared": null,
+    "services": []
+  },
+  {
+    "id": "727b78ea-89d1-41ec-9b47-0e2288a204f6",
+    "role": "brand",
+    "status": "unclaimed",
+    "ownerUserId": null,
+    "snapshot": {
+      "handle": "moto.ruta.demo",
+      "fullName": "MotoRuta",
+      "biography": "MotoRuta · automotriz · Envíos a todo el Perú",
+      "followers": 16015,
+      "following": 244,
+      "postsCount": 414,
+      "isBusiness": true,
+      "businessCategory": "automotriz",
+      "isPrivate": false,
+      "isVerified": false,
+      "profilePicUrl": null,
+      "externalUrl": "https://example.com/moto",
+      "posts": [
+        {
+          "id": "moto.ruta.demo-1",
+          "type": "carousel",
+          "caption": "Motor ✨ Nuevo post #autos #motor #cars",
+          "hashtags": ["autos", "motor", "cars"],
+          "likes": 90,
+          "comments": 2,
+          "views": null,
+          "postedAt": "2026-11-20T20:00:00Z"
+        },
+        {
+          "id": "moto.ruta.demo-2",
+          "type": "carousel",
+          "caption": "Fútbol ✨ ¿Qué opinan? #running #futbol #deporte",
+          "hashtags": ["running", "futbol", "deporte"],
+          "likes": 92,
+          "comments": 4,
+          "views": null,
+          "postedAt": "2026-11-18T20:00:00Z"
+        },
+        {
+          "id": "moto.ruta.demo-3",
+          "type": "video",
+          "caption": "Test drive ✨ Guárdalo para después #autos #motor #cars",
+          "hashtags": ["autos", "motor", "cars"],
+          "likes": 104,
+          "comments": 5,
+          "views": 1768,
+          "postedAt": "2026-11-14T20:00:00Z"
+        },
+        {
+          "id": "moto.ruta.demo-4",
+          "type": "image",
+          "caption": "Autos ✨ ¿Qué opinan? #autos #motor #cars",
+          "hashtags": ["autos", "motor", "cars"],
+          "likes": 97,
+          "comments": 4,
+          "views": null,
+          "postedAt": "2026-11-11T20:00:00Z"
+        },
+        {
+          "id": "moto.ruta.demo-5",
+          "type": "image",
+          "caption": "Test drive ✨ Cuéntenme en comentarios #autos #motor #cars",
+          "hashtags": ["autos", "motor", "cars"],
+          "likes": 97,
+          "comments": 3,
+          "views": null,
+          "postedAt": "2026-11-04T20:00:00Z"
+        },
+        {
+          "id": "moto.ruta.demo-6",
+          "type": "carousel",
+          "caption": "Running ✨ Cuéntenme en comentarios #running #futbol #deporte",
+          "hashtags": ["running", "futbol", "deporte"],
+          "likes": 51,
+          "comments": 2,
+          "views": null,
+          "postedAt": "2026-11-10T20:00:00Z"
+        },
+        {
+          "id": "moto.ruta.demo-7",
+          "type": "image",
+          "caption": "Maratón ✨ ¿Qué opinan? #running #futbol #deporte",
+          "hashtags": ["running", "futbol", "deporte"],
+          "likes": 68,
+          "comments": 4,
+          "views": null,
+          "postedAt": "2026-11-08T20:00:00Z"
+        },
+        {
+          "id": "moto.ruta.demo-8",
+          "type": "carousel",
+          "caption": "Running ✨ ¿Qué opinan? #running #futbol #deporte",
+          "hashtags": ["running", "futbol", "deporte"],
+          "likes": 92,
+          "comments": 5,
+          "views": null,
+          "postedAt": "2026-10-23T20:00:00Z"
+        },
+        {
+          "id": "moto.ruta.demo-9",
+          "type": "carousel",
+          "caption": "Motor ✨ Cuéntenme en comentarios #autos #motor #cars",
+          "hashtags": ["autos", "motor", "cars"],
+          "likes": 84,
+          "comments": 3,
+          "views": null,
+          "postedAt": "2026-11-04T20:00:00Z"
+        },
+        {
+          "id": "moto.ruta.demo-10",
+          "type": "carousel",
+          "caption": "Maratón ✨ Guárdalo para después #running #futbol #deporte",
+          "hashtags": ["running", "futbol", "deporte"],
+          "likes": 92,
+          "comments": 4,
+          "views": null,
+          "postedAt": "2026-11-02T20:00:00Z"
+        },
+        {
+          "id": "moto.ruta.demo-11",
+          "type": "carousel",
+          "caption": "Motor ✨ Nuevo post #autos #motor #cars",
+          "hashtags": ["autos", "motor", "cars"],
+          "likes": 74,
+          "comments": 2,
+          "views": null,
+          "postedAt": "2026-10-11T20:00:00Z"
+        },
+        {
+          "id": "moto.ruta.demo-12",
+          "type": "image",
+          "caption": "Test drive ✨ Cuéntenme en comentarios #autos #motor #cars",
+          "hashtags": ["autos", "motor", "cars"],
+          "likes": 107,
+          "comments": 5,
+          "views": null,
+          "postedAt": "2026-10-18T20:00:00Z"
+        }
+      ],
+      "fetchedAt": "2026-11-20T20:00:00Z",
+      "source": "mock"
+    },
+    "declared": null,
+    "services": []
+  }
+]

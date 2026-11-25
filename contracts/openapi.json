@@ -1,0 +1,4465 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Sponcer core API",
+    "version": "0.1.0"
+  },
+  "components": {
+    "securitySchemes": {
+      "bearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "paths": {
+    "/api/v1/health": {
+      "get": {
+        "operationId": "health",
+        "summary": "Salud del servicio",
+        "security": [],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "ok"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "status"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "enum": [
+                            "VALIDATION_ERROR",
+                            "UNAUTHORIZED",
+                            "FORBIDDEN",
+                            "NOT_FOUND",
+                            "CONFLICT",
+                            "RATE_LIMITED",
+                            "INVALID_TRANSITION",
+                            "UPSTREAM_ERROR",
+                            "INTERNAL_ERROR"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "details": {}
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/me": {
+      "get": {
+        "operationId": "me",
+        "summary": "Usuario actual y sus perfiles",
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "userId": {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    },
+                    "email": {
+                      "type": "string",
+                      "format": "email",
+                      "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+                    },
+                    "profiles": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                          },
+                          "handle": {
+                            "type": "string",
+                            "pattern": "^[a-z0-9._]{1,30}$"
+                          },
+                          "role": {
+                            "type": "string",
+                            "enum": [
+                              "creator",
+                              "brand"
+                            ]
+                          },
+                          "fullName": {
+                            "type": "string"
+                          },
+                          "profilePicUrl": {
+                            "nullable": true,
+                            "type": "string",
+                            "format": "uri"
+                          },
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "unclaimed",
+                              "verified",
+                              "removed"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "handle",
+                          "role",
+                          "fullName",
+                          "profilePicUrl",
+                          "status"
+                        ],
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "required": [
+                    "userId",
+                    "email",
+                    "profiles"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "enum": [
+                            "VALIDATION_ERROR",
+                            "UNAUTHORIZED",
+                            "FORBIDDEN",
+                            "NOT_FOUND",
+                            "CONFLICT",
+                            "RATE_LIMITED",
+                            "INVALID_TRANSITION",
+                            "UPSTREAM_ERROR",
+                            "INTERNAL_ERROR"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "details": {}
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/claims": {
+      "post": {
+        "operationId": "startClaim",
+        "summary": "Inicia el reclamo de un @handle y devuelve el código para la bio (RF-02)",
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "handle": {
+                    "type": "string"
+                  },
+                  "role": {
+                    "type": "string",
+                    "enum": [
+                      "creator",
+                      "brand"
+                    ]
+                  }
+                },
+                "required": [
+                  "handle",
+                  "role"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "claimId": {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    },
+                    "handle": {
+                      "type": "string",
+                      "pattern": "^[a-z0-9._]{1,30}$"
+                    },
+                    "role": {
+                      "type": "string",
+                      "enum": [
+                        "creator",
+                        "brand"
+                      ]
+                    },
+                    "code": {
+                      "type": "string",
+                      "pattern": "sponcer-[A-HJKMNP-Z2-9]{6}"
+                    },
+                    "expiresAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                    }
+                  },
+                  "required": [
+                    "claimId",
+                    "handle",
+                    "role",
+                    "code",
+                    "expiresAt"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "enum": [
+                            "VALIDATION_ERROR",
+                            "UNAUTHORIZED",
+                            "FORBIDDEN",
+                            "NOT_FOUND",
+                            "CONFLICT",
+                            "RATE_LIMITED",
+                            "INVALID_TRANSITION",
+                            "UPSTREAM_ERROR",
+                            "INTERNAL_ERROR"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "details": {}
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/claims/{claimId}/verify": {
+      "post": {
+        "operationId": "verifyClaim",
+        "summary": "Verifica el código en la bio con una lectura en vivo (ADR-002)",
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "claimId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "verified"
+                          ]
+                        },
+                        "profileId": {
+                          "type": "string",
+                          "format": "uuid",
+                          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "profileId"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "code_not_found"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "status"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "expired"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "status"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "not_eligible"
+                          ]
+                        },
+                        "reason": {
+                          "type": "string",
+                          "enum": [
+                            "private",
+                            "not_professional",
+                            "removed"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "reason"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "already_owned"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "status"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "enum": [
+                            "VALIDATION_ERROR",
+                            "UNAUTHORIZED",
+                            "FORBIDDEN",
+                            "NOT_FOUND",
+                            "CONFLICT",
+                            "RATE_LIMITED",
+                            "INVALID_TRANSITION",
+                            "UPSTREAM_ERROR",
+                            "INTERNAL_ERROR"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "details": {}
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/profiles/{handle}": {
+      "get": {
+        "operationId": "getProfile",
+        "summary": "Ficha completa (RF-01, RF-06). Ingiere bajo demanda si no existe",
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "handle",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    },
+                    "handle": {
+                      "type": "string",
+                      "pattern": "^[a-z0-9._]{1,30}$"
+                    },
+                    "role": {
+                      "type": "string",
+                      "enum": [
+                        "creator",
+                        "brand"
+                      ]
+                    },
+                    "fullName": {
+                      "type": "string"
+                    },
+                    "profilePicUrl": {
+                      "nullable": true,
+                      "type": "string",
+                      "format": "uri"
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "unclaimed",
+                        "verified",
+                        "removed"
+                      ]
+                    },
+                    "ingested": {
+                      "type": "object",
+                      "properties": {
+                        "biography": {
+                          "type": "string"
+                        },
+                        "followers": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "following": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "postsCount": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "isVerified": {
+                          "type": "boolean"
+                        },
+                        "externalUrl": {
+                          "nullable": true,
+                          "type": "string",
+                          "format": "uri"
+                        },
+                        "fetchedAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                        }
+                      },
+                      "required": [
+                        "biography",
+                        "followers",
+                        "following",
+                        "postsCount",
+                        "isVerified",
+                        "externalUrl",
+                        "fetchedAt"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "declared": {
+                      "nullable": true,
+                      "oneOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "role": {
+                              "type": "string",
+                              "enum": [
+                                "creator"
+                              ]
+                            },
+                            "niches": {
+                              "minItems": 1,
+                              "maxItems": 3,
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "enum": [
+                                  "moda",
+                                  "belleza",
+                                  "fitness",
+                                  "deportes",
+                                  "gastronomia",
+                                  "viajes",
+                                  "tecnologia",
+                                  "gaming",
+                                  "musica",
+                                  "entretenimiento",
+                                  "educacion",
+                                  "finanzas",
+                                  "salud-bienestar",
+                                  "familia-maternidad",
+                                  "mascotas",
+                                  "arte-diseno",
+                                  "emprendimiento",
+                                  "hogar-deco",
+                                  "automotriz",
+                                  "lifestyle"
+                                ]
+                              }
+                            },
+                            "city": {
+                              "type": "string",
+                              "maxLength": 60
+                            },
+                            "shortBio": {
+                              "type": "string",
+                              "maxLength": 280
+                            },
+                            "accountType": {
+                              "default": "unknown",
+                              "type": "string",
+                              "enum": [
+                                "business",
+                                "creator",
+                                "unknown"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "role",
+                            "niches",
+                            "accountType"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "role": {
+                              "type": "string",
+                              "enum": [
+                                "brand"
+                              ]
+                            },
+                            "sector": {
+                              "type": "string",
+                              "enum": [
+                                "moda-retail",
+                                "belleza-cuidado-personal",
+                                "alimentos-bebidas",
+                                "restaurantes",
+                                "tecnologia",
+                                "salud",
+                                "educacion",
+                                "finanzas-seguros",
+                                "turismo-hoteleria",
+                                "entretenimiento-medios",
+                                "deporte",
+                                "hogar",
+                                "automotriz",
+                                "servicios",
+                                "otro"
+                              ]
+                            },
+                            "objectives": {
+                              "minItems": 1,
+                              "maxItems": 3,
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "enum": [
+                                  "reconocimiento",
+                                  "interaccion",
+                                  "ventas",
+                                  "lanzamiento",
+                                  "trafico-web",
+                                  "comunidad"
+                                ]
+                              }
+                            },
+                            "targetNiches": {
+                              "minItems": 1,
+                              "maxItems": 5,
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "enum": [
+                                  "moda",
+                                  "belleza",
+                                  "fitness",
+                                  "deportes",
+                                  "gastronomia",
+                                  "viajes",
+                                  "tecnologia",
+                                  "gaming",
+                                  "musica",
+                                  "entretenimiento",
+                                  "educacion",
+                                  "finanzas",
+                                  "salud-bienestar",
+                                  "familia-maternidad",
+                                  "mascotas",
+                                  "arte-diseno",
+                                  "emprendimiento",
+                                  "hogar-deco",
+                                  "automotriz",
+                                  "lifestyle"
+                                ]
+                              }
+                            },
+                            "budgetMinPen": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 1000000
+                            },
+                            "budgetMaxPen": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 1000000
+                            },
+                            "shortBio": {
+                              "type": "string",
+                              "maxLength": 280
+                            },
+                            "accountType": {
+                              "default": "unknown",
+                              "type": "string",
+                              "enum": [
+                                "business",
+                                "creator",
+                                "unknown"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "role",
+                            "sector",
+                            "objectives",
+                            "targetNiches",
+                            "budgetMinPen",
+                            "budgetMaxPen",
+                            "accountType"
+                          ],
+                          "additionalProperties": false
+                        }
+                      ]
+                    },
+                    "classification": {
+                      "nullable": true,
+                      "type": "object",
+                      "properties": {
+                        "niches": {
+                          "maxItems": 3,
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "niche": {
+                                "type": "string",
+                                "enum": [
+                                  "moda",
+                                  "belleza",
+                                  "fitness",
+                                  "deportes",
+                                  "gastronomia",
+                                  "viajes",
+                                  "tecnologia",
+                                  "gaming",
+                                  "musica",
+                                  "entretenimiento",
+                                  "educacion",
+                                  "finanzas",
+                                  "salud-bienestar",
+                                  "familia-maternidad",
+                                  "mascotas",
+                                  "arte-diseno",
+                                  "emprendimiento",
+                                  "hogar-deco",
+                                  "automotriz",
+                                  "lifestyle"
+                                ]
+                              },
+                              "confidence": {
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 1
+                              },
+                              "source": {
+                                "type": "string",
+                                "enum": [
+                                  "declared",
+                                  "rules",
+                                  "embedding"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "niche",
+                              "confidence",
+                              "source"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "tier": {
+                          "type": "string",
+                          "enum": [
+                            "nano",
+                            "micro",
+                            "mid",
+                            "macro",
+                            "mega"
+                          ]
+                        },
+                        "followers": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "engagementRate": {
+                          "type": "number",
+                          "minimum": 0
+                        },
+                        "classifiedAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                        }
+                      },
+                      "required": [
+                        "niches",
+                        "tier",
+                        "followers",
+                        "engagementRate",
+                        "classifiedAt"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "services": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "publicacion-patrocinada",
+                              "canje",
+                              "embajador",
+                              "evento",
+                              "contenido-ugc"
+                            ]
+                          },
+                          "format": {
+                            "type": "string",
+                            "enum": [
+                              "post",
+                              "reel",
+                              "story",
+                              "live",
+                              "combo"
+                            ]
+                          },
+                          "pricePen": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 1000000
+                          },
+                          "description": {
+                            "type": "string",
+                            "maxLength": 280
+                          },
+                          "id": {
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "format",
+                          "pricePen",
+                          "description",
+                          "id"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "isOwner": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "handle",
+                    "role",
+                    "fullName",
+                    "profilePicUrl",
+                    "status",
+                    "ingested",
+                    "declared",
+                    "classification",
+                    "services",
+                    "isOwner"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "enum": [
+                            "VALIDATION_ERROR",
+                            "UNAUTHORIZED",
+                            "FORBIDDEN",
+                            "NOT_FOUND",
+                            "CONFLICT",
+                            "RATE_LIMITED",
+                            "INVALID_TRANSITION",
+                            "UPSTREAM_ERROR",
+                            "INTERNAL_ERROR"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "details": {}
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/profiles/{profileId}/declared": {
+      "patch": {
+        "operationId": "updateDeclared",
+        "summary": "Reemplaza los datos declarados del perfil propio (RF-05, RF-08)",
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "profileId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "role": {
+                        "type": "string",
+                        "enum": [
+                          "creator"
+                        ]
+                      },
+                      "niches": {
+                        "minItems": 1,
+                        "maxItems": 3,
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "enum": [
+                            "moda",
+                            "belleza",
+                            "fitness",
+                            "deportes",
+                            "gastronomia",
+                            "viajes",
+                            "tecnologia",
+                            "gaming",
+                            "musica",
+                            "entretenimiento",
+                            "educacion",
+                            "finanzas",
+                            "salud-bienestar",
+                            "familia-maternidad",
+                            "mascotas",
+                            "arte-diseno",
+                            "emprendimiento",
+                            "hogar-deco",
+                            "automotriz",
+                            "lifestyle"
+                          ]
+                        }
+                      },
+                      "city": {
+                        "type": "string",
+                        "maxLength": 60
+                      },
+                      "shortBio": {
+                        "type": "string",
+                        "maxLength": 280
+                      },
+                      "accountType": {
+                        "default": "unknown",
+                        "type": "string",
+                        "enum": [
+                          "business",
+                          "creator",
+                          "unknown"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "role",
+                      "niches"
+                    ]
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "role": {
+                        "type": "string",
+                        "enum": [
+                          "brand"
+                        ]
+                      },
+                      "sector": {
+                        "type": "string",
+                        "enum": [
+                          "moda-retail",
+                          "belleza-cuidado-personal",
+                          "alimentos-bebidas",
+                          "restaurantes",
+                          "tecnologia",
+                          "salud",
+                          "educacion",
+                          "finanzas-seguros",
+                          "turismo-hoteleria",
+                          "entretenimiento-medios",
+                          "deporte",
+                          "hogar",
+                          "automotriz",
+                          "servicios",
+                          "otro"
+                        ]
+                      },
+                      "objectives": {
+                        "minItems": 1,
+                        "maxItems": 3,
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "enum": [
+                            "reconocimiento",
+                            "interaccion",
+                            "ventas",
+                            "lanzamiento",
+                            "trafico-web",
+                            "comunidad"
+                          ]
+                        }
+                      },
+                      "targetNiches": {
+                        "minItems": 1,
+                        "maxItems": 5,
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "enum": [
+                            "moda",
+                            "belleza",
+                            "fitness",
+                            "deportes",
+                            "gastronomia",
+                            "viajes",
+                            "tecnologia",
+                            "gaming",
+                            "musica",
+                            "entretenimiento",
+                            "educacion",
+                            "finanzas",
+                            "salud-bienestar",
+                            "familia-maternidad",
+                            "mascotas",
+                            "arte-diseno",
+                            "emprendimiento",
+                            "hogar-deco",
+                            "automotriz",
+                            "lifestyle"
+                          ]
+                        }
+                      },
+                      "budgetMinPen": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 1000000
+                      },
+                      "budgetMaxPen": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 1000000
+                      },
+                      "shortBio": {
+                        "type": "string",
+                        "maxLength": 280
+                      },
+                      "accountType": {
+                        "default": "unknown",
+                        "type": "string",
+                        "enum": [
+                          "business",
+                          "creator",
+                          "unknown"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "role",
+                      "sector",
+                      "objectives",
+                      "targetNiches",
+                      "budgetMinPen",
+                      "budgetMaxPen"
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    },
+                    "handle": {
+                      "type": "string",
+                      "pattern": "^[a-z0-9._]{1,30}$"
+                    },
+                    "role": {
+                      "type": "string",
+                      "enum": [
+                        "creator",
+                        "brand"
+                      ]
+                    },
+                    "fullName": {
+                      "type": "string"
+                    },
+                    "profilePicUrl": {
+                      "nullable": true,
+                      "type": "string",
+                      "format": "uri"
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "unclaimed",
+                        "verified",
+                        "removed"
+                      ]
+                    },
+                    "ingested": {
+                      "type": "object",
+                      "properties": {
+                        "biography": {
+                          "type": "string"
+                        },
+                        "followers": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "following": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "postsCount": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "isVerified": {
+                          "type": "boolean"
+                        },
+                        "externalUrl": {
+                          "nullable": true,
+                          "type": "string",
+                          "format": "uri"
+                        },
+                        "fetchedAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                        }
+                      },
+                      "required": [
+                        "biography",
+                        "followers",
+                        "following",
+                        "postsCount",
+                        "isVerified",
+                        "externalUrl",
+                        "fetchedAt"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "declared": {
+                      "nullable": true,
+                      "oneOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "role": {
+                              "type": "string",
+                              "enum": [
+                                "creator"
+                              ]
+                            },
+                            "niches": {
+                              "minItems": 1,
+                              "maxItems": 3,
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "enum": [
+                                  "moda",
+                                  "belleza",
+                                  "fitness",
+                                  "deportes",
+                                  "gastronomia",
+                                  "viajes",
+                                  "tecnologia",
+                                  "gaming",
+                                  "musica",
+                                  "entretenimiento",
+                                  "educacion",
+                                  "finanzas",
+                                  "salud-bienestar",
+                                  "familia-maternidad",
+                                  "mascotas",
+                                  "arte-diseno",
+                                  "emprendimiento",
+                                  "hogar-deco",
+                                  "automotriz",
+                                  "lifestyle"
+                                ]
+                              }
+                            },
+                            "city": {
+                              "type": "string",
+                              "maxLength": 60
+                            },
+                            "shortBio": {
+                              "type": "string",
+                              "maxLength": 280
+                            },
+                            "accountType": {
+                              "default": "unknown",
+                              "type": "string",
+                              "enum": [
+                                "business",
+                                "creator",
+                                "unknown"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "role",
+                            "niches",
+                            "accountType"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "role": {
+                              "type": "string",
+                              "enum": [
+                                "brand"
+                              ]
+                            },
+                            "sector": {
+                              "type": "string",
+                              "enum": [
+                                "moda-retail",
+                                "belleza-cuidado-personal",
+                                "alimentos-bebidas",
+                                "restaurantes",
+                                "tecnologia",
+                                "salud",
+                                "educacion",
+                                "finanzas-seguros",
+                                "turismo-hoteleria",
+                                "entretenimiento-medios",
+                                "deporte",
+                                "hogar",
+                                "automotriz",
+                                "servicios",
+                                "otro"
+                              ]
+                            },
+                            "objectives": {
+                              "minItems": 1,
+                              "maxItems": 3,
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "enum": [
+                                  "reconocimiento",
+                                  "interaccion",
+                                  "ventas",
+                                  "lanzamiento",
+                                  "trafico-web",
+                                  "comunidad"
+                                ]
+                              }
+                            },
+                            "targetNiches": {
+                              "minItems": 1,
+                              "maxItems": 5,
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "enum": [
+                                  "moda",
+                                  "belleza",
+                                  "fitness",
+                                  "deportes",
+                                  "gastronomia",
+                                  "viajes",
+                                  "tecnologia",
+                                  "gaming",
+                                  "musica",
+                                  "entretenimiento",
+                                  "educacion",
+                                  "finanzas",
+                                  "salud-bienestar",
+                                  "familia-maternidad",
+                                  "mascotas",
+                                  "arte-diseno",
+                                  "emprendimiento",
+                                  "hogar-deco",
+                                  "automotriz",
+                                  "lifestyle"
+                                ]
+                              }
+                            },
+                            "budgetMinPen": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 1000000
+                            },
+                            "budgetMaxPen": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 1000000
+                            },
+                            "shortBio": {
+                              "type": "string",
+                              "maxLength": 280
+                            },
+                            "accountType": {
+                              "default": "unknown",
+                              "type": "string",
+                              "enum": [
+                                "business",
+                                "creator",
+                                "unknown"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "role",
+                            "sector",
+                            "objectives",
+                            "targetNiches",
+                            "budgetMinPen",
+                            "budgetMaxPen",
+                            "accountType"
+                          ],
+                          "additionalProperties": false
+                        }
+                      ]
+                    },
+                    "classification": {
+                      "nullable": true,
+                      "type": "object",
+                      "properties": {
+                        "niches": {
+                          "maxItems": 3,
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "niche": {
+                                "type": "string",
+                                "enum": [
+                                  "moda",
+                                  "belleza",
+                                  "fitness",
+                                  "deportes",
+                                  "gastronomia",
+                                  "viajes",
+                                  "tecnologia",
+                                  "gaming",
+                                  "musica",
+                                  "entretenimiento",
+                                  "educacion",
+                                  "finanzas",
+                                  "salud-bienestar",
+                                  "familia-maternidad",
+                                  "mascotas",
+                                  "arte-diseno",
+                                  "emprendimiento",
+                                  "hogar-deco",
+                                  "automotriz",
+                                  "lifestyle"
+                                ]
+                              },
+                              "confidence": {
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 1
+                              },
+                              "source": {
+                                "type": "string",
+                                "enum": [
+                                  "declared",
+                                  "rules",
+                                  "embedding"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "niche",
+                              "confidence",
+                              "source"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "tier": {
+                          "type": "string",
+                          "enum": [
+                            "nano",
+                            "micro",
+                            "mid",
+                            "macro",
+                            "mega"
+                          ]
+                        },
+                        "followers": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "engagementRate": {
+                          "type": "number",
+                          "minimum": 0
+                        },
+                        "classifiedAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                        }
+                      },
+                      "required": [
+                        "niches",
+                        "tier",
+                        "followers",
+                        "engagementRate",
+                        "classifiedAt"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "services": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "publicacion-patrocinada",
+                              "canje",
+                              "embajador",
+                              "evento",
+                              "contenido-ugc"
+                            ]
+                          },
+                          "format": {
+                            "type": "string",
+                            "enum": [
+                              "post",
+                              "reel",
+                              "story",
+                              "live",
+                              "combo"
+                            ]
+                          },
+                          "pricePen": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 1000000
+                          },
+                          "description": {
+                            "type": "string",
+                            "maxLength": 280
+                          },
+                          "id": {
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "format",
+                          "pricePen",
+                          "description",
+                          "id"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "isOwner": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "handle",
+                    "role",
+                    "fullName",
+                    "profilePicUrl",
+                    "status",
+                    "ingested",
+                    "declared",
+                    "classification",
+                    "services",
+                    "isOwner"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "enum": [
+                            "VALIDATION_ERROR",
+                            "UNAUTHORIZED",
+                            "FORBIDDEN",
+                            "NOT_FOUND",
+                            "CONFLICT",
+                            "RATE_LIMITED",
+                            "INVALID_TRANSITION",
+                            "UPSTREAM_ERROR",
+                            "INTERNAL_ERROR"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "details": {}
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/profiles/{profileId}/services": {
+      "put": {
+        "operationId": "putServices",
+        "summary": "Reemplaza el catálogo de servicios del creador (RF-07)",
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "profileId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "services": {
+                    "maxItems": 20,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "publicacion-patrocinada",
+                            "canje",
+                            "embajador",
+                            "evento",
+                            "contenido-ugc"
+                          ]
+                        },
+                        "format": {
+                          "type": "string",
+                          "enum": [
+                            "post",
+                            "reel",
+                            "story",
+                            "live",
+                            "combo"
+                          ]
+                        },
+                        "pricePen": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 1000000
+                        },
+                        "description": {
+                          "type": "string",
+                          "maxLength": 280
+                        }
+                      },
+                      "required": [
+                        "type",
+                        "format",
+                        "pricePen",
+                        "description"
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "services"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "publicacion-patrocinada",
+                          "canje",
+                          "embajador",
+                          "evento",
+                          "contenido-ugc"
+                        ]
+                      },
+                      "format": {
+                        "type": "string",
+                        "enum": [
+                          "post",
+                          "reel",
+                          "story",
+                          "live",
+                          "combo"
+                        ]
+                      },
+                      "pricePen": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 1000000
+                      },
+                      "description": {
+                        "type": "string",
+                        "maxLength": 280
+                      },
+                      "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "format",
+                      "pricePen",
+                      "description",
+                      "id"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "enum": [
+                            "VALIDATION_ERROR",
+                            "UNAUTHORIZED",
+                            "FORBIDDEN",
+                            "NOT_FOUND",
+                            "CONFLICT",
+                            "RATE_LIMITED",
+                            "INVALID_TRANSITION",
+                            "UPSTREAM_ERROR",
+                            "INTERNAL_ERROR"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "details": {}
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/profiles/{handle}/removal-requests": {
+      "post": {
+        "operationId": "requestRemoval",
+        "summary": "Pedido de exclusión y borrado del titular (Ley 29733)",
+        "security": [],
+        "parameters": [
+          {
+            "name": "handle",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+                  },
+                  "reason": {
+                    "type": "string",
+                    "maxLength": 500
+                  }
+                },
+                "required": [
+                  "email"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    }
+                  },
+                  "required": [
+                    "ok"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "enum": [
+                            "VALIDATION_ERROR",
+                            "UNAUTHORIZED",
+                            "FORBIDDEN",
+                            "NOT_FOUND",
+                            "CONFLICT",
+                            "RATE_LIMITED",
+                            "INVALID_TRANSITION",
+                            "UPSTREAM_ERROR",
+                            "INTERNAL_ERROR"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "details": {}
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/feed": {
+      "get": {
+        "operationId": "feed",
+        "summary": "Feed de tarjetas ordenado por compatibilidad (RF-10)",
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "default": 20,
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50
+            }
+          },
+          {
+            "name": "profileId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            }
+          },
+          {
+            "name": "niches",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "moda",
+                  "belleza",
+                  "fitness",
+                  "deportes",
+                  "gastronomia",
+                  "viajes",
+                  "tecnologia",
+                  "gaming",
+                  "musica",
+                  "entretenimiento",
+                  "educacion",
+                  "finanzas",
+                  "salud-bienestar",
+                  "familia-maternidad",
+                  "mascotas",
+                  "arte-diseno",
+                  "emprendimiento",
+                  "hogar-deco",
+                  "automotriz",
+                  "lifestyle"
+                ]
+              }
+            }
+          },
+          {
+            "name": "tiers",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "nano",
+                  "micro",
+                  "mid",
+                  "macro",
+                  "mega"
+                ]
+              }
+            }
+          },
+          {
+            "name": "minEngagement",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "minimum": 0
+            }
+          },
+          {
+            "name": "maxPricePen",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            }
+          },
+          {
+            "name": "minBudgetPen",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "card": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "handle": {
+                                "type": "string",
+                                "pattern": "^[a-z0-9._]{1,30}$"
+                              },
+                              "role": {
+                                "type": "string",
+                                "enum": [
+                                  "creator",
+                                  "brand"
+                                ]
+                              },
+                              "fullName": {
+                                "type": "string"
+                              },
+                              "profilePicUrl": {
+                                "nullable": true,
+                                "type": "string",
+                                "format": "uri"
+                              },
+                              "status": {
+                                "type": "string",
+                                "enum": [
+                                  "unclaimed",
+                                  "verified",
+                                  "removed"
+                                ]
+                              },
+                              "niches": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string",
+                                  "enum": [
+                                    "moda",
+                                    "belleza",
+                                    "fitness",
+                                    "deportes",
+                                    "gastronomia",
+                                    "viajes",
+                                    "tecnologia",
+                                    "gaming",
+                                    "musica",
+                                    "entretenimiento",
+                                    "educacion",
+                                    "finanzas",
+                                    "salud-bienestar",
+                                    "familia-maternidad",
+                                    "mascotas",
+                                    "arte-diseno",
+                                    "emprendimiento",
+                                    "hogar-deco",
+                                    "automotriz",
+                                    "lifestyle"
+                                  ]
+                                }
+                              },
+                              "tier": {
+                                "type": "string",
+                                "enum": [
+                                  "nano",
+                                  "micro",
+                                  "mid",
+                                  "macro",
+                                  "mega"
+                                ]
+                              },
+                              "followers": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 9007199254740991
+                              },
+                              "engagementRate": {
+                                "type": "number",
+                                "minimum": 0
+                              },
+                              "sector": {
+                                "nullable": true,
+                                "type": "string",
+                                "enum": [
+                                  "moda-retail",
+                                  "belleza-cuidado-personal",
+                                  "alimentos-bebidas",
+                                  "restaurantes",
+                                  "tecnologia",
+                                  "salud",
+                                  "educacion",
+                                  "finanzas-seguros",
+                                  "turismo-hoteleria",
+                                  "entretenimiento-medios",
+                                  "deporte",
+                                  "hogar",
+                                  "automotriz",
+                                  "servicios",
+                                  "otro"
+                                ]
+                              },
+                              "minServicePricePen": {
+                                "nullable": true,
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 1000000
+                              },
+                              "budgetMaxPen": {
+                                "nullable": true,
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 1000000
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "handle",
+                              "role",
+                              "fullName",
+                              "profilePicUrl",
+                              "status",
+                              "niches",
+                              "tier",
+                              "followers",
+                              "engagementRate",
+                              "sector",
+                              "minServicePricePen",
+                              "budgetMaxPen"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "score": {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 1
+                          },
+                          "reasons": {
+                            "maxItems": 2,
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "enum": [
+                                "similarity",
+                                "niches",
+                                "budget",
+                                "engagement"
+                              ]
+                            }
+                          }
+                        },
+                        "required": [
+                          "card",
+                          "score",
+                          "reasons"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "nextCursor": {
+                      "nullable": true,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "items",
+                    "nextCursor"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "enum": [
+                            "VALIDATION_ERROR",
+                            "UNAUTHORIZED",
+                            "FORBIDDEN",
+                            "NOT_FOUND",
+                            "CONFLICT",
+                            "RATE_LIMITED",
+                            "INVALID_TRANSITION",
+                            "UPSTREAM_ERROR",
+                            "INTERNAL_ERROR"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "details": {}
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/interactions": {
+      "post": {
+        "operationId": "interact",
+        "summary": "Interés o descarte; interés mutuo crea un match",
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "actorProfileId": {
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                  },
+                  "targetProfileId": {
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                  },
+                  "kind": {
+                    "type": "string",
+                    "enum": [
+                      "interest",
+                      "dismiss"
+                    ]
+                  }
+                },
+                "required": [
+                  "actorProfileId",
+                  "targetProfileId",
+                  "kind"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "matched": {
+                      "type": "boolean"
+                    },
+                    "matchId": {
+                      "nullable": true,
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    }
+                  },
+                  "required": [
+                    "matched",
+                    "matchId"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "enum": [
+                            "VALIDATION_ERROR",
+                            "UNAUTHORIZED",
+                            "FORBIDDEN",
+                            "NOT_FOUND",
+                            "CONFLICT",
+                            "RATE_LIMITED",
+                            "INVALID_TRANSITION",
+                            "UPSTREAM_ERROR",
+                            "INTERNAL_ERROR"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "details": {}
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/matches": {
+      "get": {
+        "operationId": "matches",
+        "summary": "Matches de un perfil propio (RF-11)",
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "profileId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                      },
+                      "creator": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                          },
+                          "handle": {
+                            "type": "string",
+                            "pattern": "^[a-z0-9._]{1,30}$"
+                          },
+                          "role": {
+                            "type": "string",
+                            "enum": [
+                              "creator",
+                              "brand"
+                            ]
+                          },
+                          "fullName": {
+                            "type": "string"
+                          },
+                          "profilePicUrl": {
+                            "nullable": true,
+                            "type": "string",
+                            "format": "uri"
+                          },
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "unclaimed",
+                              "verified",
+                              "removed"
+                            ]
+                          },
+                          "niches": {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "enum": [
+                                "moda",
+                                "belleza",
+                                "fitness",
+                                "deportes",
+                                "gastronomia",
+                                "viajes",
+                                "tecnologia",
+                                "gaming",
+                                "musica",
+                                "entretenimiento",
+                                "educacion",
+                                "finanzas",
+                                "salud-bienestar",
+                                "familia-maternidad",
+                                "mascotas",
+                                "arte-diseno",
+                                "emprendimiento",
+                                "hogar-deco",
+                                "automotriz",
+                                "lifestyle"
+                              ]
+                            }
+                          },
+                          "tier": {
+                            "type": "string",
+                            "enum": [
+                              "nano",
+                              "micro",
+                              "mid",
+                              "macro",
+                              "mega"
+                            ]
+                          },
+                          "followers": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 9007199254740991
+                          },
+                          "engagementRate": {
+                            "type": "number",
+                            "minimum": 0
+                          },
+                          "sector": {
+                            "nullable": true,
+                            "type": "string",
+                            "enum": [
+                              "moda-retail",
+                              "belleza-cuidado-personal",
+                              "alimentos-bebidas",
+                              "restaurantes",
+                              "tecnologia",
+                              "salud",
+                              "educacion",
+                              "finanzas-seguros",
+                              "turismo-hoteleria",
+                              "entretenimiento-medios",
+                              "deporte",
+                              "hogar",
+                              "automotriz",
+                              "servicios",
+                              "otro"
+                            ]
+                          },
+                          "minServicePricePen": {
+                            "nullable": true,
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 1000000
+                          },
+                          "budgetMaxPen": {
+                            "nullable": true,
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 1000000
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "handle",
+                          "role",
+                          "fullName",
+                          "profilePicUrl",
+                          "status",
+                          "niches",
+                          "tier",
+                          "followers",
+                          "engagementRate",
+                          "sector",
+                          "minServicePricePen",
+                          "budgetMaxPen"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "brand": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                          },
+                          "handle": {
+                            "type": "string",
+                            "pattern": "^[a-z0-9._]{1,30}$"
+                          },
+                          "role": {
+                            "type": "string",
+                            "enum": [
+                              "creator",
+                              "brand"
+                            ]
+                          },
+                          "fullName": {
+                            "type": "string"
+                          },
+                          "profilePicUrl": {
+                            "nullable": true,
+                            "type": "string",
+                            "format": "uri"
+                          },
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "unclaimed",
+                              "verified",
+                              "removed"
+                            ]
+                          },
+                          "niches": {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "enum": [
+                                "moda",
+                                "belleza",
+                                "fitness",
+                                "deportes",
+                                "gastronomia",
+                                "viajes",
+                                "tecnologia",
+                                "gaming",
+                                "musica",
+                                "entretenimiento",
+                                "educacion",
+                                "finanzas",
+                                "salud-bienestar",
+                                "familia-maternidad",
+                                "mascotas",
+                                "arte-diseno",
+                                "emprendimiento",
+                                "hogar-deco",
+                                "automotriz",
+                                "lifestyle"
+                              ]
+                            }
+                          },
+                          "tier": {
+                            "type": "string",
+                            "enum": [
+                              "nano",
+                              "micro",
+                              "mid",
+                              "macro",
+                              "mega"
+                            ]
+                          },
+                          "followers": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 9007199254740991
+                          },
+                          "engagementRate": {
+                            "type": "number",
+                            "minimum": 0
+                          },
+                          "sector": {
+                            "nullable": true,
+                            "type": "string",
+                            "enum": [
+                              "moda-retail",
+                              "belleza-cuidado-personal",
+                              "alimentos-bebidas",
+                              "restaurantes",
+                              "tecnologia",
+                              "salud",
+                              "educacion",
+                              "finanzas-seguros",
+                              "turismo-hoteleria",
+                              "entretenimiento-medios",
+                              "deporte",
+                              "hogar",
+                              "automotriz",
+                              "servicios",
+                              "otro"
+                            ]
+                          },
+                          "minServicePricePen": {
+                            "nullable": true,
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 1000000
+                          },
+                          "budgetMaxPen": {
+                            "nullable": true,
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 1000000
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "handle",
+                          "role",
+                          "fullName",
+                          "profilePicUrl",
+                          "status",
+                          "niches",
+                          "tier",
+                          "followers",
+                          "engagementRate",
+                          "sector",
+                          "minServicePricePen",
+                          "budgetMaxPen"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "createdAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "creator",
+                      "brand",
+                      "createdAt"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "enum": [
+                            "VALIDATION_ERROR",
+                            "UNAUTHORIZED",
+                            "FORBIDDEN",
+                            "NOT_FOUND",
+                            "CONFLICT",
+                            "RATE_LIMITED",
+                            "INVALID_TRANSITION",
+                            "UPSTREAM_ERROR",
+                            "INTERNAL_ERROR"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "details": {}
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/quotes": {
+      "get": {
+        "operationId": "listQuotes",
+        "summary": "Cotizaciones donde participa un perfil propio (RF-11)",
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "profileId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                      },
+                      "serviceId": {
+                        "type": "string",
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                      },
+                      "creatorProfileId": {
+                        "type": "string",
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                      },
+                      "requesterProfileId": {
+                        "type": "string",
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                      },
+                      "status": {
+                        "type": "string",
+                        "enum": [
+                          "draft",
+                          "sent",
+                          "negotiating",
+                          "accepted",
+                          "rejected",
+                          "completed",
+                          "cancelled"
+                        ]
+                      },
+                      "amountPen": {
+                        "nullable": true,
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 1000000
+                      },
+                      "message": {
+                        "type": "string"
+                      },
+                      "history": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "from": {
+                              "nullable": true,
+                              "type": "string",
+                              "enum": [
+                                "draft",
+                                "sent",
+                                "negotiating",
+                                "accepted",
+                                "rejected",
+                                "completed",
+                                "cancelled"
+                              ]
+                            },
+                            "to": {
+                              "type": "string",
+                              "enum": [
+                                "draft",
+                                "sent",
+                                "negotiating",
+                                "accepted",
+                                "rejected",
+                                "completed",
+                                "cancelled"
+                              ]
+                            },
+                            "actorProfileId": {
+                              "type": "string",
+                              "format": "uuid",
+                              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                            },
+                            "note": {
+                              "nullable": true,
+                              "type": "string"
+                            },
+                            "at": {
+                              "type": "string",
+                              "format": "date-time",
+                              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                            }
+                          },
+                          "required": [
+                            "from",
+                            "to",
+                            "actorProfileId",
+                            "note",
+                            "at"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "createdAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                      },
+                      "updatedAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                      },
+                      "creator": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                          },
+                          "handle": {
+                            "type": "string",
+                            "pattern": "^[a-z0-9._]{1,30}$"
+                          },
+                          "role": {
+                            "type": "string",
+                            "enum": [
+                              "creator",
+                              "brand"
+                            ]
+                          },
+                          "fullName": {
+                            "type": "string"
+                          },
+                          "profilePicUrl": {
+                            "nullable": true,
+                            "type": "string",
+                            "format": "uri"
+                          },
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "unclaimed",
+                              "verified",
+                              "removed"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "handle",
+                          "role",
+                          "fullName",
+                          "profilePicUrl",
+                          "status"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "requester": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                          },
+                          "handle": {
+                            "type": "string",
+                            "pattern": "^[a-z0-9._]{1,30}$"
+                          },
+                          "role": {
+                            "type": "string",
+                            "enum": [
+                              "creator",
+                              "brand"
+                            ]
+                          },
+                          "fullName": {
+                            "type": "string"
+                          },
+                          "profilePicUrl": {
+                            "nullable": true,
+                            "type": "string",
+                            "format": "uri"
+                          },
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "unclaimed",
+                              "verified",
+                              "removed"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "handle",
+                          "role",
+                          "fullName",
+                          "profilePicUrl",
+                          "status"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "service": {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "publicacion-patrocinada",
+                              "canje",
+                              "embajador",
+                              "evento",
+                              "contenido-ugc"
+                            ]
+                          },
+                          "format": {
+                            "type": "string",
+                            "enum": [
+                              "post",
+                              "reel",
+                              "story",
+                              "live",
+                              "combo"
+                            ]
+                          },
+                          "pricePen": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 1000000
+                          },
+                          "description": {
+                            "type": "string",
+                            "maxLength": 280
+                          },
+                          "id": {
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "format",
+                          "pricePen",
+                          "description",
+                          "id"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "serviceId",
+                      "creatorProfileId",
+                      "requesterProfileId",
+                      "status",
+                      "amountPen",
+                      "message",
+                      "history",
+                      "createdAt",
+                      "updatedAt",
+                      "creator",
+                      "requester",
+                      "service"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "enum": [
+                            "VALIDATION_ERROR",
+                            "UNAUTHORIZED",
+                            "FORBIDDEN",
+                            "NOT_FOUND",
+                            "CONFLICT",
+                            "RATE_LIMITED",
+                            "INVALID_TRANSITION",
+                            "UPSTREAM_ERROR",
+                            "INTERNAL_ERROR"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "details": {}
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "createQuote",
+        "summary": "Solicita una cotización sobre un servicio (no requiere match)",
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "requesterProfileId": {
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                  },
+                  "serviceId": {
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                  },
+                  "message": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 1000
+                  },
+                  "amountPen": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 1000000
+                  },
+                  "send": {
+                    "default": true,
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "requesterProfileId",
+                  "serviceId",
+                  "message"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    },
+                    "serviceId": {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    },
+                    "creatorProfileId": {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    },
+                    "requesterProfileId": {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "draft",
+                        "sent",
+                        "negotiating",
+                        "accepted",
+                        "rejected",
+                        "completed",
+                        "cancelled"
+                      ]
+                    },
+                    "amountPen": {
+                      "nullable": true,
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 1000000
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "history": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "from": {
+                            "nullable": true,
+                            "type": "string",
+                            "enum": [
+                              "draft",
+                              "sent",
+                              "negotiating",
+                              "accepted",
+                              "rejected",
+                              "completed",
+                              "cancelled"
+                            ]
+                          },
+                          "to": {
+                            "type": "string",
+                            "enum": [
+                              "draft",
+                              "sent",
+                              "negotiating",
+                              "accepted",
+                              "rejected",
+                              "completed",
+                              "cancelled"
+                            ]
+                          },
+                          "actorProfileId": {
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                          },
+                          "note": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "at": {
+                            "type": "string",
+                            "format": "date-time",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                          }
+                        },
+                        "required": [
+                          "from",
+                          "to",
+                          "actorProfileId",
+                          "note",
+                          "at"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                    },
+                    "updatedAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                    },
+                    "creator": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid",
+                          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                        },
+                        "handle": {
+                          "type": "string",
+                          "pattern": "^[a-z0-9._]{1,30}$"
+                        },
+                        "role": {
+                          "type": "string",
+                          "enum": [
+                            "creator",
+                            "brand"
+                          ]
+                        },
+                        "fullName": {
+                          "type": "string"
+                        },
+                        "profilePicUrl": {
+                          "nullable": true,
+                          "type": "string",
+                          "format": "uri"
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "unclaimed",
+                            "verified",
+                            "removed"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "handle",
+                        "role",
+                        "fullName",
+                        "profilePicUrl",
+                        "status"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "requester": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid",
+                          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                        },
+                        "handle": {
+                          "type": "string",
+                          "pattern": "^[a-z0-9._]{1,30}$"
+                        },
+                        "role": {
+                          "type": "string",
+                          "enum": [
+                            "creator",
+                            "brand"
+                          ]
+                        },
+                        "fullName": {
+                          "type": "string"
+                        },
+                        "profilePicUrl": {
+                          "nullable": true,
+                          "type": "string",
+                          "format": "uri"
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "unclaimed",
+                            "verified",
+                            "removed"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "handle",
+                        "role",
+                        "fullName",
+                        "profilePicUrl",
+                        "status"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "service": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "publicacion-patrocinada",
+                            "canje",
+                            "embajador",
+                            "evento",
+                            "contenido-ugc"
+                          ]
+                        },
+                        "format": {
+                          "type": "string",
+                          "enum": [
+                            "post",
+                            "reel",
+                            "story",
+                            "live",
+                            "combo"
+                          ]
+                        },
+                        "pricePen": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 1000000
+                        },
+                        "description": {
+                          "type": "string",
+                          "maxLength": 280
+                        },
+                        "id": {
+                          "type": "string",
+                          "format": "uuid",
+                          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                        }
+                      },
+                      "required": [
+                        "type",
+                        "format",
+                        "pricePen",
+                        "description",
+                        "id"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "serviceId",
+                    "creatorProfileId",
+                    "requesterProfileId",
+                    "status",
+                    "amountPen",
+                    "message",
+                    "history",
+                    "createdAt",
+                    "updatedAt",
+                    "creator",
+                    "requester",
+                    "service"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "enum": [
+                            "VALIDATION_ERROR",
+                            "UNAUTHORIZED",
+                            "FORBIDDEN",
+                            "NOT_FOUND",
+                            "CONFLICT",
+                            "RATE_LIMITED",
+                            "INVALID_TRANSITION",
+                            "UPSTREAM_ERROR",
+                            "INTERNAL_ERROR"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "details": {}
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/quotes/{quoteId}/transitions": {
+      "post": {
+        "operationId": "transitionQuote",
+        "summary": "Cambia el estado de una cotización según QUOTE_TRANSITIONS",
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "quoteId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "actorProfileId": {
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                  },
+                  "to": {
+                    "type": "string",
+                    "enum": [
+                      "draft",
+                      "sent",
+                      "negotiating",
+                      "accepted",
+                      "rejected",
+                      "completed",
+                      "cancelled"
+                    ]
+                  },
+                  "amountPen": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 1000000
+                  },
+                  "note": {
+                    "type": "string",
+                    "maxLength": 500
+                  }
+                },
+                "required": [
+                  "actorProfileId",
+                  "to"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    },
+                    "serviceId": {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    },
+                    "creatorProfileId": {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    },
+                    "requesterProfileId": {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "draft",
+                        "sent",
+                        "negotiating",
+                        "accepted",
+                        "rejected",
+                        "completed",
+                        "cancelled"
+                      ]
+                    },
+                    "amountPen": {
+                      "nullable": true,
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 1000000
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "history": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "from": {
+                            "nullable": true,
+                            "type": "string",
+                            "enum": [
+                              "draft",
+                              "sent",
+                              "negotiating",
+                              "accepted",
+                              "rejected",
+                              "completed",
+                              "cancelled"
+                            ]
+                          },
+                          "to": {
+                            "type": "string",
+                            "enum": [
+                              "draft",
+                              "sent",
+                              "negotiating",
+                              "accepted",
+                              "rejected",
+                              "completed",
+                              "cancelled"
+                            ]
+                          },
+                          "actorProfileId": {
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                          },
+                          "note": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "at": {
+                            "type": "string",
+                            "format": "date-time",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                          }
+                        },
+                        "required": [
+                          "from",
+                          "to",
+                          "actorProfileId",
+                          "note",
+                          "at"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                    },
+                    "updatedAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                    },
+                    "creator": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid",
+                          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                        },
+                        "handle": {
+                          "type": "string",
+                          "pattern": "^[a-z0-9._]{1,30}$"
+                        },
+                        "role": {
+                          "type": "string",
+                          "enum": [
+                            "creator",
+                            "brand"
+                          ]
+                        },
+                        "fullName": {
+                          "type": "string"
+                        },
+                        "profilePicUrl": {
+                          "nullable": true,
+                          "type": "string",
+                          "format": "uri"
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "unclaimed",
+                            "verified",
+                            "removed"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "handle",
+                        "role",
+                        "fullName",
+                        "profilePicUrl",
+                        "status"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "requester": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid",
+                          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                        },
+                        "handle": {
+                          "type": "string",
+                          "pattern": "^[a-z0-9._]{1,30}$"
+                        },
+                        "role": {
+                          "type": "string",
+                          "enum": [
+                            "creator",
+                            "brand"
+                          ]
+                        },
+                        "fullName": {
+                          "type": "string"
+                        },
+                        "profilePicUrl": {
+                          "nullable": true,
+                          "type": "string",
+                          "format": "uri"
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "unclaimed",
+                            "verified",
+                            "removed"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "handle",
+                        "role",
+                        "fullName",
+                        "profilePicUrl",
+                        "status"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "service": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "publicacion-patrocinada",
+                            "canje",
+                            "embajador",
+                            "evento",
+                            "contenido-ugc"
+                          ]
+                        },
+                        "format": {
+                          "type": "string",
+                          "enum": [
+                            "post",
+                            "reel",
+                            "story",
+                            "live",
+                            "combo"
+                          ]
+                        },
+                        "pricePen": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 1000000
+                        },
+                        "description": {
+                          "type": "string",
+                          "maxLength": 280
+                        },
+                        "id": {
+                          "type": "string",
+                          "format": "uuid",
+                          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                        }
+                      },
+                      "required": [
+                        "type",
+                        "format",
+                        "pricePen",
+                        "description",
+                        "id"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "serviceId",
+                    "creatorProfileId",
+                    "requesterProfileId",
+                    "status",
+                    "amountPen",
+                    "message",
+                    "history",
+                    "createdAt",
+                    "updatedAt",
+                    "creator",
+                    "requester",
+                    "service"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "enum": [
+                            "VALIDATION_ERROR",
+                            "UNAUTHORIZED",
+                            "FORBIDDEN",
+                            "NOT_FOUND",
+                            "CONFLICT",
+                            "RATE_LIMITED",
+                            "INVALID_TRANSITION",
+                            "UPSTREAM_ERROR",
+                            "INTERNAL_ERROR"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "details": {}
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/notifications": {
+      "get": {
+        "operationId": "notifications",
+        "summary": "Notificaciones del usuario (RF-12)",
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "default": 20,
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                          },
+                          "kind": {
+                            "type": "string",
+                            "enum": [
+                              "match_created",
+                              "quote_status_changed",
+                              "message_received"
+                            ]
+                          },
+                          "payload": {
+                            "type": "object",
+                            "additionalProperties": {
+                              "type": "string"
+                            }
+                          },
+                          "readAt": {
+                            "nullable": true,
+                            "type": "string",
+                            "format": "date-time",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "format": "date-time",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "kind",
+                          "payload",
+                          "readAt",
+                          "createdAt"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "nextCursor": {
+                      "nullable": true,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "items",
+                    "nextCursor"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "enum": [
+                            "VALIDATION_ERROR",
+                            "UNAUTHORIZED",
+                            "FORBIDDEN",
+                            "NOT_FOUND",
+                            "CONFLICT",
+                            "RATE_LIMITED",
+                            "INVALID_TRANSITION",
+                            "UPSTREAM_ERROR",
+                            "INTERNAL_ERROR"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "details": {}
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/notifications/{notificationId}/read": {
+      "post": {
+        "operationId": "markNotificationRead",
+        "summary": "Marca una notificación como leída",
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "notificationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    },
+                    "kind": {
+                      "type": "string",
+                      "enum": [
+                        "match_created",
+                        "quote_status_changed",
+                        "message_received"
+                      ]
+                    },
+                    "payload": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      }
+                    },
+                    "readAt": {
+                      "nullable": true,
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "kind",
+                    "payload",
+                    "readAt",
+                    "createdAt"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "enum": [
+                            "VALIDATION_ERROR",
+                            "UNAUTHORIZED",
+                            "FORBIDDEN",
+                            "NOT_FOUND",
+                            "CONFLICT",
+                            "RATE_LIMITED",
+                            "INVALID_TRANSITION",
+                            "UPSTREAM_ERROR",
+                            "INTERNAL_ERROR"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "details": {}
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/matches/{matchId}/messages": {
+      "get": {
+        "operationId": "listMessages",
+        "summary": "Historial del chat de un match, más reciente primero (RF-13)",
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "matchId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "default": 20,
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                          },
+                          "matchId": {
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                          },
+                          "senderProfileId": {
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                          },
+                          "body": {
+                            "type": "string"
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "format": "date-time",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "matchId",
+                          "senderProfileId",
+                          "body",
+                          "createdAt"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "nextCursor": {
+                      "nullable": true,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "items",
+                    "nextCursor"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "enum": [
+                            "VALIDATION_ERROR",
+                            "UNAUTHORIZED",
+                            "FORBIDDEN",
+                            "NOT_FOUND",
+                            "CONFLICT",
+                            "RATE_LIMITED",
+                            "INVALID_TRANSITION",
+                            "UPSTREAM_ERROR",
+                            "INTERNAL_ERROR"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "details": {}
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "sendMessage",
+        "summary": "Envía un mensaje; la entrega en vivo va por Supabase Realtime",
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "matchId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "senderProfileId": {
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                  },
+                  "body": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 2000
+                  }
+                },
+                "required": [
+                  "senderProfileId",
+                  "body"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    },
+                    "matchId": {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    },
+                    "senderProfileId": {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    },
+                    "body": {
+                      "type": "string"
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "matchId",
+                    "senderProfileId",
+                    "body",
+                    "createdAt"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "enum": [
+                            "VALIDATION_ERROR",
+                            "UNAUTHORIZED",
+                            "FORBIDDEN",
+                            "NOT_FOUND",
+                            "CONFLICT",
+                            "RATE_LIMITED",
+                            "INVALID_TRANSITION",
+                            "UPSTREAM_ERROR",
+                            "INTERNAL_ERROR"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "details": {}
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

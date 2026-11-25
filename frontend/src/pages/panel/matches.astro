@@ -1,0 +1,39 @@
+---
+import App from '../../layouts/App.astro';
+import { call } from '../../lib/api';
+import { getMe } from '../../lib/session';
+import MatchCard from '../../features/matches/components/MatchCard.astro';
+
+const me = await getMe(Astro.locals);
+const token = Astro.locals.accessToken;
+const sections = await Promise.all(
+  me.profiles.map(async (profile) => ({
+    profile,
+    matches: await call('matches', { query: { profileId: profile.id }, token }),
+  })),
+);
+---
+
+<App title="Matches">
+  <header class="page-head">
+    <p class="eyebrow">Tu espacio / matches</p>
+    <h1>Matches</h1>
+    <p class="lead">Intereses mutuos: aquí puedes abrir el chat.</p>
+  </header>
+  {me.profiles.length === 0 && <p class="card">Reclama un perfil en <a href="/panel">Mi panel</a> para empezar.</p>}
+  {
+    sections.map(({ profile, matches }) => (
+      <section class="stack" aria-labelledby={`s-${profile.id}`}>
+        <h2 id={`s-${profile.id}`}>@{profile.handle}</h2>
+        {matches.length === 0 && (
+          <p class="muted">Aún no tienes matches. Muestra interés en <a href="/descubrir">Descubrir</a>.</p>
+        )}
+        <div class="feed-grid">
+          {matches.map((m) => (
+            <MatchCard match={m} mine={profile.id} />
+          ))}
+        </div>
+      </section>
+    ))
+  }
+</App>

@@ -32,3 +32,9 @@ Thumbs.db
 .idea/
 # Generado por `npm run db:reset` desde contracts/fixtures
 db/supabase/seed.sql
+# Respaldos de BD (contienen datos de usuarios)
+db/backup-*.sql
+db/*.sql
+!db/supabase/migrations/*.sql
+# Caché del modelo de embeddings (~465 MB)
+backend/.cache/

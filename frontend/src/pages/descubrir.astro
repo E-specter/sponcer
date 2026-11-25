@@ -1,0 +1,18 @@
+---
+import App from '../layouts/App.astro';
+import { getMe } from '../lib/session';
+import FilterPanel from '../features/discover/islands/FilterPanel';
+import Feed from '../features/discover/islands/Feed';
+
+const me = await getMe(Astro.locals);
+---
+
+<App title="Descubrir">
+  <header class="page-head">
+    <p class="eyebrow">Descubrir / personas, no algoritmos</p>
+    <h1 class="display-break">Tu próximo punto en común.</h1>
+    <p class="lead">Encuentra personas y marcas por lo que les interesa. Conoce su contexto antes de dar el primer paso.</p>
+  </header>
+  <FilterPanel client:load profiles={me.profiles} />
+  <Feed client:load profiles={me.profiles} />
+</App>

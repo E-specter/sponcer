@@ -1,0 +1,38 @@
+---
+import { ExternalLink } from 'lucide-react';
+import type { ProfileDetail } from '@sponcer/contracts';
+import { formatCount, formatDate } from '../../../lib/labels';
+
+interface Props {
+  ingested: ProfileDetail['ingested'];
+  handle: string;
+}
+const { ingested, handle } = Astro.props;
+---
+
+<section class="card" aria-labelledby="ingerido">
+  <h2 id="ingerido">Desde Instagram</h2>
+  <p class="row"><span class="tag tag-accion">Instagram · ingerido</span><span class="tag">Solo lectura</span></p>
+  <p class="muted small">
+    Información pública leída de Instagram el {formatDate(ingested.fetchedAt)}. No puede editarse.
+  </p>
+  <p>{ingested.biography || 'Sin biografía.'}</p>
+  <dl class="row">
+    <div><dt class="small muted">Seguidores</dt><dd>{formatCount(ingested.followers)}</dd></div>
+    <div><dt class="small muted">Siguiendo</dt><dd>{formatCount(ingested.following)}</dd></div>
+    <div><dt class="small muted">Publicaciones</dt><dd>{formatCount(ingested.postsCount)}</dd></div>
+    <div><dt class="small muted">Cuenta verificada</dt><dd>{ingested.isVerified ? 'Sí' : 'No'}</dd></div>
+  </dl>
+  <p class="row">
+    <a class="ink-link-light" href={`https://www.instagram.com/${handle}/`} rel="noopener noreferrer nofollow" target="_blank">
+      Ver perfil de origen <ExternalLink size={14} strokeWidth={2} aria-hidden="true" />
+    </a>
+    {
+      ingested.externalUrl && (
+        <a class="ink-link-light" href={ingested.externalUrl} rel="noopener noreferrer nofollow" target="_blank">
+          Enlace de su bio <ExternalLink size={14} strokeWidth={2} aria-hidden="true" />
+        </a>
+      )
+    }
+  </p>
+</section>

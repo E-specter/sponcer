@@ -25,5 +25,21 @@ ultima_actualizacion: 2026-11-25
   - el consentimiento se registra al crear la cuenta y al reclamar un perfil.
 - **Fichas previas (RF-01):** solo de cuentas profesionales, visibles solo para usuarios autenticados y con `noindex`.
 - **Derechos ARCO / exclusión:** cualquier titular puede pedir la exclusión y el borrado de su ficha (`RequestProfileRemoval`). El handle excluido queda en una lista de bloqueo para la ingesta.
+- **Revisión de exclusiones pendientes** (pedidos de titulares sin cuenta o no verificados):
+  - **Plazo y responsable:** Eduard los revisa al menos una vez por semana y siempre antes de cada demo. Una vez confirmada la titularidad, se aplican en un plazo máximo de 10 días hábiles, como pide la Ley 29733 para los derechos ARCO.
+  - **Cómo se consultan:** desde Studio local (`http://127.0.0.1:55523`) con `select ig_handle, email, reason, created_at from profile_removal_requests where status = 'pending' order by created_at;`.
+  - **Cómo se confirma la titularidad:** escribiendo al correo indicado en el pedido.
+  - **Cómo se aplica:** si la ficha tiene dueño, lo hace el dueño desde la app, que publica `ProfileRemoved`. Si no tiene dueño, se ejecuta en Studio este SQL equivalente, en una transacción. Un `update` manual **no** dispara el evento del backend, por eso el SQL hace también el bloqueo y el borrado:
+    ```sql
+    begin;
+    insert into ingestion_blocklist (ig_handle, reason) values ('<handle>', 'exclusion ARCO') on conflict do nothing;
+    delete from ig_snapshots where ig_handle = '<handle>';
+    delete from profile_classifications where profile_id = (select id from profiles where ig_handle = '<handle>');
+    delete from profile_embeddings where profile_id = (select id from profiles where ig_handle = '<handle>');
+    update profiles set status = 'removed' where ig_handle = '<handle>';
+    update profile_removal_requests set status = 'applied' where ig_handle = '<handle>';
+    commit;
+    ```
+  - **Pendiente de automatizar:** un panel de administración queda fuera del MVP.
 - **Seguridad:** RLS, secretos fuera del repo y acceso a la BD solo con el rol de servicio en el backend.
 - **Nota:** esto es una implementación técnica de buenas prácticas, **no una opinión legal**. Si el proyecto sale de la demo académica, se recomienda revisar el banco de datos ante la ANPD.

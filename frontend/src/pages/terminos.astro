@@ -1,0 +1,29 @@
+---
+import Public from '../layouts/Public.astro';
+
+export const prerender = true;
+---
+
+<Public title="Términos de uso">
+  <h1>Términos de uso</h1>
+  <p class="muted">Texto provisional para el MVP; requiere revisión legal antes del lanzamiento.</p>
+  <section class="stack">
+    <h2>El servicio</h2>
+    <p>
+      Sponcer facilita el contacto entre marcas y creadores. No es parte de los acuerdos que ustedes
+      celebren ni procesa pagos.
+    </p>
+    <h2>Tu cuenta</h2>
+    <p>
+      Solo puedes reclamar cuentas de Instagram que controles. La verificación se hace con un
+      código temporal en tu biografía. La información declarada debe ser veraz.
+    </p>
+    <h2>Conducta</h2>
+    <p>
+      No se permite el spam, la suplantación ni el uso del chat para fines distintos a la
+      colaboración comercial. Podemos suspender cuentas que incumplan estas reglas.
+    </p>
+    <h2>Datos personales</h2>
+    <p>El tratamiento de datos se describe en la <a href="/privacidad">política de privacidad</a>.</p>
+  </section>
+</Public>

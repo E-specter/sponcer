@@ -1,0 +1,33 @@
+---
+import App from '../../layouts/App.astro';
+import { call } from '../../lib/api';
+import { getMe } from '../../lib/session';
+import QuoteList from '../../features/quotes/islands/QuoteList';
+
+const me = await getMe(Astro.locals);
+const token = Astro.locals.accessToken;
+
+const sections = await Promise.all(
+  me.profiles.map(async (profile) => ({
+    profile,
+    quotes: await call('listQuotes', { query: { profileId: profile.id }, token }),
+  })),
+);
+---
+
+<App title="Cotizaciones">
+  <header class="page-head">
+    <p class="eyebrow">Tu espacio / cotizaciones</p>
+    <h1>Cotizaciones</h1>
+    <p class="lead">Solicitudes enviadas y recibidas, con su estado.</p>
+  </header>
+  {me.profiles.length === 0 && <p class="card">Reclama un perfil en <a href="/panel">Mi panel</a> para empezar.</p>}
+  {
+    sections.map(({ profile, quotes }) => (
+      <section class="stack" aria-labelledby={`s-${profile.id}`}>
+        <h2 id={`s-${profile.id}`}>@{profile.handle}</h2>
+        <QuoteList client:load profile={profile} quotes={quotes} />
+      </section>
+    ))
+  }
+</App>

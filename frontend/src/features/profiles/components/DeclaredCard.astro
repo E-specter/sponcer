@@ -1,0 +1,39 @@
+---
+import type { Declared } from '@sponcer/contracts';
+import { NICHE_LABEL, OBJECTIVE_LABEL, SECTOR_LABEL, formatPen } from '../../../lib/labels';
+
+interface Props {
+  declared: Declared | null;
+}
+const { declared } = Astro.props;
+---
+
+<section class="card" aria-labelledby="declarado">
+  <h2 id="declarado">En Sponcer</h2>
+  <p class="row"><span class="tag">Declarado en Sponcer</span></p>
+  {
+    !declared ? (
+      <p class="muted">Este perfil aún no ha completado sus datos.</p>
+    ) : declared.role === 'creator' ? (
+      <div class="stack">
+        <p class="row">
+          {declared.niches.map((n) => <span class="chip">{NICHE_LABEL[n]}</span>)}
+        </p>
+        {declared.city && <p>Ciudad: {declared.city}</p>}
+        {declared.shortBio && <p>{declared.shortBio}</p>}
+      </div>
+    ) : (
+      <div class="stack">
+        <p>Sector: {SECTOR_LABEL[declared.sector]}</p>
+        <p>
+          Objetivos: {declared.objectives.map((o) => OBJECTIVE_LABEL[o]).join(', ')}
+        </p>
+        <p class="row">
+          Busca: {declared.targetNiches.map((n) => <span class="chip">{NICHE_LABEL[n]}</span>)}
+        </p>
+        <p>Presupuesto: {formatPen(declared.budgetMinPen)} a {formatPen(declared.budgetMaxPen)}</p>
+        {declared.shortBio && <p>{declared.shortBio}</p>}
+      </div>
+    )
+  }
+</section>
