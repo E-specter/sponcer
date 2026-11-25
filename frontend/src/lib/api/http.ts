@@ -7,6 +7,8 @@ export interface RawArgs {
   query?: unknown;
   body?: unknown;
   token?: string;
+  /** IP del navegador: el backend la usa para límites por IP (viaja en X-Forwarded-For). */
+  clientIp?: string;
 }
 
 const serializeValue = (v: unknown): string => (Array.isArray(v) ? v.join(',') : String(v));
@@ -43,6 +45,7 @@ export async function httpCall(name: EndpointName, args: RawArgs): Promise<unkno
     headers: {
       Accept: 'application/json',
       ...(hasBody ? { 'Content-Type': 'application/json' } : {}),
+      ...(args.clientIp ? { 'X-Forwarded-For': args.clientIp } : {}),
       ...(args.token ? { Authorization: `Bearer ${args.token}` } : {}),
     },
     body: hasBody ? JSON.stringify(args.body) : undefined,

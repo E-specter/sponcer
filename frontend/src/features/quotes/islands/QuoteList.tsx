@@ -17,11 +17,12 @@ import {
   formatDate,
   formatPen,
 } from '../../../lib/labels';
-import { transitionQuote } from '../api/quotes';
+import { listQuotes, transitionQuote } from '../api/quotes';
 
 interface Props {
   profile: ProfileSummary;
   quotes: Quote[];
+  nextCursor: string | null;
 }
 
 /** Transiciones válidas desde `status` para quien actúa como `role` (QUOTE_TRANSITIONS + QUOTE_TRANSITION_ACTOR). */
@@ -34,12 +35,28 @@ export const allowedTransitions = (
     return actor === 'any' || actor === role;
   });
 
-export default function QuoteList({ profile, quotes: initial }: Props) {
+export default function QuoteList({ profile, quotes: initial, nextCursor }: Props) {
   const [quotes, setQuotes] = useState(initial);
+  const [cursor, setCursor] = useState(nextCursor);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [notes, setNotes] = useState<Record<string, string>>({});
   const [amounts, setAmounts] = useState<Record<string, string>>({});
   const [busy, setBusy] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  async function more() {
+    if (!cursor) return;
+    setLoadingMore(true);
+    try {
+      const page = await listQuotes(profile.id, cursor);
+      setQuotes((prev) => [...prev, ...page.items]);
+      setCursor(page.nextCursor);
+    } catch (e) {
+      setError(messageOf(e));
+    } finally {
+      setLoadingMore(false);
+    }
+  }
 
   async function move(q: Quote, to: QuoteStatus) {
     setBusy(q.id);
@@ -137,6 +154,11 @@ export default function QuoteList({ profile, quotes: initial }: Props) {
           </article>
         );
       })}
+      {cursor && (
+        <button type="button" className="btn btn-secondary" disabled={loadingMore} onClick={more}>
+          Cargar más
+        </button>
+      )}
     </div>
   );
 }

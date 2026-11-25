@@ -3,6 +3,7 @@ import {
   AccountType,
   BRAND_SECTORS,
   CAMPAIGN_OBJECTIVES,
+  CITIES,
   Declared,
   MAX_BRAND_OBJECTIVES,
   MAX_BRAND_TARGET_NICHES,
@@ -10,6 +11,7 @@ import {
   NICHES,
   type BrandSector,
   type CampaignObjective,
+  type City,
   type Niche,
   type ProfileRole,
 } from '@sponcer/contracts';
@@ -17,7 +19,7 @@ import { Alert } from '../../../components/ui/Alert';
 import { CheckboxGroup } from '../../../components/ui/CheckboxGroup';
 import { Field, describe } from '../../../components/ui/Field';
 import { fieldErrors, messageOf } from '../../../components/ui/errors';
-import { NICHE_LABEL, OBJECTIVE_LABEL, SECTOR_LABEL } from '../../../lib/labels';
+import { CITY_LABEL, NICHE_LABEL, OBJECTIVE_LABEL, SECTOR_LABEL } from '../../../lib/labels';
 import { updateDeclared } from '../api/panel';
 
 const NICHE_OPTIONS = NICHES.map((value) => ({ value, label: NICHE_LABEL[value] }));
@@ -42,7 +44,7 @@ export default function DeclaredForm({ profileId, role, initial }: Props) {
   const brand = initial?.role === 'brand' ? initial : null;
 
   const [niches, setNiches] = useState<Niche[]>(creator?.niches ?? []);
-  const [city, setCity] = useState(creator?.city ?? '');
+  const [city, setCity] = useState<City | ''>(creator?.city ?? brand?.city ?? '');
   const [sector, setSector] = useState<BrandSector | ''>(brand?.sector ?? '');
   const [objectives, setObjectives] = useState<CampaignObjective[]>(brand?.objectives ?? []);
   const [targetNiches, setTargetNiches] = useState<Niche[]>(brand?.targetNiches ?? []);
@@ -63,6 +65,7 @@ export default function DeclaredForm({ profileId, role, initial }: Props) {
           targetNiches,
           budgetMinPen: budgetMin === '' ? undefined : Number(budgetMin),
           budgetMaxPen: budgetMax === '' ? undefined : Number(budgetMax),
+          city: city || undefined,
           shortBio: shortBio || undefined,
           accountType,
         };
@@ -84,6 +87,22 @@ export default function DeclaredForm({ profileId, role, initial }: Props) {
   }
 
   const id = (name: string) => `${profileId}-${name}`;
+  const cityField = (
+    <Field id={id('city')} label="Ciudad" error={errors.city}>
+      <select
+        {...describe(id('city'), errors.city)}
+        value={city}
+        onChange={(e) => setCity(CITIES.find((c) => c === e.target.value) ?? '')}
+      >
+        <option value="">Sin indicar</option>
+        {CITIES.map((c) => (
+          <option key={c} value={c}>
+            {CITY_LABEL[c]}
+          </option>
+        ))}
+      </select>
+    </Field>
+  );
 
   return (
     <form onSubmit={submit} noValidate aria-label="Datos declarados">
@@ -98,13 +117,7 @@ export default function DeclaredForm({ profileId, role, initial }: Props) {
             max={MAX_CREATOR_NICHES}
             error={errors.niches}
           />
-          <Field id={id('city')} label="Ciudad" error={errors.city}>
-            <input
-              {...describe(id('city'), errors.city)}
-              value={city}
-              onChange={(e) => setCity(e.target.value)}
-            />
-          </Field>
+          {cityField}
         </>
       ) : (
         <>
@@ -140,6 +153,7 @@ export default function DeclaredForm({ profileId, role, initial }: Props) {
             max={MAX_BRAND_TARGET_NICHES}
             error={errors.targetNiches}
           />
+          {cityField}
           <Field id={id('bmin')} label="Presupuesto mínimo (S/)" error={errors.budgetMinPen}>
             <input
               {...describe(id('bmin'), errors.budgetMinPen)}

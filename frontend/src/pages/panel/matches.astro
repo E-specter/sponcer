@@ -2,7 +2,7 @@
 import App from '../../layouts/App.astro';
 import { call } from '../../lib/api';
 import { getMe } from '../../lib/session';
-import MatchCard from '../../features/matches/components/MatchCard.astro';
+import MatchList from '../../features/matches/islands/MatchList';
 
 const me = await getMe(Astro.locals);
 const token = Astro.locals.accessToken;
@@ -25,14 +25,7 @@ const sections = await Promise.all(
     sections.map(({ profile, matches }) => (
       <section class="stack" aria-labelledby={`s-${profile.id}`}>
         <h2 id={`s-${profile.id}`}>@{profile.handle}</h2>
-        {matches.length === 0 && (
-          <p class="muted">Aún no tienes matches. Muestra interés en <a href="/descubrir">Descubrir</a>.</p>
-        )}
-        <div class="feed-grid">
-          {matches.map((m) => (
-            <MatchCard match={m} mine={profile.id} />
-          ))}
-        </div>
+        <MatchList client:load profileId={profile.id} initial={matches.items} nextCursor={matches.nextCursor} />
       </section>
     ))
   }

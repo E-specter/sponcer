@@ -1,10 +1,19 @@
 ---
-import { PUBLIC_AUTH_MODE } from 'astro:env/client';
+import { PUBLIC_AUTH_MODE, PUBLIC_DEMO_LOGIN } from 'astro:env/client';
+import { DEMO_PASSWORD } from 'astro:env/server';
 import Public from '../layouts/Public.astro';
+import { DEMO_ACCOUNTS } from '../lib/demo';
 import { createSupabase } from '../lib/supabase';
 
 let message: string | null = null;
 let failed = false;
+
+// Sin DEMO_PASSWORD el acceso de demo no se ofrece (ADR-007).
+const showDemo = PUBLIC_AUTH_MODE === 'supabase' && PUBLIC_DEMO_LOGIN && Boolean(DEMO_PASSWORD);
+if (Astro.url.searchParams.get('demo') === 'error') {
+  failed = true;
+  message = 'No pudimos entrar con la cuenta demo. Inténtalo de nuevo.';
+}
 
 if (Astro.url.searchParams.has('expired')) {
   failed = true;
@@ -56,6 +65,25 @@ if (Astro.request.method === 'POST' && PUBLIC_AUTH_MODE === 'supabase') {
           <span class="muted small">Te enviaremos un enlace mágico, sin contraseña.</span>
         </div>
         <button class="btn" type="submit">Enviarme el enlace</button>
+      </form>
+    )
+  }
+  {
+    showDemo && (
+      <form method="post" action="/auth/demo-login" class="card" aria-label="Acceso de demostración">
+        <h2>Entrar con una cuenta demo</h2>
+        <div class="field">
+          <label for="demo-email">Cuenta</label>
+          <select id="demo-email" name="email">
+            {DEMO_ACCOUNTS.map((a) => (
+              <option value={a.email}>
+                {a.label} · {a.email}
+              </option>
+            ))}
+          </select>
+          <span class="hint">Cuentas con datos ficticios, solo para la demostración.</span>
+        </div>
+        <button class="btn btn-secondary" type="submit">Entrar con la cuenta elegida</button>
       </form>
     )
   }

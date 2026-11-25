@@ -2,20 +2,21 @@
 import App from '../../layouts/App.astro';
 import { call } from '../../lib/api';
 import { getMe } from '../../lib/session';
+import type { Match } from '@sponcer/contracts';
 import Chat from '../../features/chat/islands/Chat';
 
 const matchId = Astro.params.matchId ?? '';
 const me = await getMe(Astro.locals);
 const token = Astro.locals.accessToken;
 
-// Se busca el match entre los de mis perfiles para saber con cuál escribo y quién es la contraparte.
+// Se busca el match entre los de mis perfiles (recorriendo las páginas) para saber con cuál escribo.
+async function findMatch(profileId: string, cursor?: string): Promise<Match | undefined> {
+  const page = await call('matches', { query: { profileId, cursor }, token });
+  const hit = page.items.find((m) => m.id === matchId);
+  return hit ?? (page.nextCursor ? findMatch(profileId, page.nextCursor) : undefined);
+}
 const found = (
-  await Promise.all(
-    me.profiles.map(async (profile) => ({
-      profile,
-      match: (await call('matches', { query: { profileId: profile.id }, token })).find((m) => m.id === matchId),
-    })),
-  )
+  await Promise.all(me.profiles.map(async (profile) => ({ profile, match: await findMatch(profile.id) })))
 ).find((x) => x.match);
 
 const match = found?.match;

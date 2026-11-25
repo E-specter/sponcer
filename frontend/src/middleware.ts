@@ -5,7 +5,7 @@ import { ApiError } from './lib/api/errors';
 import { createSupabase } from './lib/supabase';
 
 /** Rutas que exigen sesión; las demás (landing, login, legales, exclusión) son públicas. */
-const PROTECTED_PREFIXES = ['/descubrir', '/perfil', '/panel', '/mensajes'];
+const PROTECTED_PREFIXES = ['/descubrir', '/perfil', '/panel', '/mensajes', '/admin'];
 const BFF_PREFIX = '/bff/';
 /** Rutas con datos de perfiles: nunca indexables (RF-01, RNF-05). */
 const NOINDEX_PREFIXES = [...PROTECTED_PREFIXES, '/exclusion'];
