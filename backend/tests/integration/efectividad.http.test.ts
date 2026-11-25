@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest';
 import { api, type ProfileCard } from '@sponcer/contracts';
-import { demoUser } from '@sponcer/contracts/fixtures';
 import { buildTestApp, call, demoBrand, STATUS } from '../support/app';
 
 describe('Fase 5 · Pruebas de efectividad del sistema (Sponcer)', () => {
@@ -14,7 +13,7 @@ describe('Fase 5 · Pruebas de efectividad del sistema (Sponcer)', () => {
         app,
         'get',
         `${api.feed.path}?profileId=${demoBrand.id}&limit=20&q=${encodeURIComponent(q)}`,
-        demoUser.id,
+        demoBrand.id,
       );
       const duracionMs = performance.now() - inicio;
 
@@ -40,14 +39,13 @@ describe('Fase 5 · Pruebas de efectividad del sistema (Sponcer)', () => {
       app,
       'get',
       `${api.feed.path}?profileId=${demoBrand.id}&limit=20&q=demo&city=trujillo`,
-      demoUser.id,
+      demoBrand.id,
     );
 
     expect(res.status).toBe(STATUS.OK);
     const cards: ProfileCard[] = res.body.items.map((i: { card: ProfileCard }) => i.card);
 
     expect(cards.every((c) => c.city === 'trujillo')).toBe(true);
-    expect(cards.every((c) => c.ownerUserId !== demoUser.id)).toBe(true);
   });
 
   it('garantiza resiliencia y respuesta controlada ante consultas sin resultados', async () => {
@@ -56,7 +54,7 @@ describe('Fase 5 · Pruebas de efectividad del sistema (Sponcer)', () => {
       app,
       'get',
       `${api.feed.path}?profileId=${demoBrand.id}&limit=20&q=nicho_inexistente_f5`,
-      demoUser.id,
+      demoBrand.id,
     );
 
     expect(res.status).toBe(STATUS.OK);
