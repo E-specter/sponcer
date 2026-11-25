@@ -8,7 +8,8 @@
     "start": "tsx --env-file-if-exists=.env src/main.ts",
     "typecheck": "tsc -p tsconfig.json",
     "test": "vitest run",
-    "lint:deps": "depcruise src --config .dependency-cruiser.cjs"
+    "lint:deps": "depcruise src --config .dependency-cruiser.cjs",
+    "model:prefetch": "tsx --env-file-if-exists=.env src/modules/classification/scripts/prefetch-model.ts"
   },
   "dependencies": {
     "@huggingface/transformers": "^4.3.2",

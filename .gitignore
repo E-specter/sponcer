@@ -36,3 +36,5 @@ db/supabase/seed.sql
 db/backup-*.sql
 db/*.sql
 !db/supabase/migrations/*.sql
+# Caché del modelo de embeddings (~465 MB)
+backend/.cache/

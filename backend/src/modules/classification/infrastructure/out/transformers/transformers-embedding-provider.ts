@@ -1,18 +1,18 @@
 import type { EmbeddingProvider } from '../../../application/ports/out/embedding-provider';
 
-const MODEL = 'Xenova/multilingual-e5-small';
-/** Revisión fija del modelo (cadena de suministro / reproducibilidad, RNF-06). */
-const MODEL_REVISION = '761b726dd34fb83930e26aab4e9ac3899aa1fa78';
+import { MODEL, MODEL_REVISION, modelCacheDir } from './model-config';
 
-interface Extractor {
+export interface Extractor {
   (
     texts: string[],
     opts: { pooling: 'mean'; normalize: boolean },
   ): Promise<{ tolist(): number[][] }>;
 }
 
-async function loadExtractor(): Promise<Extractor> {
-  const { pipeline } = await import('@huggingface/transformers');
+/** Carga (y descarga si falta) el modelo; también lo usa el script `prefetch-model`. */
+export async function loadExtractor(): Promise<Extractor> {
+  const { pipeline, env } = await import('@huggingface/transformers');
+  env.cacheDir = modelCacheDir();
   return (await pipeline('feature-extraction', MODEL, {
     revision: MODEL_REVISION,
   })) as unknown as Extractor;
