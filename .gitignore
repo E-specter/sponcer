@@ -1,0 +1,34 @@
+# Dependencias y builds
+node_modules/
+dist/
+.astro/
+coverage/
+playwright-report/
+test-results/
+*.tsbuildinfo
+
+# Entorno (versionar solo los .env.example)
+.env
+.env.*
+!.env.example
+
+# Supabase local
+supabase/.temp/
+db/supabase/.temp/
+db/supabase/.branches/
+
+# Claude Code: no se versiona, salvo las definiciones de agentes
+.claude/*
+!.claude/agents/
+.mcp.json
+CLAUDE.md
+CLAUDE.local.md
+
+# SO / editores
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+.idea/
+# Generado por `npm run db:reset` desde contracts/fixtures
+db/supabase/seed.sql
