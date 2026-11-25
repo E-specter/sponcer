@@ -99,6 +99,7 @@ const build = spawnSync('npm', ['run', 'build', '-w', 'frontend'], {
     PUBLIC_AUTH_MODE: 'supabase',
     PUBLIC_SUPABASE_URL: supabaseUrl,
     PUBLIC_DEMO_LOGIN: 'true',
+    PUBLIC_SITE_URL: frontendUrl,
   },
 });
 if (build.status !== 0) die('falló la compilación del frontend');
@@ -111,6 +112,7 @@ if ((await status(BACKEND_HEALTH)) !== HTTP_OK) {
 run('npm', ['run', 'start', '-w', 'frontend'], {
   HOST: '127.0.0.1', // Astro escucha solo en ::1 por defecto
   PORT: String(FRONTEND_PORT), // backend/.env trae PORT=3000 y Astro también lo lee
+  PUBLIC_SITE_URL: frontendUrl, // origen público para el checkOrigin de Astro
 });
 
 const checks = [
@@ -118,6 +120,40 @@ const checks = [
   [`${frontendUrl}/login`, 'frontend /login'],
   [`${supabaseUrl}/auth/v1/health`, 'supabase /auth/v1/health'],
 ] as const;
+const DEMO_EMAIL = 'demo@sponcer.local';
+const HTTP_SEE_OTHER = 303;
+const COOKIE_SEPARATOR = '; ';
+
+// Login demo real a través del túnel: POST con Origin del túnel y luego área autenticada.
+const checkDemoLogin = async (): Promise<string[]> => {
+  const post = await fetch(`${frontendUrl}/auth/demo-login`, {
+    method: 'POST',
+    redirect: 'manual',
+    headers: { Origin: frontendUrl, 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({ email: DEMO_EMAIL }),
+    signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+  });
+  const location = post.headers.get('location') ?? '';
+  const cookies = post.headers
+    .getSetCookie()
+    .map((c) => c.split(';')[0])
+    .join(COOKIE_SEPARATOR);
+  const page = await fetch(`${frontendUrl}/descubrir`, {
+    redirect: 'manual',
+    headers: { Cookie: cookies },
+    signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+  });
+  const errors = [
+    post.status === HTTP_SEE_OTHER && location.endsWith('/descubrir')
+      ? ''
+      : `POST /auth/demo-login -> ${post.status} ${location} (esperado 303 /descubrir)`,
+    page.status === HTTP_OK
+      ? ''
+      : `GET /descubrir con cookies -> ${page.status} ${page.headers.get('location') ?? ''} (esperado 200)`,
+  ];
+  return errors.filter((e) => e !== '');
+};
+
 const results = await Promise.all(
   checks.map(async ([url, label]) => ({
     label,
@@ -128,6 +164,11 @@ results.forEach((r) =>
   console.log(`${r.code === HTTP_OK ? 'ok   ' : 'FALLO'} ${r.label} -> ${r.code}`),
 );
 if (results.some((r) => r.code !== HTTP_OK)) die('las comprobaciones fallaron');
+
+const loginErrors = await checkDemoLogin().catch((e: unknown) => [`excepción: ${String(e)}`]);
+loginErrors.forEach((e) => console.log(`FALLO login demo: ${e}`));
+if (loginErrors.length > 0) die('el login demo falló a través del túnel');
+console.log('ok    login demo (POST 303 -> /descubrir 200)');
 
 console.log(
   `\nComparte esta URL: ${frontendUrl}\n(Supabase público: ${supabaseUrl})\nCtrl+C para apagar.`,

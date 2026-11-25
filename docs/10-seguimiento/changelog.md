@@ -10,6 +10,17 @@ Formato [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). Versiones c
 
 ## [Sin publicar]
 
+## [1.2.1] - 2026-11-25
+
+### Corregido
+
+- Demo pública: los formularios (acceso demo, enlace mágico, cierre de sesión) daban 403 a través del túnel; ahora se acepta el origen público con una protección CSRF propia, cookies `Secure` y enlaces con la URL pública.
+- El script del túnel verifica el acceso demo de punta a punta antes de compartir la URL.
+
+### Añadido
+
+- Pruebas de efectividad de la búsqueda (Mariana).
+
 ## [1.2.0] - 2026-11-25
 
 ### Añadido

@@ -2,6 +2,7 @@ import { PUBLIC_AUTH_MODE } from 'astro:env/client';
 import { defineMiddleware } from 'astro:middleware';
 import { demoUser } from '@sponcer/contracts/fixtures';
 import { ApiError } from './lib/api/errors';
+import { isCrossSiteForm } from './lib/csrf';
 import { createSupabase } from './lib/supabase';
 
 /** Rutas que exigen sesión; las demás (landing, login, legales, exclusión) son públicas. */
@@ -10,6 +11,7 @@ const BFF_PREFIX = '/bff/';
 /** Rutas con datos de perfiles: nunca indexables (RF-01, RNF-05). */
 const NOINDEX_PREFIXES = [...PROTECTED_PREFIXES, '/exclusion'];
 const NOINDEX_VALUE = 'noindex, nofollow';
+const HTTP_FORBIDDEN = 403;
 
 const isProtected = (pathname: string): boolean =>
   PROTECTED_PREFIXES.some((p) => pathname === p || pathname.startsWith(`${p}/`));
@@ -41,6 +43,9 @@ async function resolveSession(
 }
 
 export const onRequest = defineMiddleware(async (context, next) => {
+  if (isCrossSiteForm(context.request)) {
+    return new Response('Cross-site form submissions are forbidden', { status: HTTP_FORBIDDEN });
+  }
   const session = await resolveSession(context);
   Object.assign(context.locals, session);
   if (!session.user && isProtected(context.url.pathname)) return context.redirect('/login');
