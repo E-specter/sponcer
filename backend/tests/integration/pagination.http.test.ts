@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { api } from '@sponcer/contracts';
-import { demoUser, fixtureProfiles } from '@sponcer/contracts/fixtures';
+import { decodeCursor, encodeCursor } from '../../src/shared/cursor';
+import { demoUser, fixtureProfiles, fixtureSocial } from '@sponcer/contracts/fixtures';
 import {
   buildTestApp,
   call,
@@ -15,19 +16,13 @@ import {
 
 /**
  * Paginación por cursor de `GET /matches` y `GET /quotes` (F5): recorrer las páginas devuelve exactamente la lista
- * completa, sin repetir ni perder; el último `nextCursor` es null; un cursor corrupto no puede reiniciar la lista.
+ * completa, sin repetir ni perder; el último `nextCursor` es null. Un cursor corrupto es 400 en todos los listados.
  */
 const PAGE = 2;
 const MAX_PAGE = 50;
 const OVER = 1;
 const MIN_ITEMS = 4;
-const FAR_OFFSET_CURSOR = Buffer.from('9999').toString('base64url');
-const CORRUPT_CURSORS = [
-  'no-es-base64-ni-numero',
-  Buffer.from('-1').toString('base64url'),
-  Buffer.from('1.5').toString('base64url'),
-  Buffer.from('abc').toString('base64url'),
-];
+const FAR_OFFSET = 9999;
 
 const idsOf = (body: { items: Array<{ id: string }> }) => body.items.map((i) => i.id);
 
@@ -120,8 +115,7 @@ describe.each([
   it('un cursor válido más allá del final devuelve una página vacía sin cursor', async () => {
     const t = await buildTestApp();
     await seed(t);
-    const cursor = endpoint === api.matches ? FAR_OFFSET_CURSOR : '9999';
-    const res = await fetch(t, `&cursor=${cursor}`);
+    const res = await fetch(t, `&cursor=${encodeCursor(FAR_OFFSET)}`);
     expect(res.status).toBe(STATUS.OK);
     expect(res.body).toEqual({ items: [], nextCursor: null });
   });
@@ -138,47 +132,104 @@ describe.each([
   });
 });
 
-describe('cursor corrupto', () => {
-  it.each(CORRUPT_CURSORS)(
-    'GET /matches con el cursor %s es 400 (no reinicia la lista)',
-    async (cursor) => {
-      const t = await buildTestApp();
-      await makeMatches(t);
-      expectError(
-        await fetchMatches(t, `&cursor=${cursor}`),
-        STATUS.BAD_REQUEST,
-        'VALIDATION_ERROR',
-      );
-    },
-  );
+/** Cursores que NO son el `encodeCursor` de un entero >= 0: ninguno puede leerse como "primera página". */
+const BAD_BASE64 = ['abc', '-5', '1.5x', '%%%', '1', '9999', '', ' ', 'no-es-base64-ni-numero'];
+const BAD_PAYLOADS = [
+  '-1',
+  '1.5',
+  'abc',
+  ' 1',
+  '1 ',
+  '0x10',
+  '1e3',
+  '+1',
+  '99999999999999999999',
+  '',
+].map((text) => Buffer.from(text).toString('base64url'));
+const PADDED = `${encodeCursor(1)}==`;
+const CORRUPT_CURSORS = [
+  ...BAD_BASE64,
+  ...BAD_PAYLOADS,
+  PADDED,
+  encodeCursor(1).toUpperCase() + '!',
+];
 
-  // F5-L-1: quotes (y el panel de admin) usan `parseInt` y tratan un cursor corrupto como "primera página": un
-  // cliente con un cursor roto recorre la lista en bucle. matches responde 400; deberían ser coherentes.
-  it.fails.each(['abc', '-5', '1.5x', '%%%'])(
-    'F5-L-1: GET /quotes con el cursor corrupto %s es 400, no la primera página',
-    async (cursor) => {
-      const t = await buildTestApp();
-      await makeQuotes(t);
-      expectError(
-        await fetchQuotes(t, `&cursor=${cursor}`),
-        STATUS.BAD_REQUEST,
-        'VALIDATION_ERROR',
-      );
-    },
-  );
-
-  // F5-L-1 (bis): `decodeCursor` usa Number(texto): un cursor que decodifica a "" (p. ej. '%%%') da 0 y se acepta como
-  // primera página en vez de rechazarse.
-  it.fails('F5-L-1: GET /matches con un cursor que decodifica a vacío (%%%) es 400', async () => {
-    const t = await buildTestApp();
-    await makeMatches(t);
-    expectError(await fetchMatches(t, '&cursor=%%%'), STATUS.BAD_REQUEST, 'VALIDATION_ERROR');
+describe('shared/cursor · contrato del cursor', () => {
+  it('ida y vuelta: decodeCursor(encodeCursor(n)) = n para enteros >= 0; sin cursor es 0', () => {
+    [0, 1, PAGE, MAX_PAGE, FAR_OFFSET].forEach((n) => {
+      const r = decodeCursor(encodeCursor(n));
+      expect(r.ok && r.value).toBe(n);
+    });
+    const first = decodeCursor(undefined);
+    expect(first.ok && first.value).toBe(0);
   });
 
-  // F5-L-2: `toQuoteView` devuelve la ProfileCard completa donde el contrato dice ProfileSummary (creator, requester):
-  // fuera de producción llegan campos de más (nichos, seguidores, engagement, presupuesto, bio...). En producción
-  // register-endpoint envía lo parseado, así que el exceso queda recortado, pero el adaptador no debería producirlo.
-  it.fails('F5-L-2: la respuesta de GET /quotes no trae campos fuera del contrato', async () => {
+  it.each(CORRUPT_CURSORS)('un cursor corrupto (%j) no se decodifica', (cursor) => {
+    const r = decodeCursor(cursor);
+    expect(!r.ok && r.error.code).toBe('VALIDATION_ERROR');
+  });
+});
+
+/** Endpoints paginados: un cursor corrupto es 400 en TODOS (nunca la primera página), y uno válido se acepta. */
+const fetchers: Array<[string, (t: TestApp, cursor: string) => ReturnType<typeof call>]> = [
+  ['GET /matches', (t, c) => fetchMatches(t, `&cursor=${c}`)],
+  ['GET /quotes', (t, c) => fetchQuotes(t, `&cursor=${c}`)],
+  [
+    'GET /feed',
+    (t, c) =>
+      call(t.app, 'get', `${api.feed.path}?profileId=${demoBrand.id}&cursor=${c}`, demoUser.id),
+  ],
+  [
+    'GET /notifications',
+    (t, c) => call(t.app, 'get', `${api.notifications.path}?cursor=${c}`, demoUser.id),
+  ],
+  [
+    'GET /matches/:matchId/messages',
+    (t, c) =>
+      call(
+        t.app,
+        'get',
+        `${api.listMessages.path.replace(':matchId', fixtureSocial.matches[0]!.id)}?cursor=${c}`,
+        demoUser.id,
+      ),
+  ],
+  [
+    'GET /admin/removal-requests',
+    (t, c) => call(t.app, 'get', `${api.adminListRemovals.path}?cursor=${c}`, demoUser.id),
+  ],
+];
+
+describe.each(fetchers)('%s · cursor', (_name, fetchWith) => {
+  const app = () => buildTestApp(undefined, { ADMIN_EMAILS: demoUser.email });
+
+  it.each(CORRUPT_CURSORS)(
+    'el cursor corrupto %j es 400 VALIDATION_ERROR, no la primera página',
+    async (cursor) => {
+      const t = await app();
+      await Promise.all([makeMatches(t), makeQuotes(t)]);
+      expectError(
+        await fetchWith(t, encodeURIComponent(cursor)),
+        STATUS.BAD_REQUEST,
+        'VALIDATION_ERROR',
+      );
+    },
+  );
+
+  it('un cursor válido (encodeCursor) se acepta, también el 0 y uno más allá del final', async () => {
+    const t = await app();
+    const [zero, far] = await Promise.all([
+      fetchWith(t, encodeCursor(0)),
+      fetchWith(t, encodeCursor(FAR_OFFSET)),
+    ]);
+    expect([zero.status, far.status]).toEqual([STATUS.OK, STATUS.OK]);
+    expect(far.body.items).toEqual([]);
+    expect(far.body.nextCursor).toBeNull();
+  });
+});
+
+describe('cursores y seguridad', () => {
+  // F5-L-2 (corregido): quotes devuelve exactamente ProfileSummary en creator y requester.
+  it('la respuesta de GET /quotes no trae campos fuera del contrato', async () => {
     const t = await buildTestApp();
     await makeQuotes(t);
     expectMatchesContract(api.listQuotes, (await fetchQuotes(t, '&limit=50')).body);
