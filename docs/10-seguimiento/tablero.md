@@ -37,4 +37,5 @@ Estados: `pendiente` · `en progreso` · `en audit` · `hecho` · `bloqueado`. C
 | F4-E2E | Suite Playwright E2E-01..09 + axe (WCAG 2.1 AA) contra stack real | F4 | audit | Mariana | hecho (57/57, 0 violaciones axe) | [reporte](../07-pruebas/reportes/2026-11-25-f4-e2e.md) |
 | F4-DEPLOY | Ensayo de despliegue en clon limpio (producción, adaptadores reales) | F4 | dev-backend | Eduard | hecho | [ficha](../08-despliegue/ficha-despliegue.md) |
 | F4-FIX | B-01 noindex, B-02 ingesta bajo demanda, B-03 chips 44 px, cotizar desde el feed, caché del modelo fuera de node_modules | F4 | dev-frontend, dev-backend, dev-data | Esteban, Eduard, Leyla | hecho | [reporte](../07-pruebas/reportes/2026-11-25-f4-e2e.md) |
-| F4-REL | Release v1.0.0 (PR develop → main + tag) | F4 | leader | Eduard | pendiente de fusionar el PR | [git-flujo](../06-desarrollo/git-flujo.md) |
+| F4-REL | Release v1.0.0 (PR develop → main + tag) | F4 | leader | Eduard | hecho (PR #1 fusionado, tag v1.0.0, release publicada) | [git-flujo](../06-desarrollo/git-flujo.md) |
+| F5-VIS | Verificación visual Playwright obligatoria + hidratación, desborde móvil y ajustes Figma | F5 | audit, dev-frontend | Mariana, Esteban | hecho (22/22, E2E 57/57) | [visual](../../frontend/tests/visual/README.md) |

@@ -10,6 +10,8 @@ Formato [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). Versiones c
 
 ## [Sin publicar]
 
+## [1.0.0] - 2026-11-25
+
 ### Añadido
 
 - F1: contratos (zod, 18 endpoints, OpenAPI, 30 perfiles semilla), monorepo y CI; core API hexagonal con 8 slices en mock; BD Supabase (migraciones, RLS, Realtime, seed); frontend Astro v7 completo en mock.
