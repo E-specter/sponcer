@@ -23,9 +23,14 @@ ultima_actualizacion: 2026-11-25
 
 Si una tarea parece requerir una operación prohibida, el agente se detiene y la propone como comando.
 
-### Excepción del sprint intensivo (acordada por el equipo, 2026-11-25)
+### Excepción: el leader gestiona el control de versiones (acordada por el equipo, 2026-11-25)
 
-Durante el sprint de F1 a F3, el leader hace **commits locales** en `develop` en nombre del responsable de cada área (`--author`, según [responsables](../09-equipo/responsables.md)). Eduard habilita `add`, `commit` y `switch` en su `.claude/settings.json` local. Siguen prohibidos `push`, `merge`, `rebase`, `reset` y todo `gh` de escritura: **Eduard publica** con `git push`. La plantilla [claude-settings.example.json](claude-settings.example.json) se mantiene estricta para el resto del equipo.
+Desde el sprint de F1 a F3, el agente leader en la sesión de Eduard hace commits, push y PR:
+
+- **Autoría:** cada commit lleva `--author` del responsable del área (ver [responsables](../09-equipo/responsables.md)). El committer es Eduard. Los commits y los PR **no** llevan atribución de herramientas de IA.
+- **Commits:** atómicos por tarea y área. Se verifican antes del push con la suite equivalente al CI en un clon limpio.
+- **Prohibido igual que antes:** force-push, reescritura de historia (`rebase`, `reset`) y borrado de ramas remotas.
+- **Permisos:** Eduard habilita `add`, `commit`, `switch` y `push` en su `.claude/settings.json` local. La plantilla [claude-settings.example.json](claude-settings.example.json) se mantiene estricta para el resto del equipo, cuyos agentes no escriben en git.
 
 ## Ramas
 
