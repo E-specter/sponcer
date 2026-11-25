@@ -1,0 +1,53 @@
+/* Design tokens provisionales (sin brief de Figma aún). Re-estilizar = cambiar solo este archivo. */
+:root {
+  color-scheme: light dark;
+
+  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.75rem;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+
+  --radius: 0.5rem;
+  --focus-ring: 3px solid var(--color-focus);
+
+  /* Claro. Contrastes verificados >= 4.5:1 sobre --color-bg / --color-surface. */
+  --color-bg: #f7f7f9;
+  --color-surface: #ffffff;
+  --color-text: #1b1b24;
+  --color-muted: #4b4b5c;
+  --color-border: #c9c9d6;
+  --color-primary: #4338ca;
+  --color-primary-text: #ffffff;
+  --color-accent-soft: #e8e7fb;
+  --color-danger: #b42318;
+  --color-danger-soft: #fdecea;
+  --color-success: #0b6b3a;
+  --color-success-soft: #e3f6ec;
+  --color-focus: #1d4ed8;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #12121a;
+    --color-surface: #1c1c28;
+    --color-text: #f1f1f6;
+    --color-muted: #b4b4c6;
+    --color-border: #3d3d52;
+    --color-primary: #a5a0ff;
+    --color-primary-text: #12121a;
+    --color-accent-soft: #2a2950;
+    --color-danger: #ff9b90;
+    --color-danger-soft: #3b1a17;
+    --color-success: #6fdc9f;
+    --color-success-soft: #14301f;
+    --color-focus: #8ab4ff;
+  }
+}

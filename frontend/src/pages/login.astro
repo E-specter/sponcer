@@ -1,0 +1,61 @@
+---
+import { PUBLIC_AUTH_MODE } from 'astro:env/client';
+import Public from '../layouts/Public.astro';
+import { createSupabase } from '../lib/supabase';
+
+let message: string | null = null;
+let failed = false;
+
+if (Astro.url.searchParams.has('expired')) {
+  failed = true;
+  message = 'Tu sesión expiró. Ingresa de nuevo.';
+}
+
+if (Astro.request.method === 'POST' && PUBLIC_AUTH_MODE === 'supabase') {
+  const email = String((await Astro.request.formData()).get('email') ?? '').trim();
+  if (!email) {
+    failed = true;
+    message = 'Escribe tu correo.';
+  } else {
+    // PKCE: el verificador queda en una cookie httpOnly; el enlace vuelve a /auth/callback.
+    const { error } = await createSupabase(Astro).auth.signInWithOtp({
+      email,
+      options: { emailRedirectTo: new URL('/auth/callback', Astro.url).toString() },
+    });
+    failed = Boolean(error);
+    message = error
+      ? 'No pudimos enviar el enlace. Inténtalo de nuevo.'
+      : 'Revisa tu correo: te enviamos un enlace para entrar.';
+  }
+}
+---
+
+<Public title="Ingresar">
+  <h1>Ingresar</h1>
+  {
+    message && (
+      <div class={`alert ${failed ? 'alert-error' : 'alert-success'}`} role={failed ? 'alert' : 'status'}>
+        {message}
+      </div>
+    )
+  }
+  {
+    PUBLIC_AUTH_MODE === 'mock' ? (
+      <section class="card stack">
+        <p>Modo demostración: no hay backend conectado.</p>
+        <p>
+          <a class="btn" href="/descubrir">Entrar como demo</a>
+        </p>
+      </section>
+    ) : (
+      <form method="post" class="card" novalidate>
+        <div class="field">
+          <label for="email">Correo electrónico</label>
+          <input id="email" name="email" type="email" autocomplete="email" required />
+          <span class="muted small">Te enviaremos un enlace mágico, sin contraseña.</span>
+        </div>
+        <button class="btn" type="submit">Enviarme el enlace</button>
+      </form>
+    )
+  }
+</Public>

@@ -1,0 +1,18 @@
+---
+import App from '../layouts/App.astro';
+import { getMe } from '../lib/session';
+import FilterPanel from '../features/discover/islands/FilterPanel';
+import Feed from '../features/discover/islands/Feed';
+
+const me = await getMe(Astro.locals);
+---
+
+<App title="Descubrir">
+  <h1>Descubrir</h1>
+  <div class="layout-sidebar">
+    <aside aria-label="Filtros">
+      <FilterPanel client:load profiles={me.profiles} />
+    </aside>
+    <Feed client:load profiles={me.profiles} />
+  </div>
+</App>

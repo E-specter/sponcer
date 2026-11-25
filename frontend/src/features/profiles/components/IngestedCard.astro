@@ -1,0 +1,32 @@
+---
+import type { ProfileDetail } from '@sponcer/contracts';
+import { formatCount, formatDate } from '../../../lib/labels';
+
+interface Props {
+  ingested: ProfileDetail['ingested'];
+}
+const { ingested } = Astro.props;
+---
+
+<section class="card" aria-labelledby="ingerido">
+  <h2 id="ingerido">Datos de Instagram <span class="badge">Solo lectura</span></h2>
+  <p class="muted small">
+    Información pública leída de Instagram el {formatDate(ingested.fetchedAt)}. No puede editarse.
+  </p>
+  <p>{ingested.biography || 'Sin biografía.'}</p>
+  <dl class="row">
+    <div><dt class="small muted">Seguidores</dt><dd>{formatCount(ingested.followers)}</dd></div>
+    <div><dt class="small muted">Siguiendo</dt><dd>{formatCount(ingested.following)}</dd></div>
+    <div><dt class="small muted">Publicaciones</dt><dd>{formatCount(ingested.postsCount)}</dd></div>
+    <div><dt class="small muted">Cuenta verificada</dt><dd>{ingested.isVerified ? 'Sí' : 'No'}</dd></div>
+  </dl>
+  {
+    ingested.externalUrl && (
+      <p>
+        <a href={ingested.externalUrl} rel="noopener noreferrer nofollow">
+          {ingested.externalUrl}
+        </a>
+      </p>
+    )
+  }
+</section>

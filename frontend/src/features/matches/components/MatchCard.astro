@@ -1,0 +1,22 @@
+---
+import type { Match } from '@sponcer/contracts';
+import { NICHE_LABEL, formatDate } from '../../../lib/labels';
+
+interface Props {
+  match: Match;
+  /** Id del perfil propio: la tarjeta muestra a la contraparte. */
+  mine: string;
+}
+const { match, mine } = Astro.props;
+const other = match.creator.id === mine ? match.brand : match.creator;
+---
+
+<article class="card stack" aria-labelledby={`m-${match.id}`}>
+  <h3 id={`m-${match.id}`}>@{other.handle}</h3>
+  <p class="muted small">{other.fullName} · match el {formatDate(match.createdAt)}</p>
+  <p class="row">{other.niches.map((n) => <span class="chip">{NICHE_LABEL[n]}</span>)}</p>
+  <p class="row">
+    <a class="btn" href={`/mensajes/${match.id}`}>Abrir chat</a>
+    <a class="btn btn-secondary" href={`/perfil/${other.handle}`}>Ver ficha</a>
+  </p>
+</article>

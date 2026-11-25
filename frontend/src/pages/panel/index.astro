@@ -1,0 +1,49 @@
+---
+import App from '../../layouts/App.astro';
+import { call } from '../../lib/api';
+import { getMe } from '../../lib/session';
+import ClaimFlow from '../../features/panel/islands/ClaimFlow';
+import DeclaredForm from '../../features/panel/islands/DeclaredForm';
+import ServicesEditor from '../../features/panel/islands/ServicesEditor';
+
+const me = await getMe(Astro.locals);
+const token = Astro.locals.accessToken;
+const details = await Promise.all(
+  me.profiles.map((p) => call('getProfile', { params: { handle: p.handle }, token })),
+);
+---
+
+<App title="Mi panel">
+  <h1>Mi panel</h1>
+  <p class="muted">Sesión: {me.email}</p>
+
+  <section aria-labelledby="mis-perfiles" class="stack">
+    <h2 id="mis-perfiles">Mis perfiles</h2>
+    {me.profiles.length === 0 && <p class="card">Aún no tienes perfiles. Reclama el primero abajo.</p>}
+    {
+      details.map((d) => (
+        <article class="card stack" aria-labelledby={`p-${d.id}`}>
+          <h3 id={`p-${d.id}`}>
+            @{d.handle} <span class="badge">{d.role === 'brand' ? 'Marca' : 'Creador'}</span>{' '}
+            <span class="badge badge-success">Verificado</span>
+          </h3>
+          <p>
+            <a href={`/perfil/${d.handle}`}>Ver mi ficha pública</a>
+          </p>
+          <details open>
+            <summary>Datos declarados</summary>
+            <DeclaredForm client:load profileId={d.id} role={d.role} initial={d.declared} />
+          </details>
+          {d.role === 'creator' && (
+            <details>
+              <summary>Mis servicios</summary>
+              <ServicesEditor client:visible profileId={d.id} initial={d.services} />
+            </details>
+          )}
+        </article>
+      ))
+    }
+  </section>
+
+  <ClaimFlow client:load />
+</App>

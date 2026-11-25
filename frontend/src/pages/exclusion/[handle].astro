@@ -1,0 +1,15 @@
+---
+import Public from '../../layouts/Public.astro';
+import RemovalForm from '../../features/removal/islands/RemovalForm';
+
+const handle = Astro.params.handle ?? '';
+---
+
+<Public title="Solicitar exclusión">
+  <h1>Solicitar exclusión de @{handle}</h1>
+  <p>
+    Si eres el titular de esta cuenta puedes pedir que dejemos de mostrarla y que borremos sus
+    datos (Ley N.º 29733). No necesitas cuenta en Sponcer.
+  </p>
+  <RemovalForm client:load handle={handle} />
+</Public>

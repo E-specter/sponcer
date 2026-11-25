@@ -1,0 +1,24 @@
+---
+import Base from './Base.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+---
+
+<Base {...Astro.props}>
+  <header class="site-header">
+    <div class="container">
+      <a class="brand" href="/">Sponcer</a>
+      <nav aria-label="Principal">
+        <a href="/privacidad">Privacidad</a>
+        <a href="/terminos">Términos</a>
+      </nav>
+      <a class="btn btn-secondary" href="/login">Ingresar</a>
+    </div>
+  </header>
+  <main id="contenido" class="container stack">
+    <slot />
+  </main>
+</Base>
