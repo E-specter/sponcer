@@ -308,4 +308,34 @@ describe.skipIf(!enabled)('flujo real completo (Supabase local)', () => {
       .eq('user_id', brand.userId);
     expect(n.data?.length).toBeGreaterThan(0);
   });
+
+  it(
+    'handle desconocido: se ingiere bajo demanda, queda unclaimed y se clasifica',
+    async () => {
+      const onDemand = `flow.ondemand.${tag}`;
+      const res = await request(app).get(`/api/v1/profiles/${onDemand}`).set(as(creator));
+      expect(res.status).toBe(OK);
+      const row = await admin
+        .from('profiles')
+        .select('id,role,status,owner_user_id')
+        .eq('ig_handle', onDemand)
+        .single();
+      expect(row.data).toMatchObject({ role: 'creator', status: 'unclaimed', owner_user_id: null });
+      await until(async () => {
+        const e = await admin
+          .from('profile_embeddings')
+          .select('profile_id')
+          .eq('profile_id', row.data!.id);
+        return (e.data?.length ?? 0) > 0;
+      });
+      const emb = await admin
+        .from('profile_embeddings')
+        .select('profile_id')
+        .eq('profile_id', row.data!.id);
+      expect(emb.data).toHaveLength(1);
+      await admin.from('profiles').delete().eq('id', row.data!.id);
+      await admin.from('ig_snapshots').delete().eq('ig_handle', onDemand);
+    },
+    SETUP_TIMEOUT_MS,
+  );
 });

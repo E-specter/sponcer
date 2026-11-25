@@ -2,6 +2,7 @@
 import { createClient } from '@supabase/supabase-js';
 import { createApp } from './app';
 import type { Env } from './config/env';
+import { ok } from './shared/result';
 import { logger } from './shared/logger';
 import { createEventBus } from './shared/events/event-bus';
 import { createAuthModule } from './modules/auth';
@@ -35,6 +36,13 @@ export function composeApp(env: Env, opts: { now?: () => Date } = {}) {
 
   const profiles = createProfilesModule({
     adapter: env.ADAPTER_PROFILES,
+    // Ingesta bajo demanda: perfil primero, luego `ProfileIngested` (lo publica profiles) para que classification lo vea.
+    ingester: {
+      ingest: async (h) => {
+        const r = await ingestion.api.ingestProfile(h);
+        return r.ok ? ok({ snapshotId: r.value.snapshotId }) : r;
+      },
+    },
     now,
     bus,
     supabase,
@@ -60,8 +68,8 @@ export function composeApp(env: Env, opts: { now?: () => Date } = {}) {
   });
   classificationRef.current = classification;
   // Un perfil recién reclamado aún no tiene snapshot: se ingesta al verificarse y `ProfileIngested` dispara su clasificación.
-  // shortcut: si `ProfileIngested` llegara antes de que exista el perfil, classification lo ignora (se clasifica en el
-  // siguiente classifyAll o al cambiar los datos declarados); aquí el perfil ya existe cuando se emite `ProfileVerified`.
+  // `ProfileIngested` que llega antes de que exista el perfil lo ignora classification: en la ingesta bajo demanda
+  // profiles crea la ficha y vuelve a publicarlo; aquí el perfil ya existe cuando se emite `ProfileVerified`.
   bus.subscribe('ProfileVerified', async (e) => {
     const r = await ingestion.api.ingestProfile(e.igHandle);
     if (!r.ok) logger.warn(`no se pudo ingestar ${e.igHandle}`, r.error.message);

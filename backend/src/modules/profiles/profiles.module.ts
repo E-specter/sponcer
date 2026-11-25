@@ -1,6 +1,8 @@
 import type { Router } from 'express';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { AdapterMode } from '../../config/env';
+import { createWindowLimiter } from '../../shared/rate-limit';
+import type { OnDemandIngester } from './application/ports/out/on-demand-ingester';
 import type { EventBus } from '../../shared/events/event-bus';
 import type { ProfilesApi } from './application/ports/in/profiles-api';
 import type { ClassificationReader } from './application/ports/out/classification-reader';
@@ -21,6 +23,9 @@ import {
   createSupabaseServiceRepository,
 } from './infrastructure/out/supabase/supabase-adapters';
 
+const ON_DEMAND_INGESTS_PER_HOUR = 10;
+const HOUR_MS = 3_600_000;
+
 export interface ProfilesModule {
   api: ProfilesApi;
   router: Router;
@@ -31,6 +36,8 @@ export function createProfilesModule(deps: {
   bus: EventBus;
   /** Integración: lector sobre `IngestionApi.getLatestSnapshot`. Por defecto, mock de fixtures. */
   snapshots?: SnapshotReader;
+  /** Integración: ingesta bajo demanda de handles desconocidos (RF-01). Sin él, un handle desconocido es NOT_FOUND. */
+  ingester?: OnDemandIngester;
   /** Integración: lector sobre `ClassificationApi.getClassification`. Por defecto, mock de fixtures. */
   classifications?: ClassificationReader;
   /** Requerido con `adapter: 'real'` (cliente service_role). */
@@ -65,7 +72,20 @@ export function createProfilesModule(deps: {
       claimProfile: makeClaimProfile({ claimer: a.claimer }),
     },
     router: createProfilesRouter({
-      getProfile: makeGetProfile({ profiles: a.profiles, assembler }),
+      getProfile: makeGetProfile({
+        profiles: a.profiles,
+        assembler,
+        onDemand: deps.ingester && {
+          ingester: deps.ingester,
+          writer: a.profiles,
+          bus: deps.bus,
+          limiter: createWindowLimiter({
+            limit: ON_DEMAND_INGESTS_PER_HOUR,
+            windowMs: HOUR_MS,
+            now,
+          }),
+        },
+      }),
       updateDeclared: makeUpdateDeclared({
         reader: a.profiles,
         writer: a.profiles,

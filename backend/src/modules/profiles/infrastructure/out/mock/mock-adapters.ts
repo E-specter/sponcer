@@ -1,3 +1,4 @@
+import { DomainError } from '../../../../../shared/errors';
 import { randomUUID } from 'node:crypto';
 import { MAX_CLASSIFIED_NICHES, tierFor, type Niche, type Service } from '@sponcer/contracts';
 import { fixtureProfiles } from '@sponcer/contracts/fixtures';
@@ -59,7 +60,13 @@ export function createProfilesMockAdapters(): ProfilesMockAdapters {
     findByHandle: async (handle) => all().find((p) => p.handle === handle) ?? null,
     listByOwner: async (userId) => all().filter((p) => p.ownerUserId === userId),
     listByRole: async (role) => all().filter((p) => p.role === role),
-    save: async (p) => void byId.set(p.id, p),
+    // Como el unique(ig_handle) de la BD: otro perfil con el mismo handle es un conflicto.
+    save: async (p) => {
+      if (all().some((x) => x.handle === p.handle && x.id !== p.id)) {
+        throw new DomainError('CONFLICT', 'Ya existe un registro con esos datos');
+      }
+      byId.set(p.id, p);
+    },
   };
 
   const snapshots: SnapshotReader = { getByHandle: async (h) => snapshotsByHandle.get(h) ?? null };
