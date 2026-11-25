@@ -7,6 +7,7 @@ import { makeFetchLiveBio } from './application/use-cases/fetch-live-bio';
 import { makeGetLatestSnapshot } from './application/use-cases/get-latest-snapshot';
 import { makeHandleProfileRemoved } from './application/use-cases/handle-profile-removed';
 import { makeIngestProfile } from './application/use-cases/ingest-profile';
+import { createSupabaseImageStore } from './infrastructure/out/storage/supabase-image-store';
 import { createApifySource } from './infrastructure/out/apify/apify-source';
 import {
   createSupabaseBlocklist,
@@ -15,6 +16,7 @@ import {
 import {
   createInMemoryBlocklist,
   createInMemorySnapshotRepository,
+  createMockImageStore,
   createMockInstagramSource,
 } from './infrastructure/out/mock/mock-adapters';
 
@@ -46,12 +48,20 @@ export function createIngestionModule(deps: {
   const source: InstagramSource =
     mock ?? createApifySource({ token: deps.apifyToken as string, now });
 
-  const onRemoved = makeHandleProfileRemoved({ blocklist, snapshots });
+  const images = real ? createSupabaseImageStore({ db: deps.supabase! }) : createMockImageStore();
+  const onRemoved = makeHandleProfileRemoved({ blocklist, snapshots, images });
   deps.bus.subscribe('ProfileRemoved', (e) => onRemoved(e.igHandle));
 
   return {
     api: {
-      ingestProfile: makeIngestProfile({ source, snapshots, blocklist, bus: deps.bus, now }),
+      ingestProfile: makeIngestProfile({
+        source,
+        snapshots,
+        blocklist,
+        images,
+        bus: deps.bus,
+        now,
+      }),
       fetchLiveBio: makeFetchLiveBio({ source }),
       getLatestSnapshot: makeGetLatestSnapshot({ snapshots }),
     },

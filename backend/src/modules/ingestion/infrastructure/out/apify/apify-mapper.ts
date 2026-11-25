@@ -29,6 +29,7 @@ export const ApifyProfile = z.object({
   private: z.boolean().nullish(),
   verified: z.boolean().nullish(),
   profilePicUrl: z.string().nullish(),
+  profilePicUrlHD: z.string().nullish(),
   externalUrl: z.string().nullish(),
   latestPosts: z.array(ApifyPost).nullish(),
 });
@@ -83,7 +84,8 @@ export function mapApifyProfile(raw: unknown, now: Date): Result<IgProfileSnapsh
     // Falla cerrado: si el proveedor omite el flag, la cuenta se trata como privada.
     isPrivate: a.private !== false,
     isVerified: a.verified === true,
-    profilePicUrl: validUrl(a.profilePicUrl),
+    // Prefiere HD; la URL es de Instagram y caduca: ingest-profile la copia a Storage.
+    profilePicUrl: validUrl(a.profilePicUrlHD) ?? validUrl(a.profilePicUrl),
     externalUrl: validUrl(a.externalUrl),
     posts: (a.latestPosts ?? []).slice(0, MAX_SNAPSHOT_POSTS).map(mapPost),
     fetchedAt: now.toISOString(),

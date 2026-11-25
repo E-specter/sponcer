@@ -4,6 +4,7 @@ import { err, ok } from '../../../../shared/result';
 import { isFresh } from '../../domain/snapshot-freshness';
 import { normalizeHandle } from '../normalize-handle';
 import type { IngestionApi } from '../ports/in/ingestion-api';
+import type { ImageStore } from '../ports/out/image-store';
 import type { IngestionBlocklist } from '../ports/out/ingestion-blocklist';
 import type { InstagramSource } from '../ports/out/instagram-source';
 import type { SnapshotRepository } from '../ports/out/snapshot-repository';
@@ -13,6 +14,7 @@ export const makeIngestProfile =
     source: InstagramSource;
     snapshots: SnapshotRepository;
     blocklist: IngestionBlocklist;
+    images: ImageStore;
     bus: EventBus;
     now: () => Date;
   }): IngestionApi['ingestProfile'] =>
@@ -31,7 +33,9 @@ export const makeIngestProfile =
       return err(new DomainError('FORBIDDEN', 'Solo se ingieren cuentas públicas y profesionales'));
     }
     if (cached) return ok({ snapshotId: cached.id, snapshot: cached.snapshot, cached: true });
-    const saved = await d.snapshots.save(fetched.value);
+    // La foto del origen caduca: se copia a Storage y el snapshot guarda la URL propia (o null si falla).
+    const profilePicUrl = await d.images.store(handle.value, fetched.value.profilePicUrl);
+    const saved = await d.snapshots.save({ ...fetched.value, profilePicUrl });
     d.bus.publish({ type: 'ProfileIngested', igHandle: handle.value, snapshotId: saved.id });
     return ok({ snapshotId: saved.id, snapshot: saved.snapshot, cached: false });
   };
