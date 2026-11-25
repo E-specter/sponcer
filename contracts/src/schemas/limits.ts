@@ -1,7 +1,6 @@
 // Límites de validación compartidos por backend y frontend. Cambiarlos es un cambio de contrato.
 
 export const MAX_SHORT_TEXT = 280;
-export const MAX_CITY_LENGTH = 60;
 export const MAX_REASON_LENGTH = 500;
 export const MAX_QUOTE_MESSAGE = 1000;
 export const MAX_QUOTE_NOTE = 500;
@@ -26,3 +25,5 @@ export const FOLLOWERS_MICRO = 10_000;
 export const FOLLOWERS_MID = 100_000;
 export const FOLLOWERS_MACRO = 500_000;
 export const FOLLOWERS_MEGA = 1_000_000;
+/** Texto de búsqueda del feed (nombre, handle, bio, nichos). */
+export const MAX_SEARCH_QUERY = 80;

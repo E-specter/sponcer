@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { MAX_MATCH_REASONS } from './limits';
-import { Niche, Tier } from './catalogs';
+import { MAX_MATCH_REASONS, MAX_SEARCH_QUERY } from './limits';
+import { City, Niche, Tier } from './catalogs';
 import { Id, IsoDate, PageQuery } from './common';
 import { ProfileCard } from './profiles';
 
@@ -12,6 +12,9 @@ const csv = <T extends z.ZodType>(item: T) =>
 
 export const FeedQuery = PageQuery.extend({
   profileId: Id,
+  /** Búsqueda libre en nombre, handle, bio y nichos (sin distinguir mayúsculas ni tildes). */
+  q: z.string().trim().min(1).max(MAX_SEARCH_QUERY).optional(),
+  city: City.optional(),
   niches: csv(Niche),
   tiers: csv(Tier),
   minEngagement: z.coerce.number().min(0).optional(),
@@ -54,4 +57,4 @@ export const Match = z.object({
 });
 export type Match = z.infer<typeof Match>;
 
-export const MatchesQuery = z.object({ profileId: Id });
+export const MatchesQuery = PageQuery.extend({ profileId: Id });

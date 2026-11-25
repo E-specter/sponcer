@@ -18,6 +18,7 @@ import {
   Service,
 } from './schemas/profiles';
 import { CreateQuoteRequest, Quote, QuotesQuery, TransitionQuoteRequest } from './schemas/quotes';
+import { AdminRemovalsQuery, RemovalRequestItem, ReviewRemovalRequest } from './schemas/admin';
 
 export type HttpMethod = 'get' | 'post' | 'put' | 'patch';
 
@@ -105,14 +106,14 @@ export const api = {
     path: '/api/v1/matches',
     summary: 'Matches de un perfil propio (RF-11)',
     query: MatchesQuery,
-    response: z.array(Match),
+    response: page(Match),
   },
   listQuotes: {
     method: 'get',
     path: '/api/v1/quotes',
     summary: 'Cotizaciones donde participa un perfil propio (RF-11)',
     query: QuotesQuery,
-    response: z.array(Quote),
+    response: page(Quote),
   },
   createQuote: {
     method: 'post',
@@ -154,6 +155,20 @@ export const api = {
     summary: 'Envía un mensaje; la entrega en vivo va por Supabase Realtime',
     body: SendMessageRequest,
     response: Message,
+  },
+  adminListRemovals: {
+    method: 'get',
+    path: '/api/v1/admin/removal-requests',
+    summary: 'Pedidos de exclusión para revisión (solo administradores)',
+    query: AdminRemovalsQuery,
+    response: page(RemovalRequestItem),
+  },
+  adminReviewRemoval: {
+    method: 'post',
+    path: '/api/v1/admin/removal-requests/:requestId/review',
+    summary: 'Aplica o rechaza un pedido de exclusión (solo administradores)',
+    body: ReviewRemovalRequest,
+    response: RemovalRequestItem,
   },
 } as const satisfies Record<string, Endpoint>;
 

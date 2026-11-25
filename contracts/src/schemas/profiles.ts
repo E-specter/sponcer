@@ -3,7 +3,6 @@ import {
   MAX_BRAND_OBJECTIVES,
   MAX_BRAND_TARGET_NICHES,
   MAX_CARD_BIO,
-  MAX_CITY_LENGTH,
   MAX_CLASSIFIED_NICHES,
   MAX_CREATOR_NICHES,
   MAX_REASON_LENGTH,
@@ -14,6 +13,7 @@ import {
   AccountType,
   BrandSector,
   CampaignObjective,
+  City,
   Niche,
   NicheSource,
   ProfileRole,
@@ -31,7 +31,7 @@ const ShortText = z.string().trim().max(MAX_SHORT_TEXT);
 export const CreatorDeclared = z.object({
   role: z.literal('creator'),
   niches: z.array(Niche).min(1).max(MAX_CREATOR_NICHES),
-  city: z.string().trim().max(MAX_CITY_LENGTH).optional(),
+  city: City.optional(),
   shortBio: ShortText.optional(),
   accountType: AccountType.default('unknown'),
 });
@@ -45,6 +45,7 @@ export const BrandDeclared = z
     targetNiches: z.array(Niche).min(1).max(MAX_BRAND_TARGET_NICHES),
     budgetMinPen: PricePen,
     budgetMaxPen: PricePen,
+    city: City.optional(),
     shortBio: ShortText.optional(),
     accountType: AccountType.default('unknown'),
   })
@@ -108,6 +109,8 @@ export const ProfileCard = ProfileSummary.extend({
   sector: BrandSector.nullable(),
   minServicePricePen: PricePen.nullable(),
   budgetMaxPen: PricePen.nullable(),
+  /** Ciudad declarada (null si no la declaró). */
+  city: City.nullable(),
   /** Bio para la tarjeta: la declarada en Sponcer o, si no hay, la de Instagram; recortada a MAX_CARD_BIO. */
   bio: z
     .string()
