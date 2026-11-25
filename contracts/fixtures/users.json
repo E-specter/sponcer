@@ -1,0 +1,27 @@
+[
+  {
+    "id": "97da2849-d73e-4438-9907-d090402c802d",
+    "email": "demo@sponcer.local",
+    "name": "Usuario demo"
+  },
+  {
+    "id": "c5700893-a34b-4834-b1aa-be1f6f210579",
+    "email": "usuario1@sponcer.local",
+    "name": "Usuario 1"
+  },
+  {
+    "id": "1be4b28d-1f9e-4959-8b47-dbfe6841b5ce",
+    "email": "usuario2@sponcer.local",
+    "name": "Usuario 2"
+  },
+  {
+    "id": "7d2f2bb3-62a5-4ae5-a62d-50baee39720b",
+    "email": "usuario3@sponcer.local",
+    "name": "Usuario 3"
+  },
+  {
+    "id": "44503f9f-2284-466a-95e5-79893545a32b",
+    "email": "usuario4@sponcer.local",
+    "name": "Usuario 4"
+  }
+]
