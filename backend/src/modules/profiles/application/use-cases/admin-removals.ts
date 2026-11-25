@@ -1,4 +1,5 @@
 import type { RemovalRequestItem } from '@sponcer/contracts';
+import { decodeCursor, encodeCursor } from '../../../../shared/cursor';
 import { DomainError } from '../../../../shared/errors';
 import type { EventBus } from '../../../../shared/events/event-bus';
 import { err, ok } from '../../../../shared/result';
@@ -8,13 +9,6 @@ import type { AdminListRemovals, AdminReviewRemoval } from '../ports/in/profile-
 import type { ProfileReader } from '../ports/out/profile-reader';
 import type { ProfileWriter } from '../ports/out/profile-writer';
 import type { RemovalRequestStore, StoredRemovalRequest } from '../ports/out/removal-request-store';
-
-const DECIMAL = 10;
-// shortcut: cursor = offset numérico; con mucho volumen pasar a cursor por (created_at, id).
-const parseOffset = (cursor: string | undefined): number => {
-  const n = Number.parseInt(cursor ?? '', DECIMAL);
-  return Number.isNaN(n) || n < 0 ? 0 : n;
-};
 
 /** `ProfileRemoved` exige `profileId`: sin ficha (handle nunca ingerido) se usa el uuid nulo; solo importa `igHandle`. */
 const NO_PROFILE_ID = '00000000-0000-0000-0000-000000000000';
@@ -44,12 +38,14 @@ const toItem = async (d: Deps, r: StoredRemovalRequest): Promise<RemovalRequestI
 export const makeAdminListRemovals =
   (d: Deps): AdminListRemovals =>
   async (q) => {
-    const offset = parseOffset(q.cursor);
+    const parsed = decodeCursor(q.cursor);
+    if (!parsed.ok) return parsed;
+    const offset = parsed.value;
     const { items, total } = await d.requests.list({ status: q.status, offset, limit: q.limit });
     const next = offset + items.length;
     return ok({
       items: await Promise.all(items.map((r) => toItem(d, r))),
-      nextCursor: next < total ? String(next) : null,
+      nextCursor: next < total ? encodeCursor(next) : null,
     });
   };
 
