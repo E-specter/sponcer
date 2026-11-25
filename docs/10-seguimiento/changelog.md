@@ -10,6 +10,19 @@ Formato [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). Versiones c
 
 ## [Sin publicar]
 
+## [1.1.0] - 2026-11-25
+
+### Añadido
+
+- Tarjetas del feed con foto y bio, con la procedencia del dato ("Bio compartida · Instagram" / "Declarado en Sponcer"); foto también en el panel lateral y en la ficha.
+- Fotos ficticias generadas para los 30 perfiles de demostración.
+- Ingesta real: copia de la foto de perfil en Supabase Storage (`profile-images`), borrada al retirar la ficha.
+- Verificación visual con Playwright obligatoria al cierre de cada implementación con UI (`npm run e2e:visual -w frontend`), con detección de desborde horizontal e imágenes rotas.
+
+### Corregido
+
+- Hidratación del perfil activo, desborde horizontal en móvil y ajustes de diseño según Figma.
+
 ## [1.0.0] - 2026-11-25
 
 ### Añadido
