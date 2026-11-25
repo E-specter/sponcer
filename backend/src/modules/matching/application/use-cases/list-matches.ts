@@ -1,7 +1,7 @@
 import { DomainError } from '../../../../shared/errors';
 import { err, ok } from '../../../../shared/result';
 import type { ProfilesApi } from '../../../profiles';
-import { decodeCursor, encodeCursor } from '../cursor';
+import { decodeCursor, encodeCursor } from '../../../../shared/cursor';
 import type { ListMatches } from '../ports/in/matching-use-cases';
 import type { MatchRepository } from '../ports/out/match-repository';
 
@@ -14,8 +14,9 @@ export const makeListMatches =
     if (!(await d.profiles.isOwner(query.profileId, userId))) {
       return err(new DomainError('FORBIDDEN', 'El perfil no te pertenece'));
     }
-    const offset = decodeCursor(query.cursor);
-    if (offset === null) return err(new DomainError('VALIDATION_ERROR', 'Cursor inválido'));
+    const decoded = decodeCursor(query.cursor);
+    if (!decoded.ok) return decoded;
+    const offset = decoded.value;
     const records = await d.matches.listByProfile(query.profileId);
     const cards = await d.profiles.getCards(
       records.flatMap((m) => [m.creatorProfileId, m.brandProfileId]),

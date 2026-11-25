@@ -50,8 +50,11 @@ describe('ListMatches paginado', () => {
     expect(third.ok && third.value.nextCursor).toBeNull();
   });
 
-  it('un cursor corrupto es VALIDATION_ERROR', async () => {
-    const r = await list('u', { profileId: ME, limit: LIMIT, cursor: 'no-es-un-numero' });
-    expect(!r.ok && r.error.code).toBe('VALIDATION_ERROR');
-  });
+  it.each(['%%%', 'abc', 'LTU', 'MS41eA', ''])(
+    'el cursor corrupto %j es VALIDATION_ERROR',
+    async (cursor) => {
+      const r = await list('u', { profileId: ME, limit: LIMIT, cursor });
+      expect(!r.ok && r.error.code).toBe('VALIDATION_ERROR');
+    },
+  );
 });

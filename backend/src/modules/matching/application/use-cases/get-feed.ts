@@ -17,7 +17,7 @@ import type { GetFeed } from '../ports/in/matching-use-cases';
 import type { CandidateSearch } from '../ports/out/candidate-search';
 import type { InteractionRepository } from '../ports/out/interaction-repository';
 import type { ProfileCard, FeedQuery } from '@sponcer/contracts';
-import { decodeCursor, encodeCursor } from '../cursor';
+import { decodeCursor, encodeCursor } from '../../../../shared/cursor';
 
 /** Candidatos que se piden de una vez; si los filtros dejan la página corta, se duplica hasta MAX. */
 export const INITIAL_POOL = 200;
@@ -48,8 +48,9 @@ export const makeGetFeed =
     if (!(await d.profiles.isOwner(query.profileId, userId))) {
       return err(new DomainError('FORBIDDEN', 'El perfil no te pertenece'));
     }
-    const offset = decodeCursor(query.cursor);
-    if (offset === null) return err(new DomainError('VALIDATION_ERROR', 'Cursor inválido'));
+    const decoded = decodeCursor(query.cursor);
+    if (!decoded.ok) return decoded;
+    const offset = decoded.value;
     const [own, past] = await Promise.all([
       d.profiles.listByOwner(userId),
       d.interactions.listByActor(query.profileId),
