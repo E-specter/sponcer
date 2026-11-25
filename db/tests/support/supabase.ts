@@ -31,9 +31,26 @@ export const hasSupabase = Boolean(
 );
 
 const AUTH_OPTS = { auth: { persistSession: false, autoRefreshToken: false } } as const;
+/**
+ * Cliente PEREZOSO: `describe.skipIf(...)` ejecuta igualmente el cuerpo del describe, así que un cliente creado ahí
+ * lanzaría "supabaseUrl is required" al cargar el archivo sin Supabase. El cliente real se crea al primer uso
+ * (dentro de beforeAll o de un test, que sí se saltan).
+ */
+const lazy = (make: () => SupabaseClient): SupabaseClient => {
+  let client: SupabaseClient | undefined;
+  return new Proxy({} as SupabaseClient, {
+    get(_target, prop) {
+      if (prop === 'then') return undefined; // que `await`/return de un async no la trate como thenable
+      client ??= make();
+      const value = Reflect.get(client, prop) as unknown;
+      return typeof value === 'function' ? value.bind(client) : value;
+    },
+  });
+};
 export const serviceClient = (): SupabaseClient =>
-  createClient(SUPABASE_URL!, SERVICE_KEY!, AUTH_OPTS);
-export const anonClient = (): SupabaseClient => createClient(SUPABASE_URL!, ANON_KEY!, AUTH_OPTS);
+  lazy(() => createClient(SUPABASE_URL!, SERVICE_KEY!, AUTH_OPTS));
+export const anonClient = (): SupabaseClient =>
+  lazy(() => createClient(SUPABASE_URL!, ANON_KEY!, AUTH_OPTS));
 
 /** Cliente con el JWT del usuario (rol `authenticated`, sujeto a RLS). */
 export const clientWithJwt = (jwt: string): SupabaseClient =>

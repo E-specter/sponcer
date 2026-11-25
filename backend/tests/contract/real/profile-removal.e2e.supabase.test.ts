@@ -55,37 +55,42 @@ describe.skipIf(!hasSupabase)(
     const sb = serviceClient();
     const world = createWorld(sb);
     const classifications = createSupabaseClassificationRepository(sb);
-    const env = loadEnv({
-      ADAPTER_PROFILES: 'real',
-      ADAPTER_INGESTION: 'real',
-      ADAPTER_CLASSIFICATION: 'real',
-      APIFY_TOKEN: 'token-falso-no-se-debe-usar',
-      ...supabaseEnv(),
-    });
-    const bus = createEventBus();
-    const profiles = createProfilesModule({ adapter: 'real', bus, supabase: sb });
-    const ingestion = createIngestionModule({
-      adapter: 'real',
-      bus,
-      apifyToken: env.APIFY_TOKEN,
-      supabase: sb,
-    });
-    // Mock de embeddings: no descarga el modelo; el resto es el adaptador real (Supabase/pgvector).
-    createClassificationModule({
-      adapter: 'real',
-      bus,
-      profiles: profiles.api,
-      snapshots: ingestion.api,
-      supabase: sb,
-      embeddings: createMockEmbeddingProvider(),
-    });
-    const app = createApp({
-      env,
-      authMiddleware: createAuthMiddleware(createMockIdentityProvider()),
-      routers: [profiles.router],
-    });
+    // Los módulos reales exigen credenciales: se montan en beforeAll (se salta sin Supabase), no en el cuerpo del describe.
+    let ingestion: ReturnType<typeof createIngestionModule>;
+    let app: ReturnType<typeof createApp>;
 
-    beforeAll(() => world.cleanup(), SETUP_TIMEOUT_MS);
+    beforeAll(async () => {
+      const env = loadEnv({
+        ADAPTER_PROFILES: 'real',
+        ADAPTER_INGESTION: 'real',
+        ADAPTER_CLASSIFICATION: 'real',
+        APIFY_TOKEN: 'token-falso-no-se-debe-usar',
+        ...supabaseEnv(),
+      });
+      const bus = createEventBus();
+      const profiles = createProfilesModule({ adapter: 'real', bus, supabase: sb });
+      ingestion = createIngestionModule({
+        adapter: 'real',
+        bus,
+        apifyToken: env.APIFY_TOKEN,
+        supabase: sb,
+      });
+      // Mock de embeddings: no descarga el modelo; el resto es el adaptador real (Supabase/pgvector).
+      createClassificationModule({
+        adapter: 'real',
+        bus,
+        profiles: profiles.api,
+        snapshots: ingestion.api,
+        supabase: sb,
+        embeddings: createMockEmbeddingProvider(),
+      });
+      app = createApp({
+        env,
+        authMiddleware: createAuthMiddleware(createMockIdentityProvider()),
+        routers: [profiles.router],
+      });
+      await world.cleanup();
+    }, SETUP_TIMEOUT_MS);
     afterAll(() => world.cleanup(), SETUP_TIMEOUT_MS);
 
     /** Perfil del demo con snapshot, clasificación y embedding ya guardados en la BD. */

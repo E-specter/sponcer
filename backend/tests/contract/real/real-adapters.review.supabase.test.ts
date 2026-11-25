@@ -86,11 +86,14 @@ describe.skipIf(!hasSupabase)('F2-B · revisión de adaptadores reales (Supabase
   });
 
   describe('HTTP sobre los adaptadores reales de profiles y quotes (auth mock)', () => {
-    const env = loadEnv({ ADAPTER_PROFILES: 'real', ADAPTER_QUOTES: 'real', ...supabaseEnv() });
-    const composed = composeApp(env);
+    // composeApp y loadEnv exigen las credenciales: se evalúan dentro de beforeAll (que se salta sin Supabase),
+    // no en el cuerpo del describe (que se ejecuta siempre).
+    let composed: ReturnType<typeof composeApp>;
     let creator = { id: '', handle: '' };
 
     beforeAll(async () => {
+      const env = loadEnv({ ADAPTER_PROFILES: 'real', ADAPTER_QUOTES: 'real', ...supabaseEnv() });
+      composed = composeApp(env);
       await composed.backfill;
       creator = await world.newProfile('creator', demoUser.id);
     }, SETUP_TIMEOUT_MS);
