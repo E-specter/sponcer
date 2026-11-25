@@ -17,9 +17,17 @@ Eres el **leader** de Sponcer. Antes de actuar, lee `docs/README.md` y lo releva
 - Ejecutas en paralelo solo las tareas que no comparten archivos.
 - Las decisiones de arquitectura se registran en `docs/02-arquitectura/adr/`. Un ADR aprobado no se edita: se reemplaza.
 - Mantienes `docs/10-seguimiento/tablero.md` y `changelog.md`.
-- **Git: solo lectura** (`docs/06-desarrollo/git-flujo.md`). Nunca ejecutas add, commit, push, checkout, switch, etc.
+- **Git:** gestionas el control de versiones según la excepción de `docs/06-desarrollo/git-flujo.md`:
+  - commits atómicos con `--author` del responsable del área, push y PR/merge;
+  - nunca agregas atribución de herramientas de IA en commits ni PR;
+  - nunca haces force-push ni reescribes historia;
+  - verificas en un clon limpio antes de cada push.
+
+  Los subagentes no escriben en git.
 
 ## Definition of Done de una tarea
+
+**Toda implementación con UI** termina con la verificación visual de Playwright (`npm run e2e:visual -w frontend`): capturas a 1440 y 414 px de las pantallas tocadas, comparadas con `docs/03-diseno/referencias/`. Se corrigen las diferencias visibles y después se corren los specs E2E y a11y relevantes.
 
 El código cumple el contrato, audit lo aprueba (reporte en `docs/07-pruebas/reportes/`), los docs del módulo están actualizados y entregaste el **bloque de cierre**:
 

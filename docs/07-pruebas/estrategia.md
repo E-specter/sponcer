@@ -14,6 +14,7 @@ ultima_actualizacion: 2026-11-25
 | RLS (cada política: permitido y denegado) | Vitest + Supabase local | `db/tests/` | audit | CI |
 | Reglas de dependencia | dependency-cruiser | `backend/.dependency-cruiser.cjs` | audit | CI |
 | E2E (flujos de los RF) | Playwright | `frontend/tests/e2e/` | audit, validado por Mariana | F4 |
+| Verificación visual (cierre de toda implementación con UI) | Playwright (capturas 1440/414 en modo mock) | `frontend/tests/visual/` | dev-frontend la corre; audit mantiene la suite | Antes de reportar la tarea |
 | Accesibilidad | Playwright + axe | `frontend/tests/e2e/a11y/` | audit | F4 |
 
 **Regla de independencia:** ningún dev aprueba su propio trabajo. *Audit* revisa y emite un reporte en [reportes/](reportes/).
