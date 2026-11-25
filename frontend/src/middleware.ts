@@ -46,7 +46,11 @@ export const onRequest = defineMiddleware(async (context, next) => {
   if (!session.user && isProtected(context.url.pathname)) return context.redirect('/login');
   try {
     const response = await next();
-    if (NOINDEX_PREFIXES.some((p) => context.url.pathname === p || context.url.pathname.startsWith(`${p}/`))) {
+    if (
+      NOINDEX_PREFIXES.some(
+        (p) => context.url.pathname === p || context.url.pathname.startsWith(`${p}/`),
+      )
+    ) {
       response.headers.set('X-Robots-Tag', NOINDEX_VALUE);
     }
     return response;
