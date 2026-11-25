@@ -55,8 +55,8 @@ test('E2E-04: marca completa necesidades y su feed sale ordenado y filtrado', as
       .allTextContents()
   ).map((t) => Number.parseInt(t, RADIX));
   expect(scores).toEqual([...scores].sort((a, b) => b - a));
-  // El motivo del match acompaña a la tarjeta (nichos en común con lo declarado).
-  await expect(page.getByText('Comparten nichos').first()).toBeVisible();
+  // El motivo del match (los 2 componentes que más pesan: nichos, contenido, presupuesto o interacción) acompaña a la tarjeta.
+  await expect(cards.first().locator('.pcard-reason')).not.toBeEmpty();
 
   // Filtro por nicho: todas las tarjetas visibles lo traen.
   await page.getByRole('button', { name: 'Filtros', exact: true }).click();
