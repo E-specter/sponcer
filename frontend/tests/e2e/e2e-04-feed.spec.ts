@@ -55,6 +55,19 @@ test('E2E-04: marca completa necesidades y su feed sale ordenado y filtrado', as
       .allTextContents()
   ).map((t) => Number.parseInt(t, RADIX));
   expect(scores).toEqual([...scores].sort((a, b) => b - a));
+  // La primera tarjeta muestra foto cargada (naturalWidth > 0, con alt) y la bio con su línea de procedencia.
+  const first = cards.first();
+  const photo = first.locator('.pcard-media img');
+  expect(((await photo.getAttribute('alt')) ?? '').startsWith('Foto de ')).toBe(true);
+  await expect
+    .poll(() => photo.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth))
+    .toBeGreaterThan(0);
+  await expect(first.locator('.pcard-bio')).not.toBeEmpty();
+  const source = (await first.locator('.pcard-source').textContent()) ?? '';
+  expect(
+    source.startsWith('Bio compartida · Instagram · @') || source === 'Declarado en Sponcer',
+  ).toBe(true);
+
   // El motivo del match (los 2 componentes que más pesan: nichos, contenido, presupuesto o interacción) acompaña a la tarjeta.
   await expect(cards.first().locator('.pcard-reason')).not.toBeEmpty();
 
