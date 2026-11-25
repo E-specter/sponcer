@@ -81,22 +81,28 @@ export function createMockInstagramSource(now: () => Date): MockInstagramSource 
   };
 }
 
-/** Caché en memoria sembrada con los fixtures. */
-export function createInMemorySnapshotRepository(): SnapshotRepository {
-  const latest = new Map<string, StoredSnapshot>(
-    fixtureProfiles.map((f) => [f.snapshot.handle, { id: randomUUID(), snapshot: f.snapshot }]),
+/** Caché en memoria sembrada con los fixtures; guarda historial por handle como la tabla `ig_snapshots`. */
+export function createInMemorySnapshotRepository(): SnapshotRepository & {
+  count(handle: string): number;
+} {
+  const history = new Map<string, StoredSnapshot[]>(
+    fixtureProfiles.map((f) => [f.snapshot.handle, [{ id: randomUUID(), snapshot: f.snapshot }]]),
   );
+  const newestFirst = (handle: string) =>
+    // Estable: ante igual `fetchedAt` gana el guardado más tarde (va antes en el arreglo).
+    [...(history.get(handle) ?? [])].sort((a, b) =>
+      b.snapshot.fetchedAt.localeCompare(a.snapshot.fetchedAt),
+    );
   return {
     async save(snapshot) {
       const stored = { id: randomUUID(), snapshot };
-      const current = latest.get(snapshot.handle);
-      // Como el real: el "último" es el de `fetchedAt` mayor, no el último guardado.
-      if (!current || snapshot.fetchedAt >= current.snapshot.fetchedAt)
-        latest.set(snapshot.handle, stored);
+      history.set(snapshot.handle, [stored, ...(history.get(snapshot.handle) ?? [])]);
       return stored;
     },
-    latestByHandle: async (handle) => latest.get(handle) ?? null,
-    deleteByHandle: async (handle) => void latest.delete(handle),
+    latestByHandle: async (handle) => newestFirst(handle)[0] ?? null,
+    deleteByHandle: async (handle) => void history.delete(handle),
+    prune: async (handle, keep) => void history.set(handle, newestFirst(handle).slice(0, keep)),
+    count: (handle) => history.get(handle)?.length ?? 0,
   };
 }
 

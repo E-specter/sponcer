@@ -1,7 +1,7 @@
 import { DomainError } from '../../../../shared/errors';
 import type { EventBus } from '../../../../shared/events/event-bus';
 import { err, ok } from '../../../../shared/result';
-import { isFresh } from '../../domain/snapshot-freshness';
+import { SNAPSHOT_RETENTION, isFresh } from '../../domain/snapshot-freshness';
 import { normalizeHandle } from '../normalize-handle';
 import type { IngestionApi } from '../ports/in/ingestion-api';
 import type { ImageStore } from '../ports/out/image-store';
@@ -36,6 +36,7 @@ export const makeIngestProfile =
     // La foto del origen caduca: se copia a Storage y el snapshot guarda la URL propia (o null si falla).
     const profilePicUrl = await d.images.store(handle.value, fetched.value.profilePicUrl);
     const saved = await d.snapshots.save({ ...fetched.value, profilePicUrl });
+    await d.snapshots.prune(handle.value, SNAPSHOT_RETENTION);
     d.bus.publish({ type: 'ProfileIngested', igHandle: handle.value, snapshotId: saved.id });
     return ok({ snapshotId: saved.id, snapshot: saved.snapshot, cached: false });
   };
