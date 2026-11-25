@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { MAX_QUOTE_MESSAGE, MAX_QUOTE_NOTE } from './limits';
-import { Id, IsoDate, PricePen } from './common';
+import { Id, IsoDate, PageQuery, PricePen } from './common';
 import { ProfileSummary, Service } from './profiles';
 
 export const QUOTE_STATUSES = [
@@ -85,4 +85,4 @@ export const Quote = QuoteRecord.extend({
 });
 export type Quote = z.infer<typeof Quote>;
 
-export const QuotesQuery = z.object({ profileId: Id });
+export const QuotesQuery = PageQuery.extend({ profileId: Id });

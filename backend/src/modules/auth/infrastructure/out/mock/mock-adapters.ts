@@ -1,5 +1,6 @@
 import { CLAIM_MAX_ATTEMPTS_PER_HOUR } from '@sponcer/contracts';
 import { fixtureProfiles, fixtureUsers } from '@sponcer/contracts/fixtures';
+import { DomainError } from '../../../../../shared/errors';
 import { ok } from '../../../../../shared/result';
 import type { ClaimRecord } from '../../../domain/claim';
 import type { ClaimStore } from '../../../application/ports/out/claim-store';
@@ -23,7 +24,12 @@ export const createInMemoryClaimStore = (): ClaimStore => {
   const claims = new Map<string, ClaimRecord>();
   const attempts: Array<{ userId: string; at: Date }> = [];
   return {
-    save: async (c) => void claims.set(c.id, c),
+    // Como la PK de la BD: un id repetido es un conflicto, no una sobrescritura.
+    save: async (c) => {
+      if (claims.has(c.id))
+        throw new DomainError('CONFLICT', 'Ya existe un registro con esos datos');
+      claims.set(c.id, c);
+    },
     findById: async (id) => claims.get(id) ?? null,
     async markConsumed(id) {
       const c = claims.get(id);

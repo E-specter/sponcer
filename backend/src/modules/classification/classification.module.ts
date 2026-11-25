@@ -60,6 +60,20 @@ export function createClassificationModule(deps: {
   const logFailure = (profileId: string, r: Awaited<ReturnType<typeof classify>>) =>
     r.ok ? undefined : logger.warn(`no se pudo clasificar ${profileId}`, r.error.message);
 
+  const inFlight = new Set<string>();
+  const ensureClassified = async (profileId: string): Promise<void> => {
+    if (inFlight.has(profileId)) return;
+    inFlight.add(profileId);
+    try {
+      if (!(await repository.getEmbedding(profileId)))
+        logFailure(profileId, await classify(profileId));
+    } catch (e) {
+      logger.warn(`no se pudo clasificar ${profileId}`, String(e));
+    } finally {
+      inFlight.delete(profileId);
+    }
+  };
+
   deps.bus.subscribe('ProfileRemoved', (e) => repository.deleteByProfile(e.profileId));
   deps.bus.subscribe('ProfileIngested', async (e) => {
     const profileId = await reader.findIdByHandle(e.igHandle);
@@ -74,6 +88,7 @@ export function createClassificationModule(deps: {
       getClassification: repository.getClassification,
       getEmbedding: repository.getEmbedding,
       getEmbeddings: repository.getEmbeddings,
+      ensureClassified,
       classifyAll: makeClassifyAll({ profiles: reader, classify }),
     },
   };

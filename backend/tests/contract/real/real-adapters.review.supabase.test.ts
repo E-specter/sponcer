@@ -123,11 +123,11 @@ describe.skipIf(!hasSupabase)('F2-B · revisión de adaptadores reales (Supabase
 
     it('PATCH declared persiste en jsonb y vuelve igual', async () => {
       const path = api.updateDeclared.path.replace(':profileId', creator.id);
-      const res = await asDemo('patch', path, { ...SEED_CREATOR_DECLARED, city: 'Piura' });
+      const res = await asDemo('patch', path, { ...SEED_CREATOR_DECLARED, city: 'piura' });
       expect(res.status).toBe(STATUS.OK);
       expectMatchesContract(api.updateDeclared, res.body);
       const again = await asDemo('get', profilePath(creator.handle));
-      expect(again.body.declared).toMatchObject({ role: 'creator', city: 'Piura' });
+      expect(again.body.declared).toMatchObject({ role: 'creator', city: 'piura' });
     });
 
     it('un usuario que no es dueño recibe 403 sobre el perfil real', async () => {
@@ -204,6 +204,39 @@ describe.skipIf(!hasSupabase)('F2-B · revisión de adaptadores reales (Supabase
 
     it('findByHandle de un handle inexistente es null y sin sensibilidad a mayúsculas inventada', async () => {
       expect(await repo.findByHandle('zz.no.existe.nunca')).toBeNull();
+    });
+
+    // F5: save nunca revive una ficha retirada (mismo contrato que el mock, con datos propios).
+    it('save NUNCA revive una ficha retirada, también con ediciones concurrentes', async () => {
+      const owner = await world.newUser();
+      const created = await world.newProfile('creator', owner.id);
+      const live = (await repo.findById(created.id))!;
+      expect(await repo.save({ ...live, status: 'removed' })).toBe(true);
+      const attempts = [
+        { ...live, status: 'verified' as const },
+        { ...live, declared: null },
+        { ...live, status: 'unclaimed' as const, ownerUserId: null },
+      ];
+      expect(await Promise.all(attempts.map((p) => repo.save(p)))).toEqual([false, false, false]);
+      expect((await repo.findById(created.id))?.status).toBe('removed');
+      expect(await repo.save({ ...live, status: 'removed' })).toBe(true);
+    });
+
+    it('un retiro concurrente con una edición deja la ficha retirada (sin lost update)', async () => {
+      const created = await world.newProfile('creator', (await world.newUser()).id);
+      const live = (await repo.findById(created.id))!;
+      await Promise.all([
+        repo.save({ ...live, declared: null }),
+        repo.save({ ...live, status: 'removed' }),
+        repo.save({ ...live, declared: null }),
+      ]);
+      expect((await repo.findById(created.id))?.status).toBe('removed');
+    });
+
+    it('save devuelve true al crear y al actualizar una ficha no retirada', async () => {
+      const created = await world.newProfile('creator');
+      const live = (await repo.findById(created.id))!;
+      expect(await repo.save({ ...live, declared: null })).toBe(true);
     });
 
     // Cambio de `unwrap` (F4): 23505 (unique) se traduce a DomainError CONFLICT en vez de un Error genérico (500).

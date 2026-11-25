@@ -19,6 +19,11 @@ export function createInMemoryInteractionRepository(): InteractionRepository {
   );
   return {
     async upsert(i) {
+      const key = interactionKey(i.actorProfileId, i.targetProfileId);
+      // Como la BD: el mismo par se reemplaza (upsert); el mismo id en otro par viola la PK.
+      if ([...store.entries()].some(([k, x]) => x.id === i.id && k !== key)) {
+        throw new Error(`interactions_pkey: id duplicado ${i.id}`);
+      }
       store.set(interactionKey(i.actorProfileId, i.targetProfileId), i);
     },
     find: async (actor, target) => store.get(interactionKey(actor, target)) ?? null,
@@ -35,6 +40,7 @@ export function createInMemoryMatchRepository(): MatchRepository {
     async createIfAbsent(match) {
       const existing = find(pairKey(match));
       if (existing) return { match: existing, created: false };
+      if (byId.has(match.id)) throw new Error(`matches_pkey: id duplicado ${match.id}`);
       byId.set(match.id, match);
       return { match, created: true };
     },
@@ -56,16 +62,19 @@ export const createMockCandidateSearch = (deps: {
     embedding: await deps.classification.getEmbedding(card.id),
   });
   return {
-    async find(viewerProfileId) {
+    async find(viewerProfileId, options) {
       const [card] = await deps.profiles.getCards([viewerProfileId]);
       if (!card) return err(new DomainError('NOT_FOUND', 'Perfil no encontrado'));
-      const cards = await deps.profiles.listCandidates(
-        card.role === 'creator' ? 'brand' : 'creator',
-      );
+      const excluded = new Set(options?.exclude ?? []);
+      const cards = (
+        await deps.profiles.listCandidates(card.role === 'creator' ? 'brand' : 'creator')
+      ).filter((c) => !excluded.has(c.id));
       const embeddings = await deps.classification.getEmbeddings(cards.map((c) => c.id));
       return ok({
         viewer: await withEmbedding(card),
+        // Sin embedding: entra igual (similitud 0 en el scoring), como en el adaptador real.
         candidates: cards.map((c) => ({ card: c, embedding: embeddings.get(c.id) ?? null })),
+        exhausted: true,
       });
     },
   };

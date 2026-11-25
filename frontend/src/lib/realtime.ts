@@ -30,6 +30,8 @@ export function subscribeInserts<Row>(
   table: 'messages' | 'notifications',
   filter: (userId: string) => string,
   onRow: (row: Row) => void,
+  /** Se llama cada vez que el canal queda SUBSCRIBED (primera vez y reconexiones): sirve para re-sincronizar lo perdido. */
+  onSubscribed?: () => void,
 ): Unsubscribe {
   if (PUBLIC_AUTH_MODE !== 'supabase' || !PUBLIC_SUPABASE_URL || !PUBLIC_SUPABASE_ANON_KEY)
     return NOOP;
@@ -53,7 +55,9 @@ export function subscribeInserts<Row>(
         { event: 'INSERT', schema: 'public', table, filter: filter(session.userId) },
         (p: RealtimePostgresInsertPayload<Record<string, unknown>>) => onRow(p.new as Row),
       )
-      .subscribe();
+      .subscribe((status) => {
+        if (status === 'SUBSCRIBED') onSubscribed?.();
+      });
     timer = setInterval(async () => {
       const next = await fetchSession();
       if (next) await c.realtime.setAuth(next.accessToken);

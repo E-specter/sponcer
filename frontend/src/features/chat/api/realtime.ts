@@ -15,7 +15,11 @@ interface MessageRow {
  * Mensajes nuevos de un match (ADR-006: Supabase Realtime, postgres_changes sobre `messages`,
  * protegido por RLS). Solo lectura; en auth mock es un no-op. La isla descarta duplicados por id.
  */
-export function subscribeMessages(matchId: string, onMessage: (m: Message) => void): Unsubscribe {
+export function subscribeMessages(
+  matchId: string,
+  onMessage: (m: Message) => void,
+  onSubscribed?: () => void,
+): Unsubscribe {
   return subscribeInserts<MessageRow>(
     'messages',
     () => `match_id=eq.${matchId}`,
@@ -29,5 +33,6 @@ export function subscribeMessages(matchId: string, onMessage: (m: Message) => vo
       });
       if (parsed.success) onMessage(parsed.data);
     },
+    onSubscribed,
   );
 }

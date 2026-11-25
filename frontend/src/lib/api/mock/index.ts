@@ -4,10 +4,12 @@ import {
   QUOTE_TRANSITION_ACTOR,
   api,
   type EndpointName,
+  type ProfileCard,
   type QuoteRecord,
+  type RemovalRequestItem,
   type VerifyClaimResult,
 } from '@sponcer/contracts';
-import { fixtureUsers, type FixtureProfile } from '@sponcer/contracts/fixtures';
+import { demoUser, fixtureUsers, type FixtureProfile } from '@sponcer/contracts/fixtures';
 import type { RawArgs } from '../http';
 import type { ParsedArgs, Result } from '../types';
 import {
@@ -20,6 +22,7 @@ import {
   paginate,
   scoreFor,
   state,
+  type MockRemoval,
   toCard,
   toDetail,
   toSummary,
@@ -37,6 +40,9 @@ const FIRST_ATTEMPT = 1;
 
 const randomCode = (): string =>
   `sponcer-${Array.from({ length: CODE_LENGTH }, () => CODE_ALPHABET[Math.floor(Math.random() * CODE_ALPHABET.length)]).join('')}`;
+
+/** Marcas diacríticas combinadas (acentos) tras normalizar a NFD: "á" -> "a". */
+const DIACRITICS = /[̀-ͯ]/g;
 
 const nowIso = (): string => new Date().toISOString();
 
@@ -73,6 +79,37 @@ function claimResult(
   return { status: 'verified', profileId: profile.id };
 }
 
+function requireAdmin(userId: string): void {
+  if (userId !== demoUser.id) fail('FORBIDDEN', 'Solo administradores');
+}
+
+const findByHandle = (handle: string): FixtureProfile | undefined =>
+  state().profiles.find((p) => p.snapshot.handle === handle);
+
+function removalItem(r: MockRemoval): RemovalRequestItem {
+  const profile = findByHandle(r.handle);
+  return {
+    id: r.id,
+    igHandle: r.handle,
+    email: r.email,
+    reason: r.reason,
+    status: r.status,
+    createdAt: r.createdAt,
+    reviewedAt: r.reviewedAt,
+    reviewNote: r.reviewNote,
+    profile: profile ? toSummary(profile) : null,
+  };
+}
+
+/** Búsqueda `q` del feed: nombre, handle o nichos (sin tildes ni mayúsculas). */
+function matchesText(card: ProfileCard, q: string | undefined): boolean {
+  if (!q) return true;
+  const needle = normalize(q);
+  return [card.fullName, card.handle, ...card.niches].some((t) => normalize(t).includes(needle));
+}
+
+const normalize = (s: string): string => s.normalize('NFD').replace(DIACRITICS, '').toLowerCase();
+
 const handlers: Handlers = {
   health: () => ({ status: 'ok' }),
 
@@ -80,6 +117,8 @@ const handlers: Handlers = {
     return {
       userId,
       email: fixtureUsers.find((u) => u.id === userId)?.email ?? '',
+      // Mock: el usuario demo es administrador.
+      isAdmin: userId === demoUser.id,
       profiles: state()
         .profiles.filter((p) => p.ownerUserId === userId)
         .map(toSummary),
@@ -170,8 +209,39 @@ const handlers: Handlers = {
   },
 
   requestRemoval: ({ params, body }) => {
-    state().removals.push({ handle: params.handle, email: body.email });
+    state().removals.push({
+      id: crypto.randomUUID(),
+      handle: params.handle,
+      email: body.email,
+      reason: body.reason ?? null,
+      status: 'pending',
+      createdAt: nowIso(),
+      reviewedAt: null,
+      reviewNote: null,
+    });
     return { ok: true };
+  },
+
+  adminListRemovals: ({ userId, query }) => {
+    requireAdmin(userId);
+    const items = state()
+      .removals.filter((r) => !query.status || r.status === query.status)
+      .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+      .map(removalItem);
+    return paginate(items, query.cursor, query.limit);
+  },
+
+  adminReviewRemoval: ({ userId, params, body }) => {
+    requireAdmin(userId);
+    const request = state().removals.find((r) => r.id === params.requestId);
+    if (!request) return fail('NOT_FOUND', 'Pedido no encontrado');
+    if (request.status !== 'pending') return fail('CONFLICT', 'El pedido ya fue revisado');
+    request.status = body.decision === 'apply' ? 'applied' : 'rejected';
+    request.reviewedAt = nowIso();
+    request.reviewNote = body.note ?? null;
+    const profile = findByHandle(request.handle);
+    if (body.decision === 'apply' && profile) profile.status = 'removed';
+    return removalItem(request);
   },
 
   feed: ({ userId, query }) => {
@@ -185,8 +255,10 @@ const handlers: Handlers = {
       .profiles.filter((p) => p.role !== actor.role && p.status !== 'removed' && !seen.has(p.id))
       .map((p) => scoreFor(actor, p))
       .filter(({ card }) => {
-        const { niches, tiers, minEngagement, maxPricePen, minBudgetPen } = query;
+        const { niches, tiers, minEngagement, maxPricePen, minBudgetPen, q, city } = query;
         return (
+          matchesText(card, q) &&
+          (!city || card.city === city) &&
           (!niches?.length || card.niches.some((n) => niches.includes(n))) &&
           (!tiers?.length || tiers.includes(card.tier)) &&
           (minEngagement === undefined || card.engagementRate >= minEngagement) &&
@@ -239,7 +311,7 @@ const handlers: Handlers = {
 
   matches: ({ userId, query }) => {
     ownProfile(userId, query.profileId);
-    return state()
+    const items = state()
       .matches.filter((m) => [m.creatorProfileId, m.brandProfileId].includes(query.profileId))
       .map((m) => ({
         id: m.id,
@@ -247,15 +319,17 @@ const handlers: Handlers = {
         brand: toCard(findProfile(m.brandProfileId)),
         createdAt: m.createdAt,
       }));
+    return paginate(items, query.cursor, query.limit);
   },
 
   listQuotes: ({ userId, query }) => {
     ownProfile(userId, query.profileId);
-    return state()
+    const items = state()
       .quotes.filter(
         (q) => q.creatorProfileId === query.profileId || q.requesterProfileId === query.profileId,
       )
       .map(enrichQuote);
+    return paginate(items, query.cursor, query.limit);
   },
 
   createQuote: ({ userId, body }) => {

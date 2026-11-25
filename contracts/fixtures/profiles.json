@@ -145,7 +145,7 @@
     "declared": {
       "role": "creator",
       "niches": ["moda", "belleza"],
-      "city": "Trujillo",
+      "city": "trujillo",
       "shortBio": "Creo contenido de moda para una comunidad real.",
       "accountType": "business"
     },
@@ -465,7 +465,7 @@
     "declared": {
       "role": "creator",
       "niches": ["fitness", "salud-bienestar"],
-      "city": "Trujillo",
+      "city": "trujillo",
       "shortBio": "Creo contenido de fitness para una comunidad real.",
       "accountType": "creator"
     },
@@ -771,7 +771,7 @@
     "declared": {
       "role": "creator",
       "niches": ["gastronomia", "lifestyle"],
-      "city": "Trujillo",
+      "city": "trujillo",
       "shortBio": "Creo contenido de gastronomia para una comunidad real.",
       "accountType": "business"
     },
@@ -1084,7 +1084,7 @@
     "declared": {
       "role": "creator",
       "niches": ["tecnologia", "musica"],
-      "city": "Cusco",
+      "city": "cusco",
       "shortBio": "Creo contenido de tecnologia para una comunidad real.",
       "accountType": "business"
     },
@@ -1404,7 +1404,7 @@
     "declared": {
       "role": "creator",
       "niches": ["musica", "deportes"],
-      "city": "Piura",
+      "city": "piura",
       "shortBio": "Creo contenido de musica para una comunidad real.",
       "accountType": "business"
     },
@@ -1724,7 +1724,7 @@
     "declared": {
       "role": "creator",
       "niches": ["educacion", "lifestyle"],
-      "city": "Cusco",
+      "city": "cusco",
       "shortBio": "Creo contenido de educacion para una comunidad real.",
       "accountType": "business"
     },
@@ -2037,7 +2037,7 @@
     "declared": {
       "role": "creator",
       "niches": ["salud-bienestar", "familia-maternidad"],
-      "city": "Piura",
+      "city": "piura",
       "shortBio": "Creo contenido de salud y bienestar para una comunidad real.",
       "accountType": "creator"
     },
@@ -2343,7 +2343,7 @@
     "declared": {
       "role": "creator",
       "niches": ["mascotas", "educacion"],
-      "city": "Trujillo",
+      "city": "trujillo",
       "shortBio": "Creo contenido de mascotas para una comunidad real.",
       "accountType": "creator"
     },
@@ -2663,7 +2663,7 @@
     "declared": {
       "role": "creator",
       "niches": ["emprendimiento", "belleza"],
-      "city": "Arequipa",
+      "city": "arequipa",
       "shortBio": "Creo contenido de emprendimiento para una comunidad real.",
       "accountType": "business"
     },
@@ -2976,7 +2976,7 @@
     "declared": {
       "role": "creator",
       "niches": ["automotriz", "belleza"],
-      "city": "Lima",
+      "city": "lima",
       "shortBio": "Creo contenido de automotriz para una comunidad real.",
       "accountType": "creator"
     },

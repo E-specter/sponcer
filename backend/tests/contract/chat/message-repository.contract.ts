@@ -42,6 +42,20 @@ export function describeMessageRepositoryContract(
       expect(await repo.listByMatch(match.matchId, 0, THREE)).toEqual({ items: [m], total: 1 });
     });
 
+    it('add con un id ya existente se rechaza con DomainError CONFLICT (sin duplicar el mensaje)', async () => {
+      const { repo, newMatch } = await factory();
+      const match = await newMatch();
+      const original = msg(match, 0);
+      await repo.add(original);
+      await expect(repo.add({ ...original, body: 'otro' })).rejects.toMatchObject({
+        code: 'CONFLICT',
+      });
+      expect(await repo.listByMatch(match.matchId, 0, THREE)).toEqual({
+        items: [original],
+        total: 1,
+      });
+    });
+
     it('devuelve lo más reciente primero', async () => {
       const { repo, newMatch } = await factory();
       const match = await newMatch();

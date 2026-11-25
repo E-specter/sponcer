@@ -1,3 +1,4 @@
+import { DomainError } from '../../../../../shared/errors';
 import { fixtureSocial } from '@sponcer/contracts/fixtures';
 import type {
   NotificationRepository,
@@ -10,7 +11,10 @@ export function createMockNotificationRepository(): NotificationRepository {
     fixtureSocial.notifications.map((n) => [n.id, n]),
   );
   return {
-    add: async (n) => void byId.set(n.id, n),
+    add: async (n) => {
+      if (byId.has(n.id)) throw new DomainError('CONFLICT', 'Ya existe un registro con esos datos');
+      byId.set(n.id, n);
+    },
     findById: async (id) => byId.get(id) ?? null,
     async listByUser(userId, offset, limit) {
       const mine = [...byId.values()]

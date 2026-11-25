@@ -8,6 +8,10 @@ import type { ProfilesApi } from './application/ports/in/profiles-api';
 import type { ClassificationReader } from './application/ports/out/classification-reader';
 import type { SnapshotReader } from './application/ports/out/snapshot-reader';
 import { createProfileAssembler } from './application/profile-assembler';
+import {
+  makeAdminListRemovals,
+  makeAdminReviewRemoval,
+} from './application/use-cases/admin-removals';
 import { makeClaimProfile } from './application/use-cases/claim-profile';
 import { makeGetProfile } from './application/use-cases/get-profile';
 import { makeProfileQueries } from './application/use-cases/profile-queries';
@@ -42,6 +46,8 @@ export function createProfilesModule(deps: {
   classifications?: ClassificationReader;
   /** Requerido con `adapter: 'real'` (cliente service_role). */
   supabase?: SupabaseClient;
+  /** `env.ADMIN_EMAILS`: pueden revisar pedidos de exclusión. */
+  adminEmails?: readonly string[];
   now?: () => Date;
 }): ProfilesModule {
   const now = deps.now ?? (() => new Date());
@@ -72,6 +78,20 @@ export function createProfilesModule(deps: {
       claimProfile: makeClaimProfile({ claimer: a.claimer }),
     },
     router: createProfilesRouter({
+      adminEmails: deps.adminEmails ?? [],
+      adminListRemovals: makeAdminListRemovals({
+        requests: a.removals,
+        reader: a.profiles,
+        assembler,
+      }),
+      adminReviewRemoval: makeAdminReviewRemoval({
+        requests: a.removals,
+        reader: a.profiles,
+        writer: a.profiles,
+        assembler,
+        bus: deps.bus,
+        now,
+      }),
       getProfile: makeGetProfile({
         profiles: a.profiles,
         assembler,

@@ -36,6 +36,7 @@ export function composeApp(env: Env, opts: { now?: () => Date } = {}) {
 
   const profiles = createProfilesModule({
     adapter: env.ADAPTER_PROFILES,
+    adminEmails: env.ADMIN_EMAILS,
     // Ingesta bajo demanda: perfil primero, luego `ProfileIngested` (lo publica profiles) para que classification lo vea.
     ingester: {
       ingest: async (h) => {
@@ -110,6 +111,7 @@ export function composeApp(env: Env, opts: { now?: () => Date } = {}) {
   });
   const auth = createAuthModule({
     adapter: env.ADAPTER_AUTH,
+    adminEmails: env.ADMIN_EMAILS,
     now,
     bus,
     supabase,

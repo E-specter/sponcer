@@ -35,3 +35,9 @@ if (!LOCAL_HOST.test(new URL(SUPABASE_URL).hostname)) {
 export const E2E_EMAIL_DOMAIN = 'e2e.sponcer.local';
 /** Prefijo de los handles de prueba (ficticios, cumplen IG_HANDLE_REGEX). */
 export const E2E_HANDLE_PREFIX = 'e2e.';
+
+/** Correo del administrador de prueba: el backend debe arrancar con `ADMIN_EMAILS` que lo incluya. */
+export const E2E_ADMIN_EMAIL = process.env.E2E_ADMIN_EMAIL ?? `e2e-admin@${E2E_EMAIL_DOMAIN}`;
+/** Cuenta sembrada que usa el acceso demo y contraseña que el frontend recibe en `DEMO_PASSWORD`. */
+export const E2E_DEMO_ACCOUNT = 'usuario4@sponcer.local';
+export const E2E_DEMO_PASSWORD = process.env.E2E_DEMO_PASSWORD ?? 'E2E-demo-Passw0rd!';

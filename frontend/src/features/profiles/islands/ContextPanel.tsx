@@ -8,7 +8,7 @@ import { Tag } from '../../../components/ui/Tag';
 import { callBff } from '../../../lib/api/bff';
 import { listNotifications } from '../../notifications/api/notifications';
 import { KIND_TEXT, hrefFor } from '../../notifications/notification-text';
-import { NICHE_LABEL } from '../../../lib/labels';
+import { CITY_LABEL, NICHE_LABEL } from '../../../lib/labels';
 import { activeDetail } from '../../../lib/state/active-detail';
 import { useActiveProfile } from '../../../lib/state/use-active-profile';
 
@@ -20,7 +20,7 @@ function declaredText(d: ProfileDetail['declared']): string {
   const niches = (d.role === 'creator' ? d.niches : d.targetNiches)
     .map((n) => NICHE_LABEL[n])
     .join(', ');
-  const city = d.role === 'creator' && d.city ? ` · ${d.city}` : '';
+  const city = d.role === 'creator' && d.city ? ` · ${CITY_LABEL[d.city]}` : '';
   return `Nichos: ${niches}${city}`;
 }
 

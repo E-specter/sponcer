@@ -21,13 +21,14 @@ function parseWith(schema: z.ZodType, value: unknown): unknown {
  */
 export async function call<N extends EndpointName>(
   name: N,
-  ...rest: ArgsTuple<CallArgs<N> & { token?: string | null }>
+  ...rest: ArgsTuple<CallArgs<N> & { token?: string | null; clientIp?: string }>
 ): Promise<Result<N>> {
   const args = (rest[0] ?? {}) as RawArgs;
   const endpoint = api[name] as { query?: z.ZodType; body?: z.ZodType };
   const parsed: RawArgs = {
     params: args.params,
     token: args.token ?? undefined,
+    clientIp: args.clientIp,
     query: endpoint.query ? parseWith(endpoint.query, args.query ?? {}) : undefined,
     body: endpoint.body ? parseWith(endpoint.body, args.body) : undefined,
   };

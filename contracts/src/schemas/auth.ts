@@ -7,6 +7,8 @@ export const Me = z.object({
   userId: Id,
   email: z.email(),
   profiles: z.array(ProfileSummary),
+  /** Puede revisar pedidos de exclusión (ADMIN_EMAILS en el backend). */
+  isAdmin: z.boolean(),
 });
 export type Me = z.infer<typeof Me>;
 

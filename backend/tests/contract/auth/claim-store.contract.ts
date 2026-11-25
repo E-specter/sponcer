@@ -73,6 +73,16 @@ export function describeClaimStoreContract(
       expect(found?.expiresAt).toBeInstanceOf(Date);
     });
 
+    it('save con un id de reclamo ya existente se rechaza con DomainError CONFLICT (sin pisar el original)', async () => {
+      const { store, userA } = await factory();
+      const original = claim(ID_1, userA);
+      await store.save(original);
+      await expect(store.save({ ...original, handle: 'otro.handle' })).rejects.toMatchObject({
+        code: 'CONFLICT',
+      });
+      expect(await store.findById(ID_1)).toEqual(original);
+    });
+
     it('solo guarda el hash del código: no hay campo con el código en claro', async () => {
       const { store, userA } = await factory();
       await store.save(claim(ID_1, userA));

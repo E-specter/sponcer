@@ -3,6 +3,7 @@ import type { FeedItem } from '@sponcer/contracts';
 import { Chip } from '../../../components/ui/Chip';
 import { ProfileCard } from '../../../components/ui/ProfileCard';
 import {
+  CITY_LABEL,
   NICHE_LABEL,
   REASON_LABEL,
   SECTOR_LABEL,
@@ -43,10 +44,14 @@ export default function FeedCard({ item, busy, onInterest, onDismiss, viewerIsBr
     <ProfileCard
       id={card.id}
       name={card.fullName || `@${card.handle}`}
-      subtitle={`${isBrand ? 'Marca' : 'Creador'}${card.sector ? ` · ${SECTOR_LABEL[card.sector]}` : ''} · @${card.handle}`}
+      subtitle={
+        card.city
+          ? `${CITY_LABEL[card.city]} · Ubicación declarada`
+          : `${isBrand ? 'Marca' : 'Creador'}${card.sector ? ` · ${SECTOR_LABEL[card.sector]}` : ''} · @${card.handle}`
+      }
       imageUrl={card.profilePicUrl}
       faceFocus={!isBrand}
-      provenance="Instagram"
+      provenance={`${isBrand ? 'Marca' : 'Creador'} · Instagram`}
       bio={card.bio}
       sourceLine={
         card.bioSource === 'instagram'

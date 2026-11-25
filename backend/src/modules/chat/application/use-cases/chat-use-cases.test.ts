@@ -92,6 +92,14 @@ describe('ListMessages', () => {
   });
 });
 
+describe('ListMessages · cursor', () => {
+  it('un cursor corrupto es VALIDATION_ERROR, no la primera página', async () => {
+    const { list } = setup();
+    const r = await list(brandOwner, match.id, { limit: SMALL_PAGE, cursor: '-5' });
+    expect(!r.ok && r.error.code).toBe('VALIDATION_ERROR');
+  });
+});
+
 describe('módulo chat', () => {
   it('registra matches nuevos desde MatchCreated', async () => {
     const bus = createEventBus();

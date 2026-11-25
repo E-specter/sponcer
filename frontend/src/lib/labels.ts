@@ -1,6 +1,7 @@
 import type {
   BrandSector,
   CampaignObjective,
+  City,
   Niche,
   QuoteStatus,
   ScoreComponent,
@@ -8,6 +9,28 @@ import type {
   ServiceType,
   Tier,
 } from '@sponcer/contracts';
+
+export const CITY_LABEL: Record<City, string> = {
+  lima: 'Lima',
+  arequipa: 'Arequipa',
+  trujillo: 'Trujillo',
+  chiclayo: 'Chiclayo',
+  piura: 'Piura',
+  cusco: 'Cusco',
+  iquitos: 'Iquitos',
+  huancayo: 'Huancayo',
+  tacna: 'Tacna',
+  ica: 'Ica',
+  juliaca: 'Juliaca',
+  puno: 'Puno',
+  pucallpa: 'Pucallpa',
+  chimbote: 'Chimbote',
+  cajamarca: 'Cajamarca',
+  ayacucho: 'Ayacucho',
+  huaraz: 'Huaraz',
+  tarapoto: 'Tarapoto',
+  otra: 'Otra ciudad',
+};
 
 export const NICHE_LABEL: Record<Niche, string> = {
   moda: 'Moda',

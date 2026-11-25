@@ -1,6 +1,6 @@
 ---
 import { PUBLIC_AUTH_MODE } from 'astro:env/client';
-import { Compass, FileText, ShieldCheck, UserRound, Users } from 'lucide-react';
+import { Compass, FileText, ShieldAlert, ShieldCheck, UserRound, Users } from 'lucide-react';
 import Base from './Base.astro';
 import { getMe } from '../lib/session';
 import { Avatar } from '../components/ui/Avatar';
@@ -32,19 +32,23 @@ const tabs = [
   { href: '/panel/matches', label: 'Matches' },
   { href: '/panel/cotizaciones', label: 'Cotizaciones' },
   { href: '/panel', label: 'Mi panel' },
+  ...(me.isAdmin ? [{ href: '/admin/exclusiones', label: 'Exclusiones' }] : []),
 ];
+const adminLink = { href: '/admin/exclusiones', label: 'Exclusiones', Icon: ShieldAlert };
 const sideLinks = [
   { href: '/descubrir', label: 'Para ti', Icon: Compass },
   { href: '/panel/matches', label: 'Matches', Icon: Users },
   { href: '/panel/cotizaciones', label: 'Cotizaciones', Icon: FileText },
   { href: '/panel', label: 'Mis perfiles', Icon: UserRound },
   { href: '/privacidad', label: 'Privacidad', Icon: ShieldCheck },
+  ...(me.isAdmin ? [adminLink] : []),
 ];
 const bottomLinks = [
   { href: '/descubrir', label: 'Descubrir', Icon: Compass },
   { href: '/panel/matches', label: 'Matches', Icon: Users },
   { href: '/panel/cotizaciones', label: 'Cotizaciones', Icon: FileText },
   { href: '/panel', label: 'Panel', Icon: UserRound },
+  ...(me.isAdmin ? [adminLink] : []),
 ];
 ---
 

@@ -130,6 +130,12 @@ describe('queries', () => {
     expect(none.ok && none.value.items).toEqual([]);
   });
 
+  it('un cursor corrupto es VALIDATION_ERROR, no la primera página', async () => {
+    const list = makeListNotifications({ repo: createMockNotificationRepository() });
+    const r = await list(STRANGER, { limit: FIRST_PAGE, cursor: 'abc' });
+    expect(!r.ok && r.error.code).toBe('VALIDATION_ERROR');
+  });
+
   it('markRead marca las propias y rechaza las ajenas', async () => {
     const repo = createMockNotificationRepository();
     const target = fixtureSocial.notifications.find((n) => n.readAt === null)!;

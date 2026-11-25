@@ -1,0 +1,29 @@
+---
+import App from '../../layouts/App.astro';
+import { getMe } from '../../lib/session';
+import AdminRemovals from '../../features/admin/islands/AdminRemovals';
+
+const me = await getMe(Astro.locals);
+if (!me.isAdmin) Astro.response.status = 404;
+---
+
+<App title={me.isAdmin ? 'Exclusiones' : 'No encontrado'}>
+  {
+    me.isAdmin ? (
+      <>
+        <header class="page-head">
+          <p class="eyebrow">Administración / exclusiones</p>
+          <h1>Pedidos de exclusión</h1>
+          <p class="lead">Derechos ARCO (Ley N.º 29733): aplica o rechaza cada pedido.</p>
+        </header>
+        <AdminRemovals client:load />
+      </>
+    ) : (
+      <section class="card">
+        <h1>Página no encontrada</h1>
+        <p>No existe o no tienes acceso.</p>
+        <a class="btn" href="/descubrir">Volver a descubrir</a>
+      </section>
+    )
+  }
+</App>

@@ -26,7 +26,7 @@ const sections = await Promise.all(
     sections.map(({ profile, quotes }) => (
       <section class="stack" aria-labelledby={`s-${profile.id}`}>
         <h2 id={`s-${profile.id}`}>@{profile.handle}</h2>
-        <QuoteList client:load profile={profile} quotes={quotes} />
+        <QuoteList client:load profile={profile} quotes={quotes.items} nextCursor={quotes.nextCursor} />
       </section>
     ))
   }

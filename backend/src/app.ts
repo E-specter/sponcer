@@ -55,6 +55,8 @@ export function createApp(deps: AppDeps) {
 
   const app = express();
   app.disable('x-powered-by');
+  // ADR-007: solo se confía en X-Forwarded-For si llega de localhost (el BFF); el rate limit usa la IP real.
+  app.set('trust proxy', 'loopback');
   app.use(cors({ origin: deps.env.CORS_ORIGIN }));
   app.use(express.json());
   app.use(deps.authMiddleware);

@@ -69,8 +69,11 @@ test('E2E-06: ciclo completo de una cotización con los dos actores correctos', 
   await expect(mine.getByText('S/ 300', { exact: false })).toBeVisible();
   await expect(mine.getByRole('button', { name: 'Aceptar' })).toHaveCount(0);
   const [quote] = (
-    await brand.api.call<{ id: string }[]>('GET', `/api/v1/quotes?profileId=${brand.profileId}`)
-  ).body;
+    await brand.api.call<{ items: { id: string }[] }>(
+      'GET',
+      `/api/v1/quotes?profileId=${brand.profileId}`,
+    )
+  ).body.items;
   const forced = await brand.api.call('POST', `/api/v1/quotes/${quote?.id}/transitions`, {
     actorProfileId: brand.profileId,
     to: 'accepted',

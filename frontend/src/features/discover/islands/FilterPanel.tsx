@@ -1,11 +1,18 @@
 import { useStore } from '@nanostores/react';
 import { useState } from 'react';
 import { SlidersHorizontal } from 'lucide-react';
-import { NICHES, TIERS, type Niche, type ProfileSummary, type Tier } from '@sponcer/contracts';
+import {
+  CITIES,
+  NICHES,
+  TIERS,
+  type Niche,
+  type ProfileSummary,
+  type Tier,
+} from '@sponcer/contracts';
 import { Chip } from '../../../components/ui/Chip';
 import { Field } from '../../../components/ui/Field';
 import { SearchField } from '../../../components/ui/SearchField';
-import { NICHE_LABEL, TIER_LABEL } from '../../../lib/labels';
+import { CITY_LABEL, NICHE_LABEL, TIER_LABEL } from '../../../lib/labels';
 import { useActiveProfile } from '../../../lib/state/use-active-profile';
 import { EMPTY_FILTERS, filters, searchQuery } from './filters.store';
 
@@ -35,6 +42,16 @@ export default function FilterPanel({ profiles }: { profiles: ProfileSummary[] }
         onChange={(v) => searchQuery.set(v)}
         large
       />
+      <Field id="f-city" label="Ciudad">
+        <select id="f-city" value={f.city} onChange={(e) => filters.setKey('city', e.target.value)}>
+          <option value="">Todas las ciudades</option>
+          {CITIES.map((c) => (
+            <option key={c} value={c}>
+              {CITY_LABEL[c]}
+            </option>
+          ))}
+        </select>
+      </Field>
       <div role="group" aria-label="Nichos" className="chips">
         {(advanced ? NICHES : f.niches).map((n: Niche) => (
           <Chip

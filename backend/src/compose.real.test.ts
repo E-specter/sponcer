@@ -10,6 +10,9 @@ import { loadEnv } from './config/env';
 import { composeApp } from './compose';
 
 const OK = 200;
+const FORBIDDEN = 403;
+const NOT_FOUND = 404;
+const CONFLICT = 409;
 const PASSWORD = 'Sponcer-test-1234';
 const PRICE_PEN = 300;
 const BUDGET_MIN_PEN = 100;
@@ -49,6 +52,9 @@ describe.skipIf(!enabled)('flujo real completo (Supabase local)', () => {
   let brand: Actor;
   let matchId = '';
   const tag = Date.now();
+  const adminEmail = `flow-admin-${randomUUID()}@sponcer.local`;
+  let adminJwt = '';
+  const adminAuth = () => ({ Authorization: `Bearer ${adminJwt}` });
 
   const as = (a: Actor) => ({ Authorization: `Bearer ${a.jwt}` });
   const until = async (check: () => Promise<boolean>) => {
@@ -103,15 +109,35 @@ describe.skipIf(!enabled)('flujo real completo (Supabase local)', () => {
         ADAPTER_NOTIFICATIONS: 'real',
         ADAPTER_CHAT: 'real',
         ADAPTER_INGESTION: 'mock',
+        ADMIN_EMAILS: adminEmail,
       }),
     );
     app = composed.app;
     backfill = composed.backfill;
     creator = await newActor('creator');
     brand = await newActor('brand');
+    await admin.auth.admin.createUser({
+      email: adminEmail,
+      password: PASSWORD,
+      email_confirm: true,
+    });
+    const anon = createClient(url, raw.SUPABASE_ANON_KEY as string, {
+      auth: { persistSession: false },
+    });
+    adminJwt = (await anon.auth.signInWithPassword({ email: adminEmail, password: PASSWORD })).data
+      .session!.access_token;
   }, SETUP_TIMEOUT_MS);
 
   afterAll(async () => {
+    await admin.from('profile_removal_requests').delete().like('ig_handle', `flow.%.${tag}`);
+    await admin.from('ingestion_blocklist').delete().like('ig_handle', `flow.%.${tag}`);
+    await admin.from('profiles').delete().like('ig_handle', `flow.%.${tag}`);
+    const { data: users } = await admin.auth.admin.listUsers({ perPage: 1000 });
+    await Promise.all(
+      (users?.users ?? [])
+        .filter((u) => u.email === adminEmail)
+        .map((u) => admin.auth.admin.deleteUser(u.id)),
+    );
     const ids = [creator?.profileId, brand?.profileId].filter(Boolean);
     // matches, messages, quotes, interacciones y clasificación caen en cascada con el perfil.
     if (ids.length) await admin.from('profiles').delete().in('id', ids);
@@ -335,6 +361,62 @@ describe.skipIf(!enabled)('flujo real completo (Supabase local)', () => {
       expect(emb.data).toHaveLength(1);
       await admin.from('profiles').delete().eq('id', row.data!.id);
       await admin.from('ig_snapshots').delete().eq('ig_handle', onDemand);
+    },
+    SETUP_TIMEOUT_MS,
+  );
+
+  it(
+    'admin: Me.isAdmin, listar, rechazar y aplicar pedidos de exclusión',
+    async () => {
+      expect((await request(app).get('/api/v1/me').set(adminAuth())).body.isAdmin).toBe(true);
+      expect((await request(app).get('/api/v1/me').set(as(creator))).body.isAdmin).toBe(false);
+      const list = '/api/v1/admin/removal-requests';
+      expect((await request(app).get(list).set(as(creator))).status).toBe(FORBIDDEN);
+
+      // Un pedido anónimo sobre una ficha ajena queda pending y la ficha sigue visible.
+      const victim = `flow.removal.${tag}`;
+      expect((await request(app).get(`/api/v1/profiles/${victim}`).set(as(creator))).status).toBe(
+        OK,
+      );
+      const ask = (handle: string) =>
+        request(app)
+          .post(`/api/v1/profiles/${handle}/removal-requests`)
+          .send({ email: 'titular@sponcer.local' });
+      expect((await ask(victim)).status).toBe(OK);
+      expect((await ask(creator.handle)).status).toBe(OK);
+      const pending = await request(app).get(`${list}?status=pending&limit=50`).set(adminAuth());
+      expect(pending.status, JSON.stringify(pending.body)).toBe(OK);
+      const mine = (h: string) =>
+        pending.body.items.find((r: { igHandle: string }) => r.igHandle === h);
+      expect(mine(victim)).toMatchObject({ status: 'pending', profile: { handle: victim } });
+
+      const review = (id: string, body: object, a = adminAuth()) =>
+        request(app).post(`${list}/${id}/review`).set(a).send(body);
+      expect((await review(mine(victim).id, { decision: 'apply' }, as(creator))).status).toBe(
+        FORBIDDEN,
+      );
+      expect((await review(randomUUID(), { decision: 'apply' })).status).toBe(NOT_FOUND);
+
+      const rejected = await review(mine(creator.handle).id, {
+        decision: 'reject',
+        note: 'no verificado',
+      });
+      expect(rejected.body).toMatchObject({ status: 'rejected', reviewNote: 'no verificado' });
+      const kept = await admin
+        .from('profiles')
+        .select('status')
+        .eq('id', creator.profileId)
+        .single();
+      expect(kept.data?.status).toBe('verified');
+
+      const applied = await review(mine(victim).id, { decision: 'apply' });
+      expect(applied.body.status).toBe('applied');
+      expect((await review(mine(victim).id, { decision: 'apply' })).status).toBe(CONFLICT);
+      const gone = await admin.from('profiles').select('status').eq('ig_handle', victim).single();
+      expect(gone.data?.status).toBe('removed');
+      // El bloqueo del handle lo hace ingestion al recibir ProfileRemoved (en memoria con ingestion mock).
+      const after = await request(app).get(`/api/v1/profiles/${victim}`).set(as(creator));
+      expect(after.status).toBe(NOT_FOUND);
     },
     SETUP_TIMEOUT_MS,
   );

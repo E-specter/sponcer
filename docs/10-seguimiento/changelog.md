@@ -10,6 +10,25 @@ Formato [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). Versiones c
 
 ## [Sin publicar]
 
+## [1.2.0] - 2026-11-25
+
+### Añadido
+
+- Búsqueda en Descubrir por nombre, handle, bio y nichos (sin distinguir mayúsculas ni tildes) y filtro por ciudad; la ciudad pasa a ser un catálogo.
+- Paginación con "Cargar más" en matches y cotizaciones.
+- Panel de exclusiones para administradores (`ADMIN_EMAILS`): aplicar o rechazar pedidos de titulares (Ley 29733), reemplaza el SQL manual.
+- Demo pública con túneles de Cloudflare y acceso con cuentas demo (ADR-007, `npm run demo:tunnel`).
+- E2E en Chromium, Firefox y WebKit.
+
+### Corregido
+
+- El feed real ya no oculta perfiles sin embedding.
+- Retirar una ficha no puede revertirse por una edición concurrente.
+- Cursores de paginación estrictos (400 si están corruptos) en todos los listados.
+- Límites por IP con la IP real del cliente a través del BFF.
+- El chat recupera mensajes enviados antes de terminar la suscripción a Realtime.
+- Se conservan solo los últimos 3 snapshots por cuenta.
+
 ## [1.1.0] - 2026-11-25
 
 ### Añadido

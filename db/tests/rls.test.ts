@@ -45,6 +45,7 @@ const NO_ROW_UUID = '00000000-0000-4000-8000-000000000000';
 const WINDOW_MINUTES = 60;
 const MAX_ATTEMPTS = 5;
 const BURST_FACTOR = 3;
+const HTTP_OK = 200;
 const BENIGN_DATE = '2000-01-01T00:00:00.000Z';
 const embeddingLiteral = `[${Array.from({ length: EMBEDDING_DIMS }, (_, i) => (i === 0 ? 1 : 0)).join(',')}]`;
 const zeros = `[${Array.from({ length: EMBEDDING_DIMS }, () => 0).join(',')}]`;
@@ -362,6 +363,49 @@ describe.skipIf(!hasSupabase)('RLS (Supabase local)', () => {
       expect(theirs.data).toBe(false);
       const none = await asC.rpc('is_match_participant', { p_match_id: own.m1 });
       expect(none.data).toBe(false);
+    });
+  });
+
+  // F5: bucket público de fotos. Lectura pública por URL; escritura y borrado SOLO del backend (service_role).
+  describe('Storage · bucket profile-images', () => {
+    const BUCKET = 'profile-images';
+    const PNG = new Uint8Array(Buffer.from('iVBORw0KGgo=', 'base64'));
+    const objectPath = () => `${TEST_HANDLE_PREFIX}${tag}/foto-${uniqueTag()}.png`;
+    const upload = (client: typeof anon, path: string) =>
+      client.storage.from(BUCKET).upload(path, PNG, { contentType: 'image/png' });
+
+    it('el bucket es público pero no admite escritura de anon ni de authenticated', async () => {
+      const [a, u] = [objectPath(), objectPath()];
+      const [asAnon, asUser] = await Promise.all([upload(anon, a), upload(asA, u)]);
+      expect(asAnon.error).not.toBeNull();
+      expect(asUser.error).not.toBeNull();
+      const present = await sb.storage.from(BUCKET).list(`${TEST_HANDLE_PREFIX}${tag}`);
+      expect(present.data ?? []).toEqual([]);
+    });
+
+    it('lectura pública por URL de un objeto subido por el backend; anon y authenticated no pueden borrarlo ni reemplazarlo', async () => {
+      const path = objectPath();
+      expect((await upload(sb, path)).error).toBeNull();
+      const url = sb.storage.from(BUCKET).getPublicUrl(path).data.publicUrl;
+      expect((await fetch(url)).status).toBe(HTTP_OK);
+      await Promise.all([
+        anon.storage.from(BUCKET).remove([path]),
+        asA.storage.from(BUCKET).remove([path]),
+      ]);
+      expect((await fetch(url)).status).toBe(HTTP_OK);
+      const overwrite = await asA.storage
+        .from(BUCKET)
+        .upload(path, PNG, { contentType: 'image/png', upsert: true });
+      expect(overwrite.error).not.toBeNull();
+      expect((await sb.storage.from(BUCKET).remove([path])).error).toBeNull();
+      expect((await fetch(url)).status).not.toBe(HTTP_OK);
+    });
+
+    it('rechaza tipos que no son imagen aunque suba el backend (allowed_mime_types)', async () => {
+      const bad = await sb.storage
+        .from(BUCKET)
+        .upload(objectPath(), new TextEncoder().encode('<h1>x</h1>'), { contentType: 'text/html' });
+      expect(bad.error).not.toBeNull();
     });
   });
 

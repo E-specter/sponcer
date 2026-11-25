@@ -29,7 +29,7 @@ const REJECTIONS: Array<[string, DomainError]> = [
 ];
 
 function setup(ingestResult: ReturnType<typeof ok> | ReturnType<typeof err>) {
-  const save = vi.fn(async () => undefined);
+  const save = vi.fn(async () => true);
   const ingest = vi.fn(async () => ingestResult as never);
   const assembler = {
     detail: async (p: { id: string; handle: string }) => ({ id: p.id, handle: p.handle }),

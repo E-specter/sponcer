@@ -16,7 +16,7 @@ export interface QuotesUseCases {
 export function createQuotesRouter(uc: QuotesUseCases): Router {
   const router = Router();
   registerEndpoint(router, api.listQuotes, ({ query, user }) =>
-    uc.listQuotes(user.userId, query.profileId),
+    uc.listQuotes(user.userId, query.profileId, query),
   );
   registerEndpoint(router, api.createQuote, ({ body, user }) => uc.createQuote(user.userId, body));
   registerEndpoint(router, api.transitionQuote, ({ params, body, user }) =>

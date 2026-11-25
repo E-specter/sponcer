@@ -67,4 +67,6 @@ ultima_actualizacion: 2026-11-25
 - **Proxy / túnel:** sin proxy no hace falta nada. Si se expone con un túnel, el rate limit por IP verá una sola IP hasta configurar `trust proxy` (pendiente, ver `backend/src/app.ts`).
 - Los scripts de instalación de `npm ci` se omiten con un aviso (`install-scripts`); es inofensivo para este flujo.
 
+Demo fuera de la PC: [demo pública](demo-publica.md).
+
 Rollback: [rollback](rollback.md).

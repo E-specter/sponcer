@@ -105,3 +105,28 @@ export type CampaignObjective = z.infer<typeof CampaignObjective>;
 
 export const NicheSource = z.enum(['declared', 'rules', 'embedding']);
 export type NicheSource = z.infer<typeof NicheSource>;
+
+/** Ciudades del Perú para datos declarados y filtro del feed (RF-05: catálogo, no texto libre). */
+export const CITIES = [
+  'lima',
+  'arequipa',
+  'trujillo',
+  'chiclayo',
+  'piura',
+  'cusco',
+  'iquitos',
+  'huancayo',
+  'tacna',
+  'ica',
+  'juliaca',
+  'puno',
+  'pucallpa',
+  'chimbote',
+  'cajamarca',
+  'ayacucho',
+  'huaraz',
+  'tarapoto',
+  'otra',
+] as const;
+export const City = z.enum(CITIES);
+export type City = z.infer<typeof City>;

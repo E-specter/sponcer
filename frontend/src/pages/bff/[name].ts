@@ -14,7 +14,13 @@ const errorResponse = (e: ApiError) =>
  * BFF para islas: el navegador no ve el token (cookie httpOnly), así que reenvía aquí
  * y el servidor llama a la API (mock o http) con el Bearer de la sesión.
  */
-export const POST: APIRoute = async ({ params, request, locals }) => {
+/** IP del visitante: `CF-Connecting-IP` (túnel de Cloudflare), el primer valor de `X-Forwarded-For` o la del socket. */
+const clientIpOf = (request: Request, clientAddress: string): string =>
+  request.headers.get('cf-connecting-ip') ??
+  request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ??
+  clientAddress;
+
+export const POST: APIRoute = async ({ params, request, locals, clientAddress }) => {
   const name = params.name;
   if (!name || !Object.hasOwn(api, name))
     return errorResponse(new ApiError('NOT_FOUND', 'Endpoint desconocido'));
@@ -26,7 +32,11 @@ export const POST: APIRoute = async ({ params, request, locals }) => {
   try {
     const out = await call(
       name as EndpointName,
-      { ...(args as object), token: locals.accessToken } as never,
+      {
+        ...(args as object),
+        token: locals.accessToken,
+        clientIp: clientIpOf(request, clientAddress),
+      } as never,
     );
     return Response.json(out);
   } catch (e) {

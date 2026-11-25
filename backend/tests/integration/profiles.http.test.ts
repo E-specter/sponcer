@@ -243,11 +243,11 @@ describe('PATCH /profiles/:profileId/declared', () => {
 
   it('200: el dueño actualiza, la respuesta cumple el esquema y se publica el evento', async () => {
     const t = await buildTestApp();
-    const next = { ...CREATOR_DECLARED, niches: ['gaming', 'musica'], city: 'Lima' };
+    const next = { ...CREATOR_DECLARED, niches: ['gaming', 'musica'], city: 'lima' };
     const res = await patch(t, demoCreator.id, demoUser.id, next);
     expect(res.status).toBe(STATUS.OK);
     expectMatchesContract(api.updateDeclared, res.body);
-    expect(res.body.declared).toMatchObject({ niches: ['gaming', 'musica'], city: 'Lima' });
+    expect(res.body.declared).toMatchObject({ niches: ['gaming', 'musica'], city: 'lima' });
     expect(t.events).toEqual([{ type: 'ProfileDeclaredDataChanged', profileId: demoCreator.id }]);
     const reread = await get(t, demoCreator.snapshot.handle, demoUser.id);
     expect(reread.body.declared).toEqual(res.body.declared);

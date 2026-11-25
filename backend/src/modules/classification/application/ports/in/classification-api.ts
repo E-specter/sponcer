@@ -11,6 +11,8 @@ export interface ClassificationApi {
   getEmbedding(profileId: string): Promise<number[] | null>;
   /** Lote en una sola consulta; los perfiles sin embedding no aparecen en el mapa. */
   getEmbeddings(profileIds: string[]): Promise<Map<string, number[]>>;
+  /** Clasifica el perfil si aún no tiene embedding (idempotente, sin duplicar trabajo en curso). No lanza. */
+  ensureClassified(profileId: string): Promise<void>;
   /** Backfill al arrancar: clasifica todos los perfiles, de uno en uno. */
   classifyAll(): Promise<BackfillResult>;
 }

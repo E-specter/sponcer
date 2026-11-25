@@ -19,6 +19,7 @@ Suite Playwright en `frontend/tests/e2e/` contra el **stack real local** (Supaba
 | E2E-07 | Chat entre las partes del match en tiempo real (2 navegadores) | RF-13 | `e2e-07-chat.spec.ts` | Pasa |
 | E2E-08 | Un usuario sin match no puede leer mensajes ajenos (RLS) | RNF-03 | `e2e-08-rls.spec.ts` | Pasa |
 | E2E-09 | Ficha previa de un perfil sin dueño visible solo con sesión; pedido de exclusión | RF-01, RNF-05 | `e2e-09-preview.spec.ts` | Pasa (B-01 y B-02 corregidos y verificados) |
+| F5 | Búsqueda con tildes y debounce, filtro de ciudad, "Cargar más" (matches y cotizaciones), panel de administración de exclusiones, acceso demo, cabecera móvil con sesión | F5 | `e2e-10` a `e2e-14`, `a11y/axe.spec.ts` | Pasa en Chromium, Firefox y WebKit |
 | A11Y | axe WCAG 2.1 AA en 10 pantallas a 1440 y 414 px + estados abiertos + teclado del flujo "Me interesa" | brief de diseño | `a11y/axe.spec.ts`, `a11y/keyboard.spec.ts` | Pasa (B-03 corregido y verificado) |
 
-Re-verificación 2026-11-25: 57 tests pasan, sin `test.fail` pendientes.
+Re-verificación 2026-11-25: suite completa en Chromium, Firefox y WebKit: 209 pasan, 4 saltadas con motivo (2 de axe en Firefox, 2 de teclado en WebKit), 0 fallan. Detalle en el reporte.

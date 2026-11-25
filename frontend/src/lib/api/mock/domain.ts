@@ -58,8 +58,26 @@ export interface MockState {
   quotes: FixtureSocial['quotes'];
   notifications: FixtureSocial['notifications'];
   claims: ClaimRecord[];
-  removals: { handle: string; email: string }[];
+  removals: MockRemoval[];
 }
+
+const MS_PER_DAY = 86_400_000;
+
+export interface MockRemoval {
+  id: string;
+  handle: string;
+  email: string;
+  reason: string | null;
+  status: 'pending' | 'applied' | 'rejected';
+  createdAt: string;
+  reviewedAt: string | null;
+  reviewNote: string | null;
+}
+
+const SEED_REMOVALS = [
+  { index: 3, email: 'titular@example.com', reason: 'No quiero aparecer en la plataforma.' },
+  { index: 7, email: 'prensa@example.com', reason: null },
+];
 
 declare global {
   var __sponcerMock: MockState | undefined;
@@ -75,7 +93,16 @@ export function state(): MockState {
     quotes: structuredClone(fixtureSocial.quotes),
     notifications: structuredClone(fixtureSocial.notifications),
     claims: [],
-    removals: [],
+    removals: SEED_REMOVALS.map(({ index, email, reason }, i) => ({
+      id: crypto.randomUUID(),
+      handle: fixtureProfiles[index]?.snapshot.handle ?? 'sin.handle',
+      email,
+      reason,
+      status: 'pending' as const,
+      createdAt: new Date(Date.now() - (i + 1) * MS_PER_DAY).toISOString(),
+      reviewedAt: null,
+      reviewNote: null,
+    })),
   };
   return globalThis.__sponcerMock;
 }
@@ -169,6 +196,7 @@ function cardBio(p: FixtureProfile): Pick<ProfileCard, 'bio' | 'bioSource'> {
 export const toCard = (p: FixtureProfile): ProfileCard => ({
   ...toSummary(p),
   ...cardBio(p),
+  city: p.declared?.city ?? null,
   niches: nichesOf(p),
   tier: tierFor(p.snapshot.followers),
   followers: p.snapshot.followers,

@@ -33,6 +33,17 @@ const EnvSchema = z
         (w) => w.length === WEIGHTS_COUNT && w.every(Number.isFinite),
         'MATCH_WEIGHTS: 4 números separados por coma',
       ),
+    // Correos con permiso de administración (pedidos de exclusión), separados por coma.
+    ADMIN_EMAILS: z
+      .string()
+      .default('')
+      .transform((s) =>
+        s
+          .split(',')
+          .map((e) => e.trim().toLowerCase())
+          .filter(Boolean),
+      )
+      .pipe(z.array(z.email())),
     ADAPTER_AUTH: Adapter,
     ADAPTER_PROFILES: Adapter,
     ADAPTER_INGESTION: Adapter,

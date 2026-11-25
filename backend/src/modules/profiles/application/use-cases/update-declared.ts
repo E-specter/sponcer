@@ -23,7 +23,9 @@ export const makeUpdateDeclared =
       );
     }
     const updated = { ...owned.value, declared };
-    await d.writer.save(updated);
+    // Si la ficha se retiró entre la lectura y la escritura, no se escribe nada.
+    if (!(await d.writer.save(updated)))
+      return err(new DomainError('NOT_FOUND', 'Perfil no encontrado'));
     d.bus.publish({ type: 'ProfileDeclaredDataChanged', profileId });
     return ok(await d.assembler.detail(updated, userId));
   };

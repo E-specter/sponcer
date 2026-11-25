@@ -4,6 +4,8 @@ import { allOf } from './specification';
 import {
   excludeIds,
   hasAnyNiche,
+  inCity,
+  matchesText,
   inTiers,
   maxPricePen,
   minBudgetPen,
@@ -31,6 +33,7 @@ const card = (over: Partial<ProfileCard> = {}): ProfileCard => ({
   minServicePricePen: PRICE,
   budgetMaxPen: null,
   bio: null,
+  city: null,
   bioSource: null,
   ...over,
 });
@@ -75,5 +78,29 @@ describe('Specifications', () => {
     expect(allOf(hasAnyNiche(['moda']), inTiers(['micro'])).isSatisfiedBy(c)).toBe(true);
     expect(allOf(hasAnyNiche(['moda']), inTiers(['mega'])).isSatisfiedBy(c)).toBe(false);
     expect(allOf().isSatisfiedBy(c)).toBe(true);
+  });
+});
+
+describe('búsqueda y ciudad', () => {
+  it('matchesText ignora mayúsculas y tildes y busca en nombre, handle, bio y nichos', () => {
+    const c = card({
+      fullName: 'Sofía Pérez',
+      handle: 'sofi.moda',
+      bio: 'Reseñas de café',
+      niches: ['arte-diseno'],
+    });
+    ['sofia', 'PEREZ', 'sofi.mo', 'resenas', 'CAFÉ', 'arte diseno'].forEach((q) =>
+      expect(matchesText(q).isSatisfiedBy(c), q).toBe(true),
+    );
+    expect(matchesText('viajes').isSatisfiedBy(c)).toBe(false);
+  });
+
+  it('matchesText tolera bio nula', () => {
+    expect(matchesText('x').isSatisfiedBy(card({ bio: null }))).toBe(false);
+  });
+
+  it('inCity compara la ciudad de la tarjeta', () => {
+    expect(inCity('lima').isSatisfiedBy(card({ city: 'lima' }))).toBe(true);
+    expect(inCity('lima').isSatisfiedBy(card({ city: null }))).toBe(false);
   });
 });

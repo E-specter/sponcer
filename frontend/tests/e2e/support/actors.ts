@@ -1,4 +1,4 @@
-import type { Niche, ServiceInput } from '@sponcer/contracts';
+import type { City, Niche, ServiceInput } from '@sponcer/contracts';
 import { apiAs } from './api';
 import { sessionFor } from './session';
 import type { E2EUser, World } from './world';
@@ -18,6 +18,7 @@ const BRAND_BUDGET_MAX_PEN = 5000;
 
 export interface CreatorOptions {
   niches?: Niche[];
+  city?: City;
   services?: ServiceInput[];
 }
 
@@ -48,7 +49,7 @@ export async function newCreator(world: World, opts: CreatorOptions = {}): Promi
   await a.api.declared(a.profileId, {
     role: 'creator',
     niches: opts.niches ?? ['arte-diseno'],
-    city: 'Lima',
+    city: opts.city ?? 'lima',
     shortBio: 'Creador de prueba E2E',
     accountType: 'creator',
   });

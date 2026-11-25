@@ -4,12 +4,23 @@ import type { FeedItem, ProfileSummary } from '@sponcer/contracts';
 import { Alert } from '../../../components/ui/Alert';
 import { Notice } from '../../../components/ui/Notice';
 import { EmptyState, ErrorState, Skeleton } from '../../../components/ui/States';
-import { NICHE_LABEL } from '../../../lib/labels';
 import { messageOf } from '../../../components/ui/errors';
 import { useActiveProfile } from '../../../lib/state/use-active-profile';
 import { interact, loadFeed } from '../api/feed';
 import FeedCard from './FeedCard';
 import { EMPTY_FILTERS, filters, searchQuery } from './filters.store';
+
+/** Espera tras la última tecla antes de pedir la búsqueda al servidor. */
+const SEARCH_DEBOUNCE_MS = 350;
+
+function useDebounced(value: string, ms: number): string {
+  const [debounced, setDebounced] = useState(value);
+  useEffect(() => {
+    const t = setTimeout(() => setDebounced(value), ms);
+    return () => clearTimeout(t);
+  }, [value, ms]);
+  return debounced;
+}
 
 interface Notice {
   kind: 'success' | 'error' | 'info';
@@ -19,7 +30,7 @@ interface Notice {
 
 export default function Feed({ profiles }: { profiles: ProfileSummary[] }) {
   const f = useStore(filters);
-  const query = useStore(searchQuery).trim().toLowerCase();
+  const query = useDebounced(useStore(searchQuery).trim(), SEARCH_DEBOUNCE_MS);
   const { active, ready } = useActiveProfile(profiles);
   const [items, setItems] = useState<FeedItem[]>([]);
   const [next, setNext] = useState<string | null>(null);
@@ -36,7 +47,7 @@ export default function Feed({ profiles }: { profiles: ProfileSummary[] }) {
     setLoading(true);
     (async () => {
       try {
-        const page = await loadFeed(activeId, f);
+        const page = await loadFeed(activeId, f, query);
         if (cancelled) return;
         setItems(page.items);
         setNext(page.nextCursor);
@@ -51,13 +62,13 @@ export default function Feed({ profiles }: { profiles: ProfileSummary[] }) {
     return () => {
       cancelled = true;
     };
-  }, [activeId, f, reloads]);
+  }, [activeId, f, query, reloads]);
 
   async function more() {
     if (!activeId || !next) return;
     setLoading(true);
     try {
-      const page = await loadFeed(activeId, f, next);
+      const page = await loadFeed(activeId, f, query, next);
       setItems((prev) => [...prev, ...page.items]);
       setNext(page.nextCursor);
     } catch (e) {
@@ -104,13 +115,7 @@ export default function Feed({ profiles }: { profiles: ProfileSummary[] }) {
     );
   }
 
-  const visible = query
-    ? items.filter((i) =>
-        [i.card.fullName, i.card.handle, ...i.card.niches.map((n) => NICHE_LABEL[n])].some((t) =>
-          t.toLowerCase().includes(query),
-        ),
-      )
-    : items;
+  const visible = items;
 
   return (
     <section aria-label="Resultados" className="stack">

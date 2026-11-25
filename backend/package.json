@@ -9,7 +9,9 @@
     "typecheck": "tsc -p tsconfig.json",
     "test": "vitest run",
     "lint:deps": "depcruise src --config .dependency-cruiser.cjs",
-    "model:prefetch": "tsx --env-file-if-exists=.env src/modules/classification/scripts/prefetch-model.ts"
+    "model:prefetch": "tsx --env-file-if-exists=.env src/modules/classification/scripts/prefetch-model.ts",
+    "demo:accounts": "tsx --env-file-if-exists=.env scripts/demo-accounts.ts",
+    "demo:tunnel": "tsx --env-file-if-exists=.env scripts/demo-tunnel.ts"
   },
   "dependencies": {
     "@huggingface/transformers": "^4.3.2",

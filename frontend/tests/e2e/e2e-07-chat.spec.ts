@@ -9,6 +9,8 @@ const world = createWorld();
 test.afterAll(() => world.cleanup());
 
 const NO_RELOAD_FLAG = '__e2eNoReload';
+/** Websocket de Supabase Realtime (glob de Playwright). */
+const REALTIME_SOCKET = '**/realtime/v1/websocket*';
 // MAX_CHAT_MESSAGE del contrato (2000) más uno.
 const TOO_LONG = 2001;
 const HTTP_BAD_REQUEST = 400;
@@ -62,6 +64,64 @@ test('E2E-07: los mensajes llegan al otro navegador sin recargar y quedan en el 
   await expect(
     (await openBell(creatorPage)).getByRole('link', { name: 'Tienes un mensaje nuevo' }).first(),
   ).toBeVisible();
+
+  await creatorCtx.close();
+  await brandCtx.close();
+});
+
+// O-5: un mensaje enviado ANTES de que la otra página termine de suscribirse a Realtime no debe perderse.
+// Se retiene el websocket de la marca (la suscripción no ocurre) hasta después de que el creador envíe.
+test('E2E-07: un mensaje enviado antes de la suscripción llega al abrirse el canal, sin recargar ni duplicados', async ({
+  browser,
+}) => {
+  const creator = await newCreator(world);
+  const brand = await newBrand(world);
+  const matchId = await newMatch(creator, brand);
+  const creatorCtx = await browser.newContext();
+  const brandCtx = await browser.newContext();
+  const creatorPage = await creatorCtx.newPage();
+  const brandPage = await brandCtx.newPage();
+  await loginAs(creatorCtx, creator.user);
+  await loginAs(brandCtx, brand.user);
+
+  let openSocket: () => void = () => undefined;
+  const gate = new Promise<void>((resolve) => {
+    openSocket = resolve;
+  });
+  await brandPage.routeWebSocket(REALTIME_SOCKET, (ws) => {
+    // Hasta abrir la compuerta el navegador cree estar conectado, pero nada llega al servidor.
+    const queued: (string | Buffer)[] = [];
+    let server: ReturnType<typeof ws.connectToServer> | null = null;
+    ws.onMessage((message) => (server ? server.send(message) : queued.push(message)));
+    void gate.then(() => {
+      server = ws.connectToServer();
+      queued.forEach((message) => server?.send(message));
+    });
+  });
+
+  await visit(creatorPage, `/mensajes/${matchId}`);
+  await visit(brandPage, `/mensajes/${matchId}`);
+  const brandLog = brandPage.getByRole('log', { name: 'Historial de mensajes' });
+  await expect(brandPage.getByText('Aún no hay mensajes. Saluda primero.')).toBeVisible();
+  await brandPage.evaluate((flag) => Object.assign(window, { [flag]: true }), NO_RELOAD_FLAG);
+
+  // El creador escribe mientras la marca todavía no está suscrita: sigue sin verlo...
+  await send(creatorPage, 'Mensaje previo a la suscripción');
+  await expect(creatorPage.getByRole('log', { name: 'Historial de mensajes' })).toContainText(
+    'Mensaje previo a la suscripción',
+  );
+  await expect(brandLog).not.toContainText('Mensaje previo a la suscripción');
+
+  // ...y al abrirse el canal lo recupera solo, una vez y sin recargar.
+  openSocket();
+  await expect(brandLog).toContainText('Mensaje previo a la suscripción');
+  await expect(brandLog.locator('.bubble')).toHaveCount(1);
+  expect(await brandPage.evaluate((flag) => Reflect.get(window, flag), NO_RELOAD_FLAG)).toBe(true);
+
+  // Con el canal abierto, el siguiente mensaje sigue llegando en vivo y sin duplicar el anterior.
+  await send(creatorPage, 'Mensaje posterior');
+  await expect(brandLog).toContainText('Mensaje posterior');
+  await expect(brandLog.locator('.bubble')).toHaveCount(2);
 
   await creatorCtx.close();
   await brandCtx.close();

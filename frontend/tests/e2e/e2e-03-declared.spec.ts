@@ -35,7 +35,7 @@ test('E2E-03: declarar nichos y un servicio actualiza la ficha y reclasifica', a
   await expect(declared.locator('.field-error').first()).toBeVisible();
 
   await declared.getByLabel('Mascotas').check();
-  await declared.getByLabel('Ciudad').fill('Arequipa');
+  await declared.getByLabel('Ciudad').selectOption({ label: 'Arequipa' });
   await declared.getByLabel('Descripción corta').fill('Cuento historias de mascotas');
   await declared.getByRole('button', { name: 'Guardar datos' }).click();
   await expect(declared.getByText('Datos guardados.')).toBeVisible();
@@ -54,7 +54,8 @@ test('E2E-03: declarar nichos y un servicio actualiza la ficha y reclasifica', a
     await expect(niches).toContainText('Mascotas · declarado en Sponcer');
   }).toPass();
   const main = page.locator('#contenido');
-  await expect(main.getByText('Ciudad: Arequipa')).toBeVisible();
+  // O-7: etiqueta del catálogo con mayúscula (`getByText` ignora mayúsculas, por eso se compara el texto).
+  expect(await main.textContent()).toContain('Ciudad: Arequipa');
   await expect(main.getByText('Cuento historias de mascotas')).toBeVisible();
   await expect(main.getByText('Reel de 30 segundos con tu producto')).toBeVisible();
   await expect(main.getByRole('heading', { level: H3, name: PRICE_PEN })).toBeVisible();

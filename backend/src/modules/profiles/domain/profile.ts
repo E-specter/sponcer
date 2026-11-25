@@ -85,6 +85,7 @@ export function toCard(
     sector: brand?.sector ?? null,
     minServicePricePen: services.length ? Math.min(...services.map((s) => s.pricePen)) : null,
     budgetMaxPen: brand?.budgetMaxPen ?? null,
+    city: declared?.city ?? null,
     ...cardBio(declared, snap),
   };
 }

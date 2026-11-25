@@ -1,4 +1,4 @@
-import type { InteractionRequest, Niche, Tier } from '@sponcer/contracts';
+import { CITIES, type InteractionRequest, type Niche, type Tier } from '@sponcer/contracts';
 import { callBff } from '../../../lib/api/bff';
 
 export interface FeedFilters {
@@ -7,15 +7,19 @@ export interface FeedFilters {
   minEngagement: string;
   maxPricePen: string;
   minBudgetPen: string;
+  /** Ciudad del catálogo; vacío = todas. */
+  city: string;
 }
 
 const orUndefined = (s: string) => (s.trim() === '' ? undefined : s);
 
-export const loadFeed = (profileId: string, f: FeedFilters, cursor?: string) =>
+export const loadFeed = (profileId: string, f: FeedFilters, q: string, cursor?: string) =>
   callBff('feed', {
     query: {
       profileId,
       cursor,
+      q: orUndefined(q),
+      city: CITIES.find((c) => c === f.city),
       niches: f.niches.length ? f.niches.join(',') : undefined,
       tiers: f.tiers.length ? f.tiers.join(',') : undefined,
       minEngagement: orUndefined(f.minEngagement),

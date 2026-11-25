@@ -7,5 +7,6 @@ export * from './schemas/auth';
 export * from './schemas/matching';
 export * from './schemas/quotes';
 export * from './schemas/messaging';
+export * from './schemas/admin';
 export * from './events/domain-events';
 export * from './api';

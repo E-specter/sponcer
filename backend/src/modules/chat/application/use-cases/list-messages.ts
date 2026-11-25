@@ -1,16 +1,10 @@
+import { decodeCursor, encodeCursor } from '../../../../shared/cursor';
 import { DomainError } from '../../../../shared/errors';
 import { err, ok } from '../../../../shared/result';
 import type { ProfilesApi } from '../../../profiles';
 import { participantsOf } from '../../domain/match-ref';
 import type { ListMessages } from '../ports/in/chat-use-cases';
 import type { MatchReader, MessageRepository } from '../ports/out/chat-ports';
-
-const DECIMAL = 10;
-// shortcut: cursor = offset numérico; si llegan mensajes nuevos entre páginas se desplaza, pasar a cursor por (createdAt,id) con la BD real.
-const parseOffset = (cursor: string | undefined): number => {
-  const n = Number.parseInt(cursor ?? '', DECIMAL);
-  return Number.isNaN(n) || n < 0 ? 0 : n;
-};
 
 export const makeListMessages =
   (d: { matches: MatchReader; messages: MessageRepository; profiles: ProfilesApi }): ListMessages =>
@@ -23,8 +17,10 @@ export const makeListMessages =
     if (!owns.some(Boolean))
       return err(new DomainError('FORBIDDEN', 'No participas en este match'));
 
-    const offset = parseOffset(q.cursor);
+    const parsed = decodeCursor(q.cursor);
+    if (!parsed.ok) return parsed;
+    const offset = parsed.value;
     const { items, total } = await d.messages.listByMatch(matchId, offset, q.limit);
     const next = offset + items.length;
-    return ok({ items, nextCursor: next < total ? String(next) : null });
+    return ok({ items, nextCursor: next < total ? encodeCursor(next) : null });
   };

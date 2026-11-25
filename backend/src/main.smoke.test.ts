@@ -69,7 +69,7 @@ describe('composeApp (humo de integración, modo mock)', () => {
     const matchId = result.body.matchId as string;
 
     const matches = await get(`/api/v1/matches?profileId=${creator.id}`);
-    expect(matches.body.map((m: { id: string }) => m.id)).toContain(matchId);
+    expect(matches.body.items.map((m: { id: string }) => m.id)).toContain(matchId);
 
     const sent = await post(`/api/v1/matches/${matchId}/messages`, {
       senderProfileId: creator.id,

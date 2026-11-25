@@ -1,6 +1,8 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
 import { newBrand, newCreator, newMatch, type Actor } from '../support/actors';
+import { E2E_ADMIN_EMAIL } from '../support/env';
+import { newAdmin, profileWithPendingRequest } from '../support/removals';
 import { loginAs } from '../support/session';
 import { visit } from '../support/ui';
 import { createWorld } from '../support/world';
@@ -9,6 +11,9 @@ import { createWorld } from '../support/world';
 const world = createWorld();
 test.afterAll(() => world.cleanup());
 
+// Firefox cierra la página ("Page crashed") al correr la regla `aria-allowed-attr` de axe sobre /descubrir a 1440 px
+// (reproducible; la página funciona con normalidad y las demás reglas y anchos pasan). Ver reporte F5-E2E, O-6.
+const FIREFOX_AXE_CRASH = 'Firefox se cuelga con axe aria-allowed-attr en /descubrir @1440';
 const WCAG_TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'];
 const VIEWPORTS = [
   { name: '1440', width: 1440, height: 900 },
@@ -36,6 +41,8 @@ test.beforeAll(async () => {
 
 /** Resumen legible de las violaciones: regla, impacto, selectores y ayuda. */
 async function violationsOf(page: Page): Promise<string[]> {
+  // Auditar con imágenes aún decodificándose cuelga el motor de Firefox; se espera a que la página repose.
+  await page.waitForLoadState('networkidle');
   const { violations } = await new AxeBuilder({ page }).withTags(WCAG_TAGS).analyze();
   return violations.map(
     (v) =>
@@ -117,7 +124,15 @@ const SCREENS: Screen[] = [
 
 VIEWPORTS.forEach((viewport) => {
   SCREENS.forEach((screen) => {
-    test(`axe WCAG 2.1 AA ${screen.name} @${viewport.name}`, async ({ page, context }) => {
+    test(`axe WCAG 2.1 AA ${screen.name} @${viewport.name}`, async ({
+      page,
+      context,
+      browserName,
+    }) => {
+      test.skip(
+        browserName === 'firefox' && screen.name === '/descubrir' && viewport.name === '1440',
+        FIREFOX_AXE_CRASH,
+      );
       await page.setViewportSize({ width: viewport.width, height: viewport.height });
       if (screen.authenticated) await loginAs(context, scenario.brand.user);
       await visit(page, screen.path(scenario));
@@ -167,7 +182,9 @@ VIEWPORTS.forEach((viewport) => {
   test(`axe WCAG 2.1 AA estados abiertos: filtros, campana, errores y cotización @${viewport.name}`, async ({
     page,
     context,
+    browserName,
   }) => {
+    test.skip(browserName === 'firefox' && viewport.name === '1440', FIREFOX_AXE_CRASH);
     await page.setViewportSize({ width: viewport.width, height: viewport.height });
     await loginAs(context, scenario.brand.user);
 
@@ -231,5 +248,26 @@ TOUCH_SCREENS.forEach((path) => {
         );
     }, MIN_TOUCH_PX);
     expect(small).toEqual([]);
+  });
+});
+
+// Panel de administración: lista con un pedido pendiente y su confirmación abierta (acción destructiva).
+VIEWPORTS.forEach((viewport) => {
+  test(`axe WCAG 2.1 AA /admin/exclusiones (con confirmación abierta) @${viewport.name}`, async ({
+    page,
+    context,
+  }) => {
+    const { user, recognized } = await newAdmin(world);
+    test.skip(!recognized, `El backend no tiene ${E2E_ADMIN_EMAIL} en ADMIN_EMAILS`);
+    const pending = await profileWithPendingRequest(world);
+    await page.setViewportSize({ width: viewport.width, height: viewport.height });
+    await loginAs(context, user);
+    await visit(page, '/admin/exclusiones');
+    const card = page.getByRole('article').filter({ hasText: `@${pending.creator.handle}` });
+    await expect(card).toBeVisible();
+    expect(await violationsOf(page)).toEqual([]);
+    await card.getByRole('button', { name: 'Aplicar exclusión' }).click();
+    await expect(card.getByText('Esto no se puede deshacer')).toBeVisible();
+    expect(await violationsOf(page)).toEqual([]);
   });
 });

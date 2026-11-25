@@ -1,6 +1,6 @@
 ---
 import type { Declared } from '@sponcer/contracts';
-import { NICHE_LABEL, OBJECTIVE_LABEL, SECTOR_LABEL, formatPen } from '../../../lib/labels';
+import { CITY_LABEL, NICHE_LABEL, OBJECTIVE_LABEL, SECTOR_LABEL, formatPen } from '../../../lib/labels';
 
 interface Props {
   declared: Declared | null;
@@ -19,12 +19,13 @@ const { declared } = Astro.props;
         <p class="row">
           {declared.niches.map((n) => <span class="chip">{NICHE_LABEL[n]}</span>)}
         </p>
-        {declared.city && <p>Ciudad: {declared.city}</p>}
+        {declared.city && <p>Ciudad: {CITY_LABEL[declared.city]}</p>}
         {declared.shortBio && <p>{declared.shortBio}</p>}
       </div>
     ) : (
       <div class="stack">
         <p>Sector: {SECTOR_LABEL[declared.sector]}</p>
+        {declared.city && <p>Ciudad: {CITY_LABEL[declared.city]}</p>}
         <p>
           Objetivos: {declared.objectives.map((o) => OBJECTIVE_LABEL[o]).join(', ')}
         </p>

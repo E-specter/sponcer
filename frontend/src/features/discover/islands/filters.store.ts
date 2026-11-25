@@ -7,6 +7,7 @@ export const EMPTY_FILTERS: FeedFilters = {
   minEngagement: '',
   maxPricePen: '',
   minBudgetPen: '',
+  city: '',
 };
 
 /** Filtros compartidos entre la isla del panel de filtros y la del feed (Nano Stores). */

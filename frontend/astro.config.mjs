@@ -26,6 +26,10 @@ export default defineConfig({
         values: ['mock', 'supabase'],
         default: 'mock',
       }),
+      // ADR-007: acceso de demo con cuentas sembradas. Desactivado por defecto.
+      PUBLIC_DEMO_LOGIN: envField.boolean({ context: 'client', access: 'public', default: false }),
+      // Contraseña de las cuentas demo: secreto de servidor, nunca llega al cliente.
+      DEMO_PASSWORD: envField.string({ context: 'server', access: 'secret', optional: true }),
       PUBLIC_SUPABASE_URL: envField.string({ context: 'client', access: 'public', optional: true }),
       PUBLIC_SUPABASE_ANON_KEY: envField.string({
         context: 'client',

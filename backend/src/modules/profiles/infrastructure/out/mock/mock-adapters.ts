@@ -11,6 +11,8 @@ import type { ProfileWriter } from '../../../application/ports/out/profile-write
 import type {
   RemovalRequestRecord,
   RemovalRequestStore,
+  RemovalStatus,
+  StoredRemovalRequest,
 } from '../../../application/ports/out/removal-request-store';
 import type { ServiceRepository } from '../../../application/ports/out/service-repository';
 import type { SnapshotReader } from '../../../application/ports/out/snapshot-reader';
@@ -65,7 +67,9 @@ export function createProfilesMockAdapters(): ProfilesMockAdapters {
       if (all().some((x) => x.handle === p.handle && x.id !== p.id)) {
         throw new DomainError('CONFLICT', 'Ya existe un registro con esos datos');
       }
+      if (byId.get(p.id)?.status === 'removed') return p.status === 'removed';
       byId.set(p.id, p);
+      return true;
     },
   };
 
@@ -108,9 +112,55 @@ export function createProfilesMockAdapters(): ProfilesMockAdapters {
     },
   };
 
+  // Los registros se guardan tal cual (los lee `all()`); id y revisión van aparte.
+  const meta = new Map<
+    RemovalRequestRecord,
+    { id: string; status?: RemovalStatus; reviewedAt: Date | null; note: string | null }
+  >();
+  const stored = (r: RemovalRequestRecord): StoredRemovalRequest => {
+    const m = meta.get(r)!;
+    return {
+      id: m.id,
+      handle: r.handle,
+      email: r.email,
+      reason: r.reason ?? null,
+      status: m.status ?? r.status ?? 'pending',
+      createdAt: r.createdAt,
+      reviewedAt: m.reviewedAt,
+      reviewNote: m.note,
+    };
+  };
   const removals = {
-    add: async (r: RemovalRequestRecord) => void removalLog.push(r),
+    add: async (r: RemovalRequestRecord) => {
+      meta.set(r, { id: randomUUID(), reviewedAt: null, note: null });
+      removalLog.push(r);
+    },
     all: () => removalLog,
+    async list(q: { status?: RemovalStatus; offset: number; limit: number }) {
+      const rows = removalLog
+        .map(stored)
+        .filter((r) => !q.status || r.status === q.status)
+        .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime() || a.id.localeCompare(b.id));
+      return { items: rows.slice(q.offset, q.offset + q.limit), total: rows.length };
+    },
+    findById: async (id: string) => {
+      const r = removalLog.find((x) => meta.get(x)?.id === id);
+      return r ? stored(r) : null;
+    },
+    async review(
+      id: string,
+      r: { status: 'applied' | 'rejected'; at: Date; by: string; note?: string },
+    ) {
+      const rec = removalLog.find((x) => meta.get(x)?.id === id);
+      if (!rec || stored(rec).status !== 'pending') return false;
+      meta.set(rec, {
+        ...meta.get(rec)!,
+        status: r.status,
+        reviewedAt: r.at,
+        note: r.note ?? null,
+      });
+      return true;
+    },
   };
 
   // Mismas reglas que la RPC `claim_profile` (node es mono-hilo: no hay carrera en memoria).

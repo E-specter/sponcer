@@ -36,7 +36,7 @@ test('E2E-05: interés mutuo crea el match y notifica a las dos partes', async (
   await visit(brandPage, '/descubrir');
   await brandPage.getByRole('button', { name: 'Filtros', exact: true }).click();
   await brandPage.getByLabel('Precio máximo del servicio (S/)').fill(String(UNIQUE_PRICE_PEN));
-  const creatorCard = brandPage.getByRole('article').filter({ hasText: `@${creator.handle}` });
+  const creatorCard = brandPage.getByRole('article').filter({ hasText: creator.handle });
   await expect(creatorCard).toBeVisible();
   await creatorCard.getByRole('button', { name: 'Me interesa' }).click();
   await expect(brandPage.getByText(`Mostraste interés en @${creator.handle}`)).toBeVisible();
@@ -48,7 +48,7 @@ test('E2E-05: interés mutuo crea el match y notifica a las dos partes', async (
   await creatorPage
     .getByLabel('Presupuesto máximo mínimo de la marca (S/)')
     .fill(String(UNIQUE_BUDGET_PEN));
-  const brandCard = creatorPage.getByRole('article').filter({ hasText: `@${brand.handle}` });
+  const brandCard = creatorPage.getByRole('article').filter({ hasText: brand.handle });
   await expect(brandCard).toBeVisible();
   await brandCard.getByRole('button', { name: 'Me interesa' }).click();
   await expect(creatorPage.getByText(`¡Match con @${brand.handle}!`)).toBeVisible();

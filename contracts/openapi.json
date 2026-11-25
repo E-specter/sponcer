@@ -151,7 +151,7 @@
                               },
                               {
                                 "type": "string",
-                                "pattern": "^\\/(?!\\/)[\\w./-]+$"
+                                "pattern": "^\\/(?!\\/)(?!.*\\.\\.)[\\w./-]+$"
                               }
                             ]
                           },
@@ -174,12 +174,16 @@
                         ],
                         "additionalProperties": false
                       }
+                    },
+                    "isAdmin": {
+                      "type": "boolean"
                     }
                   },
                   "required": [
                     "userId",
                     "email",
-                    "profiles"
+                    "profiles",
+                    "isAdmin"
                   ],
                   "additionalProperties": false
                 }
@@ -585,7 +589,7 @@
                         },
                         {
                           "type": "string",
-                          "pattern": "^\\/(?!\\/)[\\w./-]+$"
+                          "pattern": "^\\/(?!\\/)(?!.*\\.\\.)[\\w./-]+$"
                         }
                       ]
                     },
@@ -687,7 +691,27 @@
                             },
                             "city": {
                               "type": "string",
-                              "maxLength": 60
+                              "enum": [
+                                "lima",
+                                "arequipa",
+                                "trujillo",
+                                "chiclayo",
+                                "piura",
+                                "cusco",
+                                "iquitos",
+                                "huancayo",
+                                "tacna",
+                                "ica",
+                                "juliaca",
+                                "puno",
+                                "pucallpa",
+                                "chimbote",
+                                "cajamarca",
+                                "ayacucho",
+                                "huaraz",
+                                "tarapoto",
+                                "otra"
+                              ]
                             },
                             "shortBio": {
                               "type": "string",
@@ -794,6 +818,30 @@
                               "type": "integer",
                               "minimum": 0,
                               "maximum": 1000000
+                            },
+                            "city": {
+                              "type": "string",
+                              "enum": [
+                                "lima",
+                                "arequipa",
+                                "trujillo",
+                                "chiclayo",
+                                "piura",
+                                "cusco",
+                                "iquitos",
+                                "huancayo",
+                                "tacna",
+                                "ica",
+                                "juliaca",
+                                "puno",
+                                "pucallpa",
+                                "chimbote",
+                                "cajamarca",
+                                "ayacucho",
+                                "huaraz",
+                                "tarapoto",
+                                "otra"
+                              ]
                             },
                             "shortBio": {
                               "type": "string",
@@ -1098,7 +1146,27 @@
                       },
                       "city": {
                         "type": "string",
-                        "maxLength": 60
+                        "enum": [
+                          "lima",
+                          "arequipa",
+                          "trujillo",
+                          "chiclayo",
+                          "piura",
+                          "cusco",
+                          "iquitos",
+                          "huancayo",
+                          "tacna",
+                          "ica",
+                          "juliaca",
+                          "puno",
+                          "pucallpa",
+                          "chimbote",
+                          "cajamarca",
+                          "ayacucho",
+                          "huaraz",
+                          "tarapoto",
+                          "otra"
+                        ]
                       },
                       "shortBio": {
                         "type": "string",
@@ -1204,6 +1272,30 @@
                         "minimum": 0,
                         "maximum": 1000000
                       },
+                      "city": {
+                        "type": "string",
+                        "enum": [
+                          "lima",
+                          "arequipa",
+                          "trujillo",
+                          "chiclayo",
+                          "piura",
+                          "cusco",
+                          "iquitos",
+                          "huancayo",
+                          "tacna",
+                          "ica",
+                          "juliaca",
+                          "puno",
+                          "pucallpa",
+                          "chimbote",
+                          "cajamarca",
+                          "ayacucho",
+                          "huaraz",
+                          "tarapoto",
+                          "otra"
+                        ]
+                      },
                       "shortBio": {
                         "type": "string",
                         "maxLength": 280
@@ -1268,7 +1360,7 @@
                         },
                         {
                           "type": "string",
-                          "pattern": "^\\/(?!\\/)[\\w./-]+$"
+                          "pattern": "^\\/(?!\\/)(?!.*\\.\\.)[\\w./-]+$"
                         }
                       ]
                     },
@@ -1370,7 +1462,27 @@
                             },
                             "city": {
                               "type": "string",
-                              "maxLength": 60
+                              "enum": [
+                                "lima",
+                                "arequipa",
+                                "trujillo",
+                                "chiclayo",
+                                "piura",
+                                "cusco",
+                                "iquitos",
+                                "huancayo",
+                                "tacna",
+                                "ica",
+                                "juliaca",
+                                "puno",
+                                "pucallpa",
+                                "chimbote",
+                                "cajamarca",
+                                "ayacucho",
+                                "huaraz",
+                                "tarapoto",
+                                "otra"
+                              ]
                             },
                             "shortBio": {
                               "type": "string",
@@ -1477,6 +1589,30 @@
                               "type": "integer",
                               "minimum": 0,
                               "maximum": 1000000
+                            },
+                            "city": {
+                              "type": "string",
+                              "enum": [
+                                "lima",
+                                "arequipa",
+                                "trujillo",
+                                "chiclayo",
+                                "piura",
+                                "cusco",
+                                "iquitos",
+                                "huancayo",
+                                "tacna",
+                                "ica",
+                                "juliaca",
+                                "puno",
+                                "pucallpa",
+                                "chimbote",
+                                "cajamarca",
+                                "ayacucho",
+                                "huaraz",
+                                "tarapoto",
+                                "otra"
+                              ]
                             },
                             "shortBio": {
                               "type": "string",
@@ -2047,6 +2183,45 @@
             }
           },
           {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 80
+            }
+          },
+          {
+            "name": "city",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "lima",
+                "arequipa",
+                "trujillo",
+                "chiclayo",
+                "piura",
+                "cusco",
+                "iquitos",
+                "huancayo",
+                "tacna",
+                "ica",
+                "juliaca",
+                "puno",
+                "pucallpa",
+                "chimbote",
+                "cajamarca",
+                "ayacucho",
+                "huaraz",
+                "tarapoto",
+                "otra"
+              ]
+            }
+          },
+          {
             "name": "niches",
             "in": "query",
             "required": false,
@@ -2171,7 +2346,7 @@
                                   },
                                   {
                                     "type": "string",
-                                    "pattern": "^\\/(?!\\/)[\\w./-]+$"
+                                    "pattern": "^\\/(?!\\/)(?!.*\\.\\.)[\\w./-]+$"
                                   }
                                 ]
                               },
@@ -2263,6 +2438,31 @@
                                 "minimum": 0,
                                 "maximum": 1000000
                               },
+                              "city": {
+                                "nullable": true,
+                                "type": "string",
+                                "enum": [
+                                  "lima",
+                                  "arequipa",
+                                  "trujillo",
+                                  "chiclayo",
+                                  "piura",
+                                  "cusco",
+                                  "iquitos",
+                                  "huancayo",
+                                  "tacna",
+                                  "ica",
+                                  "juliaca",
+                                  "puno",
+                                  "pucallpa",
+                                  "chimbote",
+                                  "cajamarca",
+                                  "ayacucho",
+                                  "huaraz",
+                                  "tarapoto",
+                                  "otra"
+                                ]
+                              },
                               "bio": {
                                 "nullable": true,
                                 "type": "string",
@@ -2291,6 +2491,7 @@
                               "sector",
                               "minServicePricePen",
                               "budgetMaxPen",
+                              "city",
                               "bio",
                               "bioSource"
                             ],
@@ -2513,6 +2714,25 @@
         ],
         "parameters": [
           {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "default": 20,
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50
+            }
+          },
+          {
             "name": "profileId",
             "in": "query",
             "required": true,
@@ -2529,16 +2749,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "string",
-                        "format": "uuid",
-                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
-                      },
-                      "creator": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
                         "type": "object",
                         "properties": {
                           "id": {
@@ -2546,324 +2761,395 @@
                             "format": "uuid",
                             "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
                           },
-                          "handle": {
-                            "type": "string",
-                            "pattern": "^[a-z0-9._]{1,30}$"
-                          },
-                          "role": {
-                            "type": "string",
-                            "enum": [
-                              "creator",
-                              "brand"
-                            ]
-                          },
-                          "fullName": {
-                            "type": "string"
-                          },
-                          "profilePicUrl": {
-                            "nullable": true,
-                            "anyOf": [
-                              {
+                          "creator": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
                                 "type": "string",
-                                "format": "uri"
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
                               },
-                              {
+                              "handle": {
                                 "type": "string",
-                                "pattern": "^\\/(?!\\/)[\\w./-]+$"
+                                "pattern": "^[a-z0-9._]{1,30}$"
+                              },
+                              "role": {
+                                "type": "string",
+                                "enum": [
+                                  "creator",
+                                  "brand"
+                                ]
+                              },
+                              "fullName": {
+                                "type": "string"
+                              },
+                              "profilePicUrl": {
+                                "nullable": true,
+                                "anyOf": [
+                                  {
+                                    "type": "string",
+                                    "format": "uri"
+                                  },
+                                  {
+                                    "type": "string",
+                                    "pattern": "^\\/(?!\\/)(?!.*\\.\\.)[\\w./-]+$"
+                                  }
+                                ]
+                              },
+                              "status": {
+                                "type": "string",
+                                "enum": [
+                                  "unclaimed",
+                                  "verified",
+                                  "removed"
+                                ]
+                              },
+                              "niches": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string",
+                                  "enum": [
+                                    "moda",
+                                    "belleza",
+                                    "fitness",
+                                    "deportes",
+                                    "gastronomia",
+                                    "viajes",
+                                    "tecnologia",
+                                    "gaming",
+                                    "musica",
+                                    "entretenimiento",
+                                    "educacion",
+                                    "finanzas",
+                                    "salud-bienestar",
+                                    "familia-maternidad",
+                                    "mascotas",
+                                    "arte-diseno",
+                                    "emprendimiento",
+                                    "hogar-deco",
+                                    "automotriz",
+                                    "lifestyle"
+                                  ]
+                                }
+                              },
+                              "tier": {
+                                "type": "string",
+                                "enum": [
+                                  "nano",
+                                  "micro",
+                                  "mid",
+                                  "macro",
+                                  "mega"
+                                ]
+                              },
+                              "followers": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 9007199254740991
+                              },
+                              "engagementRate": {
+                                "type": "number",
+                                "minimum": 0
+                              },
+                              "sector": {
+                                "nullable": true,
+                                "type": "string",
+                                "enum": [
+                                  "moda-retail",
+                                  "belleza-cuidado-personal",
+                                  "alimentos-bebidas",
+                                  "restaurantes",
+                                  "tecnologia",
+                                  "salud",
+                                  "educacion",
+                                  "finanzas-seguros",
+                                  "turismo-hoteleria",
+                                  "entretenimiento-medios",
+                                  "deporte",
+                                  "hogar",
+                                  "automotriz",
+                                  "servicios",
+                                  "otro"
+                                ]
+                              },
+                              "minServicePricePen": {
+                                "nullable": true,
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 1000000
+                              },
+                              "budgetMaxPen": {
+                                "nullable": true,
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 1000000
+                              },
+                              "city": {
+                                "nullable": true,
+                                "type": "string",
+                                "enum": [
+                                  "lima",
+                                  "arequipa",
+                                  "trujillo",
+                                  "chiclayo",
+                                  "piura",
+                                  "cusco",
+                                  "iquitos",
+                                  "huancayo",
+                                  "tacna",
+                                  "ica",
+                                  "juliaca",
+                                  "puno",
+                                  "pucallpa",
+                                  "chimbote",
+                                  "cajamarca",
+                                  "ayacucho",
+                                  "huaraz",
+                                  "tarapoto",
+                                  "otra"
+                                ]
+                              },
+                              "bio": {
+                                "nullable": true,
+                                "type": "string",
+                                "maxLength": 161
+                              },
+                              "bioSource": {
+                                "nullable": true,
+                                "type": "string",
+                                "enum": [
+                                  "declared",
+                                  "instagram"
+                                ]
                               }
-                            ]
+                            },
+                            "required": [
+                              "id",
+                              "handle",
+                              "role",
+                              "fullName",
+                              "profilePicUrl",
+                              "status",
+                              "niches",
+                              "tier",
+                              "followers",
+                              "engagementRate",
+                              "sector",
+                              "minServicePricePen",
+                              "budgetMaxPen",
+                              "city",
+                              "bio",
+                              "bioSource"
+                            ],
+                            "additionalProperties": false
                           },
-                          "status": {
+                          "brand": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "handle": {
+                                "type": "string",
+                                "pattern": "^[a-z0-9._]{1,30}$"
+                              },
+                              "role": {
+                                "type": "string",
+                                "enum": [
+                                  "creator",
+                                  "brand"
+                                ]
+                              },
+                              "fullName": {
+                                "type": "string"
+                              },
+                              "profilePicUrl": {
+                                "nullable": true,
+                                "anyOf": [
+                                  {
+                                    "type": "string",
+                                    "format": "uri"
+                                  },
+                                  {
+                                    "type": "string",
+                                    "pattern": "^\\/(?!\\/)(?!.*\\.\\.)[\\w./-]+$"
+                                  }
+                                ]
+                              },
+                              "status": {
+                                "type": "string",
+                                "enum": [
+                                  "unclaimed",
+                                  "verified",
+                                  "removed"
+                                ]
+                              },
+                              "niches": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string",
+                                  "enum": [
+                                    "moda",
+                                    "belleza",
+                                    "fitness",
+                                    "deportes",
+                                    "gastronomia",
+                                    "viajes",
+                                    "tecnologia",
+                                    "gaming",
+                                    "musica",
+                                    "entretenimiento",
+                                    "educacion",
+                                    "finanzas",
+                                    "salud-bienestar",
+                                    "familia-maternidad",
+                                    "mascotas",
+                                    "arte-diseno",
+                                    "emprendimiento",
+                                    "hogar-deco",
+                                    "automotriz",
+                                    "lifestyle"
+                                  ]
+                                }
+                              },
+                              "tier": {
+                                "type": "string",
+                                "enum": [
+                                  "nano",
+                                  "micro",
+                                  "mid",
+                                  "macro",
+                                  "mega"
+                                ]
+                              },
+                              "followers": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 9007199254740991
+                              },
+                              "engagementRate": {
+                                "type": "number",
+                                "minimum": 0
+                              },
+                              "sector": {
+                                "nullable": true,
+                                "type": "string",
+                                "enum": [
+                                  "moda-retail",
+                                  "belleza-cuidado-personal",
+                                  "alimentos-bebidas",
+                                  "restaurantes",
+                                  "tecnologia",
+                                  "salud",
+                                  "educacion",
+                                  "finanzas-seguros",
+                                  "turismo-hoteleria",
+                                  "entretenimiento-medios",
+                                  "deporte",
+                                  "hogar",
+                                  "automotriz",
+                                  "servicios",
+                                  "otro"
+                                ]
+                              },
+                              "minServicePricePen": {
+                                "nullable": true,
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 1000000
+                              },
+                              "budgetMaxPen": {
+                                "nullable": true,
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 1000000
+                              },
+                              "city": {
+                                "nullable": true,
+                                "type": "string",
+                                "enum": [
+                                  "lima",
+                                  "arequipa",
+                                  "trujillo",
+                                  "chiclayo",
+                                  "piura",
+                                  "cusco",
+                                  "iquitos",
+                                  "huancayo",
+                                  "tacna",
+                                  "ica",
+                                  "juliaca",
+                                  "puno",
+                                  "pucallpa",
+                                  "chimbote",
+                                  "cajamarca",
+                                  "ayacucho",
+                                  "huaraz",
+                                  "tarapoto",
+                                  "otra"
+                                ]
+                              },
+                              "bio": {
+                                "nullable": true,
+                                "type": "string",
+                                "maxLength": 161
+                              },
+                              "bioSource": {
+                                "nullable": true,
+                                "type": "string",
+                                "enum": [
+                                  "declared",
+                                  "instagram"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "handle",
+                              "role",
+                              "fullName",
+                              "profilePicUrl",
+                              "status",
+                              "niches",
+                              "tier",
+                              "followers",
+                              "engagementRate",
+                              "sector",
+                              "minServicePricePen",
+                              "budgetMaxPen",
+                              "city",
+                              "bio",
+                              "bioSource"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "createdAt": {
                             "type": "string",
-                            "enum": [
-                              "unclaimed",
-                              "verified",
-                              "removed"
-                            ]
-                          },
-                          "niches": {
-                            "type": "array",
-                            "items": {
-                              "type": "string",
-                              "enum": [
-                                "moda",
-                                "belleza",
-                                "fitness",
-                                "deportes",
-                                "gastronomia",
-                                "viajes",
-                                "tecnologia",
-                                "gaming",
-                                "musica",
-                                "entretenimiento",
-                                "educacion",
-                                "finanzas",
-                                "salud-bienestar",
-                                "familia-maternidad",
-                                "mascotas",
-                                "arte-diseno",
-                                "emprendimiento",
-                                "hogar-deco",
-                                "automotriz",
-                                "lifestyle"
-                              ]
-                            }
-                          },
-                          "tier": {
-                            "type": "string",
-                            "enum": [
-                              "nano",
-                              "micro",
-                              "mid",
-                              "macro",
-                              "mega"
-                            ]
-                          },
-                          "followers": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 9007199254740991
-                          },
-                          "engagementRate": {
-                            "type": "number",
-                            "minimum": 0
-                          },
-                          "sector": {
-                            "nullable": true,
-                            "type": "string",
-                            "enum": [
-                              "moda-retail",
-                              "belleza-cuidado-personal",
-                              "alimentos-bebidas",
-                              "restaurantes",
-                              "tecnologia",
-                              "salud",
-                              "educacion",
-                              "finanzas-seguros",
-                              "turismo-hoteleria",
-                              "entretenimiento-medios",
-                              "deporte",
-                              "hogar",
-                              "automotriz",
-                              "servicios",
-                              "otro"
-                            ]
-                          },
-                          "minServicePricePen": {
-                            "nullable": true,
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 1000000
-                          },
-                          "budgetMaxPen": {
-                            "nullable": true,
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 1000000
-                          },
-                          "bio": {
-                            "nullable": true,
-                            "type": "string",
-                            "maxLength": 161
-                          },
-                          "bioSource": {
-                            "nullable": true,
-                            "type": "string",
-                            "enum": [
-                              "declared",
-                              "instagram"
-                            ]
+                            "format": "date-time",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
                           }
                         },
                         "required": [
                           "id",
-                          "handle",
-                          "role",
-                          "fullName",
-                          "profilePicUrl",
-                          "status",
-                          "niches",
-                          "tier",
-                          "followers",
-                          "engagementRate",
-                          "sector",
-                          "minServicePricePen",
-                          "budgetMaxPen",
-                          "bio",
-                          "bioSource"
+                          "creator",
+                          "brand",
+                          "createdAt"
                         ],
                         "additionalProperties": false
-                      },
-                      "brand": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "string",
-                            "format": "uuid",
-                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
-                          },
-                          "handle": {
-                            "type": "string",
-                            "pattern": "^[a-z0-9._]{1,30}$"
-                          },
-                          "role": {
-                            "type": "string",
-                            "enum": [
-                              "creator",
-                              "brand"
-                            ]
-                          },
-                          "fullName": {
-                            "type": "string"
-                          },
-                          "profilePicUrl": {
-                            "nullable": true,
-                            "anyOf": [
-                              {
-                                "type": "string",
-                                "format": "uri"
-                              },
-                              {
-                                "type": "string",
-                                "pattern": "^\\/(?!\\/)[\\w./-]+$"
-                              }
-                            ]
-                          },
-                          "status": {
-                            "type": "string",
-                            "enum": [
-                              "unclaimed",
-                              "verified",
-                              "removed"
-                            ]
-                          },
-                          "niches": {
-                            "type": "array",
-                            "items": {
-                              "type": "string",
-                              "enum": [
-                                "moda",
-                                "belleza",
-                                "fitness",
-                                "deportes",
-                                "gastronomia",
-                                "viajes",
-                                "tecnologia",
-                                "gaming",
-                                "musica",
-                                "entretenimiento",
-                                "educacion",
-                                "finanzas",
-                                "salud-bienestar",
-                                "familia-maternidad",
-                                "mascotas",
-                                "arte-diseno",
-                                "emprendimiento",
-                                "hogar-deco",
-                                "automotriz",
-                                "lifestyle"
-                              ]
-                            }
-                          },
-                          "tier": {
-                            "type": "string",
-                            "enum": [
-                              "nano",
-                              "micro",
-                              "mid",
-                              "macro",
-                              "mega"
-                            ]
-                          },
-                          "followers": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 9007199254740991
-                          },
-                          "engagementRate": {
-                            "type": "number",
-                            "minimum": 0
-                          },
-                          "sector": {
-                            "nullable": true,
-                            "type": "string",
-                            "enum": [
-                              "moda-retail",
-                              "belleza-cuidado-personal",
-                              "alimentos-bebidas",
-                              "restaurantes",
-                              "tecnologia",
-                              "salud",
-                              "educacion",
-                              "finanzas-seguros",
-                              "turismo-hoteleria",
-                              "entretenimiento-medios",
-                              "deporte",
-                              "hogar",
-                              "automotriz",
-                              "servicios",
-                              "otro"
-                            ]
-                          },
-                          "minServicePricePen": {
-                            "nullable": true,
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 1000000
-                          },
-                          "budgetMaxPen": {
-                            "nullable": true,
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 1000000
-                          },
-                          "bio": {
-                            "nullable": true,
-                            "type": "string",
-                            "maxLength": 161
-                          },
-                          "bioSource": {
-                            "nullable": true,
-                            "type": "string",
-                            "enum": [
-                              "declared",
-                              "instagram"
-                            ]
-                          }
-                        },
-                        "required": [
-                          "id",
-                          "handle",
-                          "role",
-                          "fullName",
-                          "profilePicUrl",
-                          "status",
-                          "niches",
-                          "tier",
-                          "followers",
-                          "engagementRate",
-                          "sector",
-                          "minServicePricePen",
-                          "budgetMaxPen",
-                          "bio",
-                          "bioSource"
-                        ],
-                        "additionalProperties": false
-                      },
-                      "createdAt": {
-                        "type": "string",
-                        "format": "date-time",
-                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
                       }
                     },
-                    "required": [
-                      "id",
-                      "creator",
-                      "brand",
-                      "createdAt"
-                    ],
-                    "additionalProperties": false
-                  }
+                    "nextCursor": {
+                      "nullable": true,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "items",
+                    "nextCursor"
+                  ],
+                  "additionalProperties": false
                 }
               }
             }
@@ -2926,6 +3212,25 @@
         ],
         "parameters": [
           {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "default": 20,
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50
+            }
+          },
+          {
             "name": "profileId",
             "in": "query",
             "required": true,
@@ -2942,117 +3247,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "string",
-                        "format": "uuid",
-                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
-                      },
-                      "serviceId": {
-                        "type": "string",
-                        "format": "uuid",
-                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
-                      },
-                      "creatorProfileId": {
-                        "type": "string",
-                        "format": "uuid",
-                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
-                      },
-                      "requesterProfileId": {
-                        "type": "string",
-                        "format": "uuid",
-                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
-                      },
-                      "status": {
-                        "type": "string",
-                        "enum": [
-                          "draft",
-                          "sent",
-                          "negotiating",
-                          "accepted",
-                          "rejected",
-                          "completed",
-                          "cancelled"
-                        ]
-                      },
-                      "amountPen": {
-                        "nullable": true,
-                        "type": "integer",
-                        "minimum": 0,
-                        "maximum": 1000000
-                      },
-                      "message": {
-                        "type": "string"
-                      },
-                      "history": {
-                        "type": "array",
-                        "items": {
-                          "type": "object",
-                          "properties": {
-                            "from": {
-                              "nullable": true,
-                              "type": "string",
-                              "enum": [
-                                "draft",
-                                "sent",
-                                "negotiating",
-                                "accepted",
-                                "rejected",
-                                "completed",
-                                "cancelled"
-                              ]
-                            },
-                            "to": {
-                              "type": "string",
-                              "enum": [
-                                "draft",
-                                "sent",
-                                "negotiating",
-                                "accepted",
-                                "rejected",
-                                "completed",
-                                "cancelled"
-                              ]
-                            },
-                            "actorProfileId": {
-                              "type": "string",
-                              "format": "uuid",
-                              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
-                            },
-                            "note": {
-                              "nullable": true,
-                              "type": "string"
-                            },
-                            "at": {
-                              "type": "string",
-                              "format": "date-time",
-                              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
-                            }
-                          },
-                          "required": [
-                            "from",
-                            "to",
-                            "actorProfileId",
-                            "note",
-                            "at"
-                          ],
-                          "additionalProperties": false
-                        }
-                      },
-                      "createdAt": {
-                        "type": "string",
-                        "format": "date-time",
-                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
-                      },
-                      "updatedAt": {
-                        "type": "string",
-                        "format": "date-time",
-                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
-                      },
-                      "creator": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
                         "type": "object",
                         "properties": {
                           "id": {
@@ -3060,171 +3259,291 @@
                             "format": "uuid",
                             "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
                           },
-                          "handle": {
-                            "type": "string",
-                            "pattern": "^[a-z0-9._]{1,30}$"
-                          },
-                          "role": {
-                            "type": "string",
-                            "enum": [
-                              "creator",
-                              "brand"
-                            ]
-                          },
-                          "fullName": {
-                            "type": "string"
-                          },
-                          "profilePicUrl": {
-                            "nullable": true,
-                            "anyOf": [
-                              {
-                                "type": "string",
-                                "format": "uri"
-                              },
-                              {
-                                "type": "string",
-                                "pattern": "^\\/(?!\\/)[\\w./-]+$"
-                              }
-                            ]
-                          },
-                          "status": {
-                            "type": "string",
-                            "enum": [
-                              "unclaimed",
-                              "verified",
-                              "removed"
-                            ]
-                          }
-                        },
-                        "required": [
-                          "id",
-                          "handle",
-                          "role",
-                          "fullName",
-                          "profilePicUrl",
-                          "status"
-                        ],
-                        "additionalProperties": false
-                      },
-                      "requester": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
+                          "serviceId": {
                             "type": "string",
                             "format": "uuid",
                             "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
                           },
-                          "handle": {
+                          "creatorProfileId": {
                             "type": "string",
-                            "pattern": "^[a-z0-9._]{1,30}$"
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
                           },
-                          "role": {
+                          "requesterProfileId": {
                             "type": "string",
-                            "enum": [
-                              "creator",
-                              "brand"
-                            ]
-                          },
-                          "fullName": {
-                            "type": "string"
-                          },
-                          "profilePicUrl": {
-                            "nullable": true,
-                            "anyOf": [
-                              {
-                                "type": "string",
-                                "format": "uri"
-                              },
-                              {
-                                "type": "string",
-                                "pattern": "^\\/(?!\\/)[\\w./-]+$"
-                              }
-                            ]
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
                           },
                           "status": {
                             "type": "string",
                             "enum": [
-                              "unclaimed",
-                              "verified",
-                              "removed"
-                            ]
-                          }
-                        },
-                        "required": [
-                          "id",
-                          "handle",
-                          "role",
-                          "fullName",
-                          "profilePicUrl",
-                          "status"
-                        ],
-                        "additionalProperties": false
-                      },
-                      "service": {
-                        "type": "object",
-                        "properties": {
-                          "type": {
-                            "type": "string",
-                            "enum": [
-                              "publicacion-patrocinada",
-                              "canje",
-                              "embajador",
-                              "evento",
-                              "contenido-ugc"
+                              "draft",
+                              "sent",
+                              "negotiating",
+                              "accepted",
+                              "rejected",
+                              "completed",
+                              "cancelled"
                             ]
                           },
-                          "format": {
-                            "type": "string",
-                            "enum": [
-                              "post",
-                              "reel",
-                              "story",
-                              "live",
-                              "combo"
-                            ]
-                          },
-                          "pricePen": {
+                          "amountPen": {
+                            "nullable": true,
                             "type": "integer",
                             "minimum": 0,
                             "maximum": 1000000
                           },
-                          "description": {
-                            "type": "string",
-                            "maxLength": 280
+                          "message": {
+                            "type": "string"
                           },
-                          "id": {
+                          "history": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "from": {
+                                  "nullable": true,
+                                  "type": "string",
+                                  "enum": [
+                                    "draft",
+                                    "sent",
+                                    "negotiating",
+                                    "accepted",
+                                    "rejected",
+                                    "completed",
+                                    "cancelled"
+                                  ]
+                                },
+                                "to": {
+                                  "type": "string",
+                                  "enum": [
+                                    "draft",
+                                    "sent",
+                                    "negotiating",
+                                    "accepted",
+                                    "rejected",
+                                    "completed",
+                                    "cancelled"
+                                  ]
+                                },
+                                "actorProfileId": {
+                                  "type": "string",
+                                  "format": "uuid",
+                                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                                },
+                                "note": {
+                                  "nullable": true,
+                                  "type": "string"
+                                },
+                                "at": {
+                                  "type": "string",
+                                  "format": "date-time",
+                                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                                }
+                              },
+                              "required": [
+                                "from",
+                                "to",
+                                "actorProfileId",
+                                "note",
+                                "at"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "createdAt": {
                             "type": "string",
-                            "format": "uuid",
-                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                            "format": "date-time",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                          },
+                          "updatedAt": {
+                            "type": "string",
+                            "format": "date-time",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                          },
+                          "creator": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "handle": {
+                                "type": "string",
+                                "pattern": "^[a-z0-9._]{1,30}$"
+                              },
+                              "role": {
+                                "type": "string",
+                                "enum": [
+                                  "creator",
+                                  "brand"
+                                ]
+                              },
+                              "fullName": {
+                                "type": "string"
+                              },
+                              "profilePicUrl": {
+                                "nullable": true,
+                                "anyOf": [
+                                  {
+                                    "type": "string",
+                                    "format": "uri"
+                                  },
+                                  {
+                                    "type": "string",
+                                    "pattern": "^\\/(?!\\/)(?!.*\\.\\.)[\\w./-]+$"
+                                  }
+                                ]
+                              },
+                              "status": {
+                                "type": "string",
+                                "enum": [
+                                  "unclaimed",
+                                  "verified",
+                                  "removed"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "handle",
+                              "role",
+                              "fullName",
+                              "profilePicUrl",
+                              "status"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "requester": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "handle": {
+                                "type": "string",
+                                "pattern": "^[a-z0-9._]{1,30}$"
+                              },
+                              "role": {
+                                "type": "string",
+                                "enum": [
+                                  "creator",
+                                  "brand"
+                                ]
+                              },
+                              "fullName": {
+                                "type": "string"
+                              },
+                              "profilePicUrl": {
+                                "nullable": true,
+                                "anyOf": [
+                                  {
+                                    "type": "string",
+                                    "format": "uri"
+                                  },
+                                  {
+                                    "type": "string",
+                                    "pattern": "^\\/(?!\\/)(?!.*\\.\\.)[\\w./-]+$"
+                                  }
+                                ]
+                              },
+                              "status": {
+                                "type": "string",
+                                "enum": [
+                                  "unclaimed",
+                                  "verified",
+                                  "removed"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "handle",
+                              "role",
+                              "fullName",
+                              "profilePicUrl",
+                              "status"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "service": {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "enum": [
+                                  "publicacion-patrocinada",
+                                  "canje",
+                                  "embajador",
+                                  "evento",
+                                  "contenido-ugc"
+                                ]
+                              },
+                              "format": {
+                                "type": "string",
+                                "enum": [
+                                  "post",
+                                  "reel",
+                                  "story",
+                                  "live",
+                                  "combo"
+                                ]
+                              },
+                              "pricePen": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 1000000
+                              },
+                              "description": {
+                                "type": "string",
+                                "maxLength": 280
+                              },
+                              "id": {
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "format",
+                              "pricePen",
+                              "description",
+                              "id"
+                            ],
+                            "additionalProperties": false
                           }
                         },
                         "required": [
-                          "type",
-                          "format",
-                          "pricePen",
-                          "description",
-                          "id"
+                          "id",
+                          "serviceId",
+                          "creatorProfileId",
+                          "requesterProfileId",
+                          "status",
+                          "amountPen",
+                          "message",
+                          "history",
+                          "createdAt",
+                          "updatedAt",
+                          "creator",
+                          "requester",
+                          "service"
                         ],
                         "additionalProperties": false
                       }
                     },
-                    "required": [
-                      "id",
-                      "serviceId",
-                      "creatorProfileId",
-                      "requesterProfileId",
-                      "status",
-                      "amountPen",
-                      "message",
-                      "history",
-                      "createdAt",
-                      "updatedAt",
-                      "creator",
-                      "requester",
-                      "service"
-                    ],
-                    "additionalProperties": false
-                  }
+                    "nextCursor": {
+                      "nullable": true,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "items",
+                    "nextCursor"
+                  ],
+                  "additionalProperties": false
                 }
               }
             }
@@ -3470,7 +3789,7 @@
                             },
                             {
                               "type": "string",
-                              "pattern": "^\\/(?!\\/)[\\w./-]+$"
+                              "pattern": "^\\/(?!\\/)(?!.*\\.\\.)[\\w./-]+$"
                             }
                           ]
                         },
@@ -3524,7 +3843,7 @@
                             },
                             {
                               "type": "string",
-                              "pattern": "^\\/(?!\\/)[\\w./-]+$"
+                              "pattern": "^\\/(?!\\/)(?!.*\\.\\.)[\\w./-]+$"
                             }
                           ]
                         },
@@ -3868,7 +4187,7 @@
                             },
                             {
                               "type": "string",
-                              "pattern": "^\\/(?!\\/)[\\w./-]+$"
+                              "pattern": "^\\/(?!\\/)(?!.*\\.\\.)[\\w./-]+$"
                             }
                           ]
                         },
@@ -3922,7 +4241,7 @@
                             },
                             {
                               "type": "string",
-                              "pattern": "^\\/(?!\\/)[\\w./-]+$"
+                              "pattern": "^\\/(?!\\/)(?!.*\\.\\.)[\\w./-]+$"
                             }
                           ]
                         },
@@ -4549,6 +4868,447 @@
                     "senderProfileId",
                     "body",
                     "createdAt"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "enum": [
+                            "VALIDATION_ERROR",
+                            "UNAUTHORIZED",
+                            "FORBIDDEN",
+                            "NOT_FOUND",
+                            "CONFLICT",
+                            "RATE_LIMITED",
+                            "INVALID_TRANSITION",
+                            "UPSTREAM_ERROR",
+                            "INTERNAL_ERROR"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "details": {}
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/removal-requests": {
+      "get": {
+        "operationId": "adminListRemovals",
+        "summary": "Pedidos de exclusión para revisión (solo administradores)",
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "default": 20,
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "pending",
+                "applied",
+                "rejected"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                          },
+                          "igHandle": {
+                            "type": "string",
+                            "pattern": "^[a-z0-9._]{1,30}$"
+                          },
+                          "email": {
+                            "type": "string",
+                            "format": "email",
+                            "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+                          },
+                          "reason": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "pending",
+                              "applied",
+                              "rejected"
+                            ]
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "format": "date-time",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                          },
+                          "reviewedAt": {
+                            "nullable": true,
+                            "type": "string",
+                            "format": "date-time",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                          },
+                          "reviewNote": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "profile": {
+                            "nullable": true,
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "handle": {
+                                "type": "string",
+                                "pattern": "^[a-z0-9._]{1,30}$"
+                              },
+                              "role": {
+                                "type": "string",
+                                "enum": [
+                                  "creator",
+                                  "brand"
+                                ]
+                              },
+                              "fullName": {
+                                "type": "string"
+                              },
+                              "profilePicUrl": {
+                                "nullable": true,
+                                "anyOf": [
+                                  {
+                                    "type": "string",
+                                    "format": "uri"
+                                  },
+                                  {
+                                    "type": "string",
+                                    "pattern": "^\\/(?!\\/)(?!.*\\.\\.)[\\w./-]+$"
+                                  }
+                                ]
+                              },
+                              "status": {
+                                "type": "string",
+                                "enum": [
+                                  "unclaimed",
+                                  "verified",
+                                  "removed"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "handle",
+                              "role",
+                              "fullName",
+                              "profilePicUrl",
+                              "status"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "igHandle",
+                          "email",
+                          "reason",
+                          "status",
+                          "createdAt",
+                          "reviewedAt",
+                          "reviewNote",
+                          "profile"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "nextCursor": {
+                      "nullable": true,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "items",
+                    "nextCursor"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "enum": [
+                            "VALIDATION_ERROR",
+                            "UNAUTHORIZED",
+                            "FORBIDDEN",
+                            "NOT_FOUND",
+                            "CONFLICT",
+                            "RATE_LIMITED",
+                            "INVALID_TRANSITION",
+                            "UPSTREAM_ERROR",
+                            "INTERNAL_ERROR"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "details": {}
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/removal-requests/{requestId}/review": {
+      "post": {
+        "operationId": "adminReviewRemoval",
+        "summary": "Aplica o rechaza un pedido de exclusión (solo administradores)",
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "requestId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "decision": {
+                    "type": "string",
+                    "enum": [
+                      "apply",
+                      "reject"
+                    ]
+                  },
+                  "note": {
+                    "type": "string",
+                    "maxLength": 500
+                  }
+                },
+                "required": [
+                  "decision"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    },
+                    "igHandle": {
+                      "type": "string",
+                      "pattern": "^[a-z0-9._]{1,30}$"
+                    },
+                    "email": {
+                      "type": "string",
+                      "format": "email",
+                      "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+                    },
+                    "reason": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "pending",
+                        "applied",
+                        "rejected"
+                      ]
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                    },
+                    "reviewedAt": {
+                      "nullable": true,
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                    },
+                    "reviewNote": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "profile": {
+                      "nullable": true,
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid",
+                          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                        },
+                        "handle": {
+                          "type": "string",
+                          "pattern": "^[a-z0-9._]{1,30}$"
+                        },
+                        "role": {
+                          "type": "string",
+                          "enum": [
+                            "creator",
+                            "brand"
+                          ]
+                        },
+                        "fullName": {
+                          "type": "string"
+                        },
+                        "profilePicUrl": {
+                          "nullable": true,
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "format": "uri"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\/(?!\\/)(?!.*\\.\\.)[\\w./-]+$"
+                            }
+                          ]
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "unclaimed",
+                            "verified",
+                            "removed"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "handle",
+                        "role",
+                        "fullName",
+                        "profilePicUrl",
+                        "status"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "igHandle",
+                    "email",
+                    "reason",
+                    "status",
+                    "createdAt",
+                    "reviewedAt",
+                    "reviewNote",
+                    "profile"
                   ],
                   "additionalProperties": false
                 }
