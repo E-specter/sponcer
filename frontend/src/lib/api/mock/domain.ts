@@ -1,6 +1,7 @@
 import {
   NICHES,
   tierFor,
+  type AdminEntry,
   type Claim,
   type Classification,
   type FeedItem,
@@ -59,6 +60,7 @@ export interface MockState {
   notifications: FixtureSocial['notifications'];
   claims: ClaimRecord[];
   removals: MockRemoval[];
+  admins: AdminEntry[];
 }
 
 const MS_PER_DAY = 86_400_000;
@@ -93,6 +95,8 @@ export function state(): MockState {
     quotes: structuredClone(fixtureSocial.quotes),
     notifications: structuredClone(fixtureSocial.notifications),
     claims: [],
+    // El administrador de arranque (ADMIN_EMAILS) no se puede quitar desde la app.
+    admins: [{ email: 'demo@sponcer.local', source: 'env', grantedAt: null, grantedBy: null }],
     removals: SEED_REMOVALS.map(({ index, email, reason }, i) => ({
       id: crypto.randomUUID(),
       handle: fixtureProfiles[index]?.snapshot.handle ?? 'sin.handle',

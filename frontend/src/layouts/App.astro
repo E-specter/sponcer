@@ -32,9 +32,9 @@ const tabs = [
   { href: '/panel/matches', label: 'Matches' },
   { href: '/panel/cotizaciones', label: 'Cotizaciones' },
   { href: '/panel', label: 'Mi panel' },
-  ...(me.isAdmin ? [{ href: '/admin/exclusiones', label: 'Exclusiones' }] : []),
+  ...(me.isAdmin ? [{ href: '/admin', label: 'Administración' }] : []),
 ];
-const adminLink = { href: '/admin/exclusiones', label: 'Exclusiones', Icon: ShieldAlert };
+const adminLink = { href: '/admin', label: 'Administración', Icon: ShieldAlert };
 const sideLinks = [
   { href: '/descubrir', label: 'Para ti', Icon: Compass },
   { href: '/panel/matches', label: 'Matches', Icon: Users },

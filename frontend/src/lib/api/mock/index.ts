@@ -244,6 +244,79 @@ const handlers: Handlers = {
     return removalItem(request);
   },
 
+  adminAddProfile: ({ userId, body }) => {
+    requireAdmin(userId);
+    if (findByHandle(body.handle)) return fail('CONFLICT', 'Esa ficha ya existe');
+    const profile: FixtureProfile = {
+      id: crypto.randomUUID(),
+      role: body.role,
+      status: 'unclaimed',
+      ownerUserId: null,
+      snapshot: {
+        handle: body.handle,
+        fullName: body.handle,
+        biography: '',
+        followers: SYNTHETIC_FOLLOWERS,
+        following: SYNTHETIC_FOLLOWING,
+        postsCount: SYNTHETIC_POSTS,
+        isBusiness: true,
+        businessCategory: null,
+        isPrivate: false,
+        isVerified: false,
+        profilePicUrl: null,
+        externalUrl: null,
+        posts: [],
+        fetchedAt: nowIso(),
+        source: 'mock',
+      },
+      declared: null,
+      services: [],
+    };
+    state().profiles.push(profile);
+    return toDetail(profile, userId);
+  },
+
+  adminInviteUser: ({ userId, body }) => {
+    requireAdmin(userId);
+    const registered = fixtureUsers.some((u) => u.email === body.email.toLowerCase());
+    return {
+      email: body.email,
+      status: registered ? 'already_registered' : 'sent',
+      invitedAt: nowIso(),
+    };
+  },
+
+  adminListAdmins: ({ userId }) => {
+    requireAdmin(userId);
+    return state().admins;
+  },
+
+  adminGrantAdmin: ({ userId, body }) => {
+    requireAdmin(userId);
+    const email = body.email.toLowerCase();
+    if (!state().admins.some((a) => a.email === email)) {
+      state().admins.push({
+        email,
+        source: 'app',
+        grantedAt: nowIso(),
+        grantedBy: fixtureUsers.find((u) => u.id === userId)?.email ?? null,
+      });
+    }
+    return state().admins;
+  },
+
+  adminRevokeAdmin: ({ userId, body }) => {
+    requireAdmin(userId);
+    const target = state().admins.find((a) => a.email === body.email.toLowerCase());
+    if (!target) return fail('NOT_FOUND', 'Esa persona no es administradora');
+    if (target.source === 'env')
+      return fail('CONFLICT', 'Es administrador fijo (ADMIN_EMAILS): solo se quita desde el .env');
+    if (state().admins.length <= 1)
+      return fail('CONFLICT', 'No se puede quitar al último administrador');
+    state().admins = state().admins.filter((a) => a !== target);
+    return state().admins;
+  },
+
   feed: ({ userId, query }) => {
     const actor = ownProfile(userId, query.profileId);
     const seen = new Set(
