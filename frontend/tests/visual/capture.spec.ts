@@ -63,6 +63,47 @@ const SCREENS: Screen[] = [
 ];
 
 const HTTP_ERROR_MIN = 400;
+const SCROLL_STEP_MS = 150;
+const IMAGES_TIMEOUT_MS = 10_000;
+/** Imágenes de perfil: fixtures locales o Storage de Supabase. */
+const PROFILE_IMAGE_PATHS = ['/fixtures/profiles/', '/storage/v1/'];
+
+/**
+ * Las imágenes `loading="lazy"` bajo el pliegue no cargan hasta acercarse: se recorre la página en pasos de un
+ * viewport, se vuelve arriba y se espera (con tope) a que todas las `img` visibles estén cargadas.
+ */
+async function loadAllImages(page: Page, viewportHeight: number): Promise<void> {
+  const total = await page.evaluate(() => document.documentElement.scrollHeight);
+  const steps = Math.ceil(total / viewportHeight);
+  await Array.from({ length: steps }).reduce<Promise<void>>(async (previous, _, i) => {
+    await previous;
+    await page.evaluate((y) => window.scrollTo(0, y), i * viewportHeight);
+    await page.waitForTimeout(SCROLL_STEP_MS);
+  }, Promise.resolve());
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page
+    .waitForFunction(
+      () =>
+        [...document.images]
+          .filter((img) => img.getClientRects().length > 0)
+          .every((img) => img.complete && img.naturalWidth > 0),
+      undefined,
+      { timeout: IMAGES_TIMEOUT_MS },
+    )
+    .catch(() => undefined);
+}
+
+/** `img` de perfil visibles que siguen rotas o sin cargar tras esperar: lista sus `src`. */
+async function brokenProfileImages(page: Page): Promise<string[]> {
+  const broken = await page.evaluate((paths) => {
+    return [...document.images]
+      .filter((img) => img.getClientRects().length > 0)
+      .filter((img) => paths.some((p) => img.src.includes(p)))
+      .filter((img) => !img.complete || img.naturalWidth === 0)
+      .map((img) => img.src);
+  }, PROFILE_IMAGE_PATHS);
+  return broken.length > 0 ? [`imágenes de perfil rotas: ${broken.join(', ')}`] : [];
+}
 const TOP_OVERFLOWERS = 3;
 
 /** Sin scroll horizontal (tolerancia 0): si lo hay, lista los elementos que más sobresalen por la derecha. */
@@ -118,10 +159,14 @@ VIEWPORTS.forEach(({ width, height }) => {
       await page.waitForLoadState('networkidle');
       // La barra de desarrollo de Astro tapa contenido en la captura.
       await page.addStyleTag({ content: 'astro-dev-toolbar { display: none !important; }' });
+      await loadAllImages(page, height);
       await page.screenshot({ path: `${OUT_DIR}/${screen.name}-${width}.png`, fullPage: true });
-      problems.push(...(await overflowProblems(page)));
+      problems.push(...(await overflowProblems(page)), ...(await brokenProfileImages(page)));
       test
-        .expect(problems, 'errores de consola, respuestas >= 400 o scroll horizontal')
+        .expect(
+          problems,
+          'errores de consola, respuestas >= 400, scroll horizontal o imágenes de perfil rotas',
+        )
         .toEqual([]);
     });
   });
