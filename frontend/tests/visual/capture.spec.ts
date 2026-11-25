@@ -32,10 +32,13 @@ const matchId = social.matches[0]?.id ?? '';
 
 const ACTIVE_PROFILE_KEY = 'sponcer.activeProfileId';
 const OUT_DIR = 'test-results/visual';
-const VIEWPORTS = [
-  { width: 1440, height: 900 },
-  { width: 414, height: 896 },
-] as const;
+const DESKTOP_WIDTH = 1440;
+const DESKTOP_HEIGHT = 900;
+const MOBILE_WIDTH = 414;
+const MOBILE_HEIGHT = 896;
+const DESKTOP = { width: DESKTOP_WIDTH, height: DESKTOP_HEIGHT };
+const MOBILE = { width: MOBILE_WIDTH, height: MOBILE_HEIGHT };
+const VIEWPORTS = [DESKTOP, MOBILE] as const;
 
 interface Screen {
   /** Nombre de archivo y de test (`--grep "descubrir-marca"`). */
@@ -60,6 +63,30 @@ const SCREENS: Screen[] = [
 ];
 
 const HTTP_ERROR_MIN = 400;
+const TOP_OVERFLOWERS = 3;
+
+/** Sin scroll horizontal (tolerancia 0): si lo hay, lista los elementos que más sobresalen por la derecha. */
+async function overflowProblems(page: Page): Promise<string[]> {
+  return page.evaluate((top) => {
+    const root = document.documentElement;
+    if (root.scrollWidth <= window.innerWidth) return [];
+    const selectorOf = (el: Element): string =>
+      el.tagName.toLowerCase() +
+      (el.id ? `#${el.id}` : '') +
+      (typeof el.className === 'string' && el.className.trim()
+        ? `.${el.className.trim().split(' ').filter(Boolean).join('.')}`
+        : '');
+    const widest = [...document.body.querySelectorAll('*')]
+      .map((el) => ({ el, right: Math.round(el.getBoundingClientRect().right) }))
+      .filter(({ right }) => right > window.innerWidth)
+      .sort((a, b) => b.right - a.right)
+      .slice(0, top)
+      .map(({ el, right }) => `${selectorOf(el)} right=${right}`);
+    return [
+      `scroll horizontal: scrollWidth ${root.scrollWidth} > innerWidth ${window.innerWidth}; más anchos: ${widest.join(' | ')}`,
+    ];
+  }, TOP_OVERFLOWERS);
+}
 
 /** Errores de consola, excepciones de página y respuestas >= 400: lo único que hace fallar la captura. */
 function watchProblems(page: Page): string[] {
@@ -92,7 +119,10 @@ VIEWPORTS.forEach(({ width, height }) => {
       // La barra de desarrollo de Astro tapa contenido en la captura.
       await page.addStyleTag({ content: 'astro-dev-toolbar { display: none !important; }' });
       await page.screenshot({ path: `${OUT_DIR}/${screen.name}-${width}.png`, fullPage: true });
-      test.expect(problems, 'errores de consola o respuestas >= 400').toEqual([]);
+      problems.push(...(await overflowProblems(page)));
+      test
+        .expect(problems, 'errores de consola, respuestas >= 400 o scroll horizontal')
+        .toEqual([]);
     });
   });
 });
