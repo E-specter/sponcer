@@ -1,5 +1,6 @@
 import type { Message } from '@sponcer/contracts';
 import { fixtureSocial } from '@sponcer/contracts/fixtures';
+import { DomainError } from '../../../../../shared/errors';
 import { logger } from '../../../../../shared/logger';
 import type { MatchRef } from '../../../domain/match-ref';
 import type {
@@ -25,7 +26,11 @@ export function createMockMatchReader(): MatchReader & { register(match: MatchRe
 export function createMockMessageRepository(): MessageRepository {
   const all: Message[] = [...fixtureSocial.messages];
   return {
-    add: async (m) => void all.push(m),
+    add: async (m) => {
+      if (all.some((x) => x.id === m.id))
+        throw new DomainError('CONFLICT', 'Ya existe un registro con esos datos');
+      all.push(m);
+    },
     async listByMatch(matchId, offset, limit) {
       const sorted = all
         .filter((m) => m.matchId === matchId)
