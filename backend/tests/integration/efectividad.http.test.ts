@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { api, type ProfileCard } from '@sponcer/contracts';
+import { demoUser } from '@sponcer/contracts/fixtures';
 import { buildTestApp, call, demoBrand, STATUS } from '../support/app';
 
 describe('Fase 5 · Pruebas de efectividad del sistema (Sponcer)', () => {
@@ -13,7 +14,7 @@ describe('Fase 5 · Pruebas de efectividad del sistema (Sponcer)', () => {
         app,
         'get',
         `${api.feed.path}?profileId=${demoBrand.id}&limit=20&q=${encodeURIComponent(q)}`,
-        demoBrand.id,
+        demoUser.id,
       );
       const duracionMs = performance.now() - inicio;
 
@@ -39,7 +40,7 @@ describe('Fase 5 · Pruebas de efectividad del sistema (Sponcer)', () => {
       app,
       'get',
       `${api.feed.path}?profileId=${demoBrand.id}&limit=20&q=demo&city=trujillo`,
-      demoBrand.id,
+      demoUser.id,
     );
 
     expect(res.status).toBe(STATUS.OK);
@@ -54,7 +55,7 @@ describe('Fase 5 · Pruebas de efectividad del sistema (Sponcer)', () => {
       app,
       'get',
       `${api.feed.path}?profileId=${demoBrand.id}&limit=20&q=nicho_inexistente_f5`,
-      demoBrand.id,
+      demoUser.id,
     );
 
     expect(res.status).toBe(STATUS.OK);
