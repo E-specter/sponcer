@@ -23,12 +23,12 @@ export function createProfileAssembler(d: Deps): ProfileAssembler {
   return {
     summary,
     async card(p) {
-      const [s, classification, services] = await Promise.all([
-        summary(p),
+      const [snap, classification, services] = await Promise.all([
+        d.snapshots.getByHandle(p.handle),
         d.classifications.getByProfileId(p.id),
         d.services.list(p.id),
       ]);
-      return toCard(s, p.declared, classification, services);
+      return toCard(toSummary(p, snap), p.declared, classification, services, snap);
     },
     async detail(p, viewerUserId) {
       const snap = await d.snapshots.getByHandle(p.handle);

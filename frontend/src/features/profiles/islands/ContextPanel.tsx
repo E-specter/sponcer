@@ -75,7 +75,7 @@ export default function ContextPanel({ profiles }: { profiles: ProfileSummary[] 
     <>
       <section className="card card-ink" aria-label="Perfil activo">
         <div className="ink-head">
-          <Avatar name={active.fullName ?? active.handle} size="lg" />
+          <Avatar name={active.fullName ?? active.handle} src={active.profilePicUrl} size="lg" />
           <div>
             <h2>{active.fullName ?? `@${active.handle}`}</h2>
             <p className="muted">

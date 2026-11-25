@@ -20,6 +20,7 @@ ultima_actualizacion: 2026-11-25
 ## Privacidad (RNF-05)
 
 - **Minimización:** solo se guardan datos públicos necesarios para clasificar (bio, métricas, últimos posts). No se guardan comentarios de terceros ni datos de seguidores.
+- **Foto de perfil:** de las cuentas ingeridas se guarda una copia de la foto pública en Supabase Storage (`profile-images/<handle>/`), porque las URL de Instagram caducan. Se usa solo para la tarjeta y la ficha. Se borra al retirar la ficha (`ProfileRemoved`) y al aplicar una exclusión manual. Las 30 fotos de los perfiles de demostración son imágenes ficticias generadas con IA y no corresponden a personas reales.
 - **Transparencia:**
   - hay una página `/privacidad` con la finalidad, el responsable, el origen de los datos y los derechos ARCO;
   - el consentimiento se registra al crear la cuenta y al reclamar un perfil.
@@ -34,6 +35,7 @@ ultima_actualizacion: 2026-11-25
     begin;
     insert into ingestion_blocklist (ig_handle, reason) values ('<handle>', 'exclusion ARCO') on conflict do nothing;
     delete from ig_snapshots where ig_handle = '<handle>';
+    -- y borrar en Studio › Storage la carpeta profile-images/<handle>/
     delete from profile_classifications where profile_id = (select id from profiles where ig_handle = '<handle>');
     delete from profile_embeddings where profile_id = (select id from profiles where ig_handle = '<handle>');
     update profiles set status = 'removed' where ig_handle = '<handle>';

@@ -15,7 +15,7 @@
       "businessCategory": "Fashion Model",
       "isPrivate": false,
       "isVerified": false,
-      "profilePicUrl": null,
+      "profilePicUrl": "/fixtures/profiles/sofi.moda.demo.webp",
       "externalUrl": null,
       "posts": [
         {
@@ -189,7 +189,7 @@
       "businessCategory": "Health/beauty",
       "isPrivate": false,
       "isVerified": false,
-      "profilePicUrl": null,
+      "profilePicUrl": "/fixtures/profiles/diego.belleza.demo.webp",
       "externalUrl": "https://example.com/diego",
       "posts": [
         {
@@ -335,7 +335,7 @@
       "businessCategory": "Fitness Model",
       "isPrivate": false,
       "isVerified": false,
-      "profilePicUrl": null,
+      "profilePicUrl": "/fixtures/profiles/valeria.fitness.demo.webp",
       "externalUrl": null,
       "posts": [
         {
@@ -495,7 +495,7 @@
       "businessCategory": "Athlete",
       "isPrivate": false,
       "isVerified": false,
-      "profilePicUrl": null,
+      "profilePicUrl": "/fixtures/profiles/mateo.deportes.demo.webp",
       "externalUrl": null,
       "posts": [
         {
@@ -641,7 +641,7 @@
       "businessCategory": "Chef",
       "isPrivate": false,
       "isVerified": false,
-      "profilePicUrl": null,
+      "profilePicUrl": "/fixtures/profiles/camila.gastronomia.demo.webp",
       "externalUrl": null,
       "posts": [
         {
@@ -808,7 +808,7 @@
       "businessCategory": "Travel Company",
       "isPrivate": false,
       "isVerified": false,
-      "profilePicUrl": null,
+      "profilePicUrl": "/fixtures/profiles/andres.viajes.demo.webp",
       "externalUrl": "https://example.com/andres",
       "posts": [
         {
@@ -954,7 +954,7 @@
       "businessCategory": "Digital creator",
       "isPrivate": false,
       "isVerified": false,
-      "profilePicUrl": null,
+      "profilePicUrl": "/fixtures/profiles/lucia.tecnologia.demo.webp",
       "externalUrl": "https://example.com/lucia",
       "posts": [
         {
@@ -1128,7 +1128,7 @@
       "businessCategory": "Gamer",
       "isPrivate": false,
       "isVerified": false,
-      "profilePicUrl": null,
+      "profilePicUrl": "/fixtures/profiles/joaquin.gaming.demo.webp",
       "externalUrl": "https://example.com/joaquin",
       "posts": [
         {
@@ -1274,7 +1274,7 @@
       "businessCategory": "Musician/band",
       "isPrivate": false,
       "isVerified": false,
-      "profilePicUrl": null,
+      "profilePicUrl": "/fixtures/profiles/daniela.musica.demo.webp",
       "externalUrl": null,
       "posts": [
         {
@@ -1448,7 +1448,7 @@
       "businessCategory": "Entertainer",
       "isPrivate": false,
       "isVerified": false,
-      "profilePicUrl": null,
+      "profilePicUrl": "/fixtures/profiles/renzo.entretenimiento.demo.webp",
       "externalUrl": null,
       "posts": [
         {
@@ -1594,7 +1594,7 @@
       "businessCategory": "Education",
       "isPrivate": false,
       "isVerified": false,
-      "profilePicUrl": null,
+      "profilePicUrl": "/fixtures/profiles/ximena.educacion.demo.webp",
       "externalUrl": "https://example.com/ximena",
       "posts": [
         {
@@ -1761,7 +1761,7 @@
       "businessCategory": "Personal blog",
       "isPrivate": false,
       "isVerified": false,
-      "profilePicUrl": null,
+      "profilePicUrl": "/fixtures/profiles/bruno.finanzas.demo.webp",
       "externalUrl": null,
       "posts": [
         {
@@ -1907,7 +1907,7 @@
       "businessCategory": "Health/beauty",
       "isPrivate": false,
       "isVerified": false,
-      "profilePicUrl": null,
+      "profilePicUrl": "/fixtures/profiles/fiorella.salud.demo.webp",
       "externalUrl": "https://example.com/fiorella",
       "posts": [
         {
@@ -2067,7 +2067,7 @@
       "businessCategory": "Personal blog",
       "isPrivate": false,
       "isVerified": true,
-      "profilePicUrl": null,
+      "profilePicUrl": "/fixtures/profiles/gonzalo.familia.demo.webp",
       "externalUrl": "https://example.com/gonzalo",
       "posts": [
         {
@@ -2213,7 +2213,7 @@
       "businessCategory": "Pet Service",
       "isPrivate": false,
       "isVerified": false,
-      "profilePicUrl": null,
+      "profilePicUrl": "/fixtures/profiles/majo.mascotas.demo.webp",
       "externalUrl": null,
       "posts": [
         {
@@ -2387,7 +2387,7 @@
       "businessCategory": "Artist",
       "isPrivate": false,
       "isVerified": false,
-      "profilePicUrl": null,
+      "profilePicUrl": "/fixtures/profiles/piero.arte.demo.webp",
       "externalUrl": null,
       "posts": [
         {
@@ -2533,7 +2533,7 @@
       "businessCategory": "Entrepreneur",
       "isPrivate": false,
       "isVerified": false,
-      "profilePicUrl": null,
+      "profilePicUrl": "/fixtures/profiles/alessandra.emprendimiento.demo.webp",
       "externalUrl": null,
       "posts": [
         {
@@ -2700,7 +2700,7 @@
       "businessCategory": "Interior Design Studio",
       "isPrivate": false,
       "isVerified": false,
-      "profilePicUrl": null,
+      "profilePicUrl": "/fixtures/profiles/rodrigo.hogar.demo.webp",
       "externalUrl": "https://example.com/rodrigo",
       "posts": [
         {
@@ -2846,7 +2846,7 @@
       "businessCategory": "Automotive",
       "isPrivate": false,
       "isVerified": false,
-      "profilePicUrl": null,
+      "profilePicUrl": "/fixtures/profiles/micaela.automotriz.demo.webp",
       "externalUrl": null,
       "posts": [
         {
@@ -3020,7 +3020,7 @@
       "businessCategory": "Blogger",
       "isPrivate": false,
       "isVerified": false,
-      "profilePicUrl": null,
+      "profilePicUrl": "/fixtures/profiles/sebastian.lifestyle.demo.webp",
       "externalUrl": "https://example.com/sebastian",
       "posts": [
         {
@@ -3166,7 +3166,7 @@
       "businessCategory": "alimentos-bebidas",
       "isPrivate": false,
       "isVerified": false,
-      "profilePicUrl": null,
+      "profilePicUrl": "/fixtures/profiles/andina.snacks.demo.webp",
       "externalUrl": "https://example.com/andina",
       "posts": [
         {
@@ -3321,7 +3321,7 @@
       "businessCategory": "deporte",
       "isPrivate": false,
       "isVerified": false,
-      "profilePicUrl": null,
+      "profilePicUrl": "/fixtures/profiles/kallpa.sport.demo.webp",
       "externalUrl": "https://example.com/kallpa",
       "posts": [
         {
@@ -3476,7 +3476,7 @@
       "businessCategory": "tecnologia",
       "isPrivate": false,
       "isVerified": false,
-      "profilePicUrl": null,
+      "profilePicUrl": "/fixtures/profiles/nube.tech.demo.webp",
       "externalUrl": "https://example.com/nube",
       "posts": [
         {
@@ -3631,7 +3631,7 @@
       "businessCategory": "belleza-cuidado-personal",
       "isPrivate": false,
       "isVerified": false,
-      "profilePicUrl": null,
+      "profilePicUrl": "/fixtures/profiles/flor.cosmetica.demo.webp",
       "externalUrl": "https://example.com/flor",
       "posts": [
         {
@@ -3786,7 +3786,7 @@
       "businessCategory": "turismo-hoteleria",
       "isPrivate": false,
       "isVerified": false,
-      "profilePicUrl": null,
+      "profilePicUrl": "/fixtures/profiles/rumbo.viajes.demo.webp",
       "externalUrl": "https://example.com/rumbo",
       "posts": [
         {
@@ -3941,7 +3941,7 @@
       "businessCategory": "servicios",
       "isPrivate": false,
       "isVerified": false,
-      "profilePicUrl": null,
+      "profilePicUrl": "/fixtures/profiles/pata.feliz.demo.webp",
       "externalUrl": "https://example.com/pata",
       "posts": [
         {
@@ -4096,7 +4096,7 @@
       "businessCategory": "hogar",
       "isPrivate": false,
       "isVerified": false,
-      "profilePicUrl": null,
+      "profilePicUrl": "/fixtures/profiles/casa.nativa.demo.webp",
       "externalUrl": "https://example.com/casa",
       "posts": [
         {
@@ -4242,7 +4242,7 @@
       "businessCategory": "finanzas-seguros",
       "isPrivate": false,
       "isVerified": false,
-      "profilePicUrl": null,
+      "profilePicUrl": "/fixtures/profiles/ahorra.ya.demo.webp",
       "externalUrl": "https://example.com/ahorra",
       "posts": [
         {
@@ -4388,7 +4388,7 @@
       "businessCategory": "restaurantes",
       "isPrivate": false,
       "isVerified": false,
-      "profilePicUrl": null,
+      "profilePicUrl": "/fixtures/profiles/sabor.costa.demo.webp",
       "externalUrl": "https://example.com/sabor",
       "posts": [
         {
@@ -4534,7 +4534,7 @@
       "businessCategory": "automotriz",
       "isPrivate": false,
       "isVerified": false,
-      "profilePicUrl": null,
+      "profilePicUrl": "/fixtures/profiles/moto.ruta.demo.webp",
       "externalUrl": "https://example.com/moto",
       "posts": [
         {

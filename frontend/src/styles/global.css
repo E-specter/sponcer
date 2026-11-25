@@ -609,7 +609,7 @@ button.chip {
   place-items: center;
   overflow: hidden;
   border-radius: var(--radius-control);
-  background: var(--color-seleccion);
+  background: var(--color-neutro-suave);
   color: var(--color-violeta);
   font-size: 2rem;
   font-weight: 600;
@@ -621,6 +621,9 @@ button.chip {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+.pcard-media-face img {
+  object-position: center 14%;
 }
 .pcard-head {
   display: grid;

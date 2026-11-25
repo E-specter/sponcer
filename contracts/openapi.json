@@ -144,8 +144,16 @@
                           },
                           "profilePicUrl": {
                             "nullable": true,
-                            "type": "string",
-                            "format": "uri"
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "format": "uri"
+                              },
+                              {
+                                "type": "string",
+                                "pattern": "^\\/(?!\\/)[\\w./-]+$"
+                              }
+                            ]
                           },
                           "status": {
                             "type": "string",
@@ -570,8 +578,16 @@
                     },
                     "profilePicUrl": {
                       "nullable": true,
-                      "type": "string",
-                      "format": "uri"
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "format": "uri"
+                        },
+                        {
+                          "type": "string",
+                          "pattern": "^\\/(?!\\/)[\\w./-]+$"
+                        }
+                      ]
                     },
                     "status": {
                       "type": "string",
@@ -1245,8 +1261,16 @@
                     },
                     "profilePicUrl": {
                       "nullable": true,
-                      "type": "string",
-                      "format": "uri"
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "format": "uri"
+                        },
+                        {
+                          "type": "string",
+                          "pattern": "^\\/(?!\\/)[\\w./-]+$"
+                        }
+                      ]
                     },
                     "status": {
                       "type": "string",
@@ -2140,8 +2164,16 @@
                               },
                               "profilePicUrl": {
                                 "nullable": true,
-                                "type": "string",
-                                "format": "uri"
+                                "anyOf": [
+                                  {
+                                    "type": "string",
+                                    "format": "uri"
+                                  },
+                                  {
+                                    "type": "string",
+                                    "pattern": "^\\/(?!\\/)[\\w./-]+$"
+                                  }
+                                ]
                               },
                               "status": {
                                 "type": "string",
@@ -2230,6 +2262,19 @@
                                 "type": "integer",
                                 "minimum": 0,
                                 "maximum": 1000000
+                              },
+                              "bio": {
+                                "nullable": true,
+                                "type": "string",
+                                "maxLength": 161
+                              },
+                              "bioSource": {
+                                "nullable": true,
+                                "type": "string",
+                                "enum": [
+                                  "declared",
+                                  "instagram"
+                                ]
                               }
                             },
                             "required": [
@@ -2245,7 +2290,9 @@
                               "engagementRate",
                               "sector",
                               "minServicePricePen",
-                              "budgetMaxPen"
+                              "budgetMaxPen",
+                              "bio",
+                              "bioSource"
                             ],
                             "additionalProperties": false
                           },
@@ -2515,8 +2562,16 @@
                           },
                           "profilePicUrl": {
                             "nullable": true,
-                            "type": "string",
-                            "format": "uri"
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "format": "uri"
+                              },
+                              {
+                                "type": "string",
+                                "pattern": "^\\/(?!\\/)[\\w./-]+$"
+                              }
+                            ]
                           },
                           "status": {
                             "type": "string",
@@ -2605,6 +2660,19 @@
                             "type": "integer",
                             "minimum": 0,
                             "maximum": 1000000
+                          },
+                          "bio": {
+                            "nullable": true,
+                            "type": "string",
+                            "maxLength": 161
+                          },
+                          "bioSource": {
+                            "nullable": true,
+                            "type": "string",
+                            "enum": [
+                              "declared",
+                              "instagram"
+                            ]
                           }
                         },
                         "required": [
@@ -2620,7 +2688,9 @@
                           "engagementRate",
                           "sector",
                           "minServicePricePen",
-                          "budgetMaxPen"
+                          "budgetMaxPen",
+                          "bio",
+                          "bioSource"
                         ],
                         "additionalProperties": false
                       },
@@ -2648,8 +2718,16 @@
                           },
                           "profilePicUrl": {
                             "nullable": true,
-                            "type": "string",
-                            "format": "uri"
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "format": "uri"
+                              },
+                              {
+                                "type": "string",
+                                "pattern": "^\\/(?!\\/)[\\w./-]+$"
+                              }
+                            ]
                           },
                           "status": {
                             "type": "string",
@@ -2738,6 +2816,19 @@
                             "type": "integer",
                             "minimum": 0,
                             "maximum": 1000000
+                          },
+                          "bio": {
+                            "nullable": true,
+                            "type": "string",
+                            "maxLength": 161
+                          },
+                          "bioSource": {
+                            "nullable": true,
+                            "type": "string",
+                            "enum": [
+                              "declared",
+                              "instagram"
+                            ]
                           }
                         },
                         "required": [
@@ -2753,7 +2844,9 @@
                           "engagementRate",
                           "sector",
                           "minServicePricePen",
-                          "budgetMaxPen"
+                          "budgetMaxPen",
+                          "bio",
+                          "bioSource"
                         ],
                         "additionalProperties": false
                       },
@@ -2983,8 +3076,16 @@
                           },
                           "profilePicUrl": {
                             "nullable": true,
-                            "type": "string",
-                            "format": "uri"
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "format": "uri"
+                              },
+                              {
+                                "type": "string",
+                                "pattern": "^\\/(?!\\/)[\\w./-]+$"
+                              }
+                            ]
                           },
                           "status": {
                             "type": "string",
@@ -3029,8 +3130,16 @@
                           },
                           "profilePicUrl": {
                             "nullable": true,
-                            "type": "string",
-                            "format": "uri"
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "format": "uri"
+                              },
+                              {
+                                "type": "string",
+                                "pattern": "^\\/(?!\\/)[\\w./-]+$"
+                              }
+                            ]
                           },
                           "status": {
                             "type": "string",
@@ -3354,8 +3463,16 @@
                         },
                         "profilePicUrl": {
                           "nullable": true,
-                          "type": "string",
-                          "format": "uri"
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "format": "uri"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\/(?!\\/)[\\w./-]+$"
+                            }
+                          ]
                         },
                         "status": {
                           "type": "string",
@@ -3400,8 +3517,16 @@
                         },
                         "profilePicUrl": {
                           "nullable": true,
-                          "type": "string",
-                          "format": "uri"
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "format": "uri"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\/(?!\\/)[\\w./-]+$"
+                            }
+                          ]
                         },
                         "status": {
                           "type": "string",
@@ -3736,8 +3861,16 @@
                         },
                         "profilePicUrl": {
                           "nullable": true,
-                          "type": "string",
-                          "format": "uri"
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "format": "uri"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\/(?!\\/)[\\w./-]+$"
+                            }
+                          ]
                         },
                         "status": {
                           "type": "string",
@@ -3782,8 +3915,16 @@
                         },
                         "profilePicUrl": {
                           "nullable": true,
-                          "type": "string",
-                          "format": "uri"
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "format": "uri"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\/(?!\\/)[\\w./-]+$"
+                            }
+                          ]
                         },
                         "status": {
                           "type": "string",

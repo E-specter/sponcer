@@ -15,6 +15,8 @@ export const MAX_SERVICES = 20;
 /** El proveedor de ingesta solo expone los últimos ~12 posts (ADR-001). */
 export const MAX_SNAPSHOT_POSTS = 12;
 export const MAX_MATCH_REASONS = 2;
+/** Bio mostrada en la tarjeta del feed (se recorta en el servidor con "…"). */
+export const MAX_CARD_BIO = 160;
 
 export const MAX_PRICE_PEN = 1_000_000;
 export const PAGE_LIMIT_DEFAULT = 20;

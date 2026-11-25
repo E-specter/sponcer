@@ -3,6 +3,7 @@ import { MAX_SNAPSHOT_POSTS, type IgPost, type IgProfileSnapshot } from '@sponce
 import { fixtureProfiles } from '@sponcer/contracts/fixtures';
 import { ok } from '../../../../../shared/result';
 import type { IngestionBlocklist } from '../../../application/ports/out/ingestion-blocklist';
+import type { ImageStore } from '../../../application/ports/out/image-store';
 import type { InstagramSource } from '../../../application/ports/out/instagram-source';
 import type {
   SnapshotRepository,
@@ -98,6 +99,12 @@ export function createInMemorySnapshotRepository(): SnapshotRepository {
     deleteByHandle: async (handle) => void latest.delete(handle),
   };
 }
+
+/** Mock: la URL de origen (ruta de fixture o null) se conserva tal cual; no hay nada que borrar. */
+export const createMockImageStore = (): ImageStore => ({
+  store: async (_handle, sourceUrl) => sourceUrl,
+  deleteAll: async () => undefined,
+});
 
 export function createInMemoryBlocklist(initial: string[] = []): IngestionBlocklist {
   const blocked = new Set(initial);

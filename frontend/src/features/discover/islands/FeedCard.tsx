@@ -45,8 +45,16 @@ export default function FeedCard({ item, busy, onInterest, onDismiss, viewerIsBr
       name={card.fullName || `@${card.handle}`}
       subtitle={`${isBrand ? 'Marca' : 'Creador'}${card.sector ? ` · ${SECTOR_LABEL[card.sector]}` : ''} · @${card.handle}`}
       imageUrl={card.profilePicUrl}
+      faceFocus={!isBrand}
       provenance="Instagram"
-      sourceLine={`Datos públicos · Instagram · @${card.handle}`}
+      bio={card.bio}
+      sourceLine={
+        card.bioSource === 'instagram'
+          ? `Bio compartida · Instagram · @${card.handle}`
+          : card.bioSource === 'declared'
+            ? 'Declarado en Sponcer'
+            : null
+      }
       niches={card.niches.map((n) => (
         <Chip key={n}>{NICHE_LABEL[n]}</Chip>
       ))}

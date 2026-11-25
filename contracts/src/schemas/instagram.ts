@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { MAX_SNAPSHOT_POSTS } from './limits';
-import { IgHandle, IsoDate } from './common';
+import { IgHandle, ImageUrl, IsoDate } from './common';
 
 /** Modelo de dominio de un post. El JSON del proveedor nunca sale del adaptador (ACL, ADR-001). */
 export const IgPost = z.object({
@@ -26,7 +26,7 @@ export const IgProfileSnapshot = z.object({
   businessCategory: z.string().nullable(),
   isPrivate: z.boolean(),
   isVerified: z.boolean(),
-  profilePicUrl: z.url().nullable(),
+  profilePicUrl: ImageUrl.nullable(),
   externalUrl: z.url().nullable(),
   posts: z.array(IgPost).max(MAX_SNAPSHOT_POSTS),
   fetchedAt: IsoDate,

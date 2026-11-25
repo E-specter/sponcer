@@ -12,6 +12,7 @@ import {
   type ProfileDetail,
   type ProfileSummary,
   type ScoreComponent,
+  MAX_CARD_BIO,
   MAX_MATCH_REASONS,
 } from '@sponcer/contracts';
 import {
@@ -155,8 +156,19 @@ export const toSummary = (p: FixtureProfile): ProfileSummary => ({
   status: p.status,
 });
 
+/** Igual que el backend: bio declarada > biografía de Instagram, recortada a MAX_CARD_BIO + "…". */
+function cardBio(p: FixtureProfile): Pick<ProfileCard, 'bio' | 'bioSource'> {
+  const declared = p.declared?.shortBio?.trim();
+  const ig = p.snapshot.biography.trim();
+  const text = declared || ig;
+  if (!text) return { bio: null, bioSource: null };
+  const bio = text.length > MAX_CARD_BIO ? `${text.slice(0, MAX_CARD_BIO).trimEnd()}…` : text;
+  return { bio, bioSource: declared ? 'declared' : 'instagram' };
+}
+
 export const toCard = (p: FixtureProfile): ProfileCard => ({
   ...toSummary(p),
+  ...cardBio(p),
   niches: nichesOf(p),
   tier: tierFor(p.snapshot.followers),
   followers: p.snapshot.followers,

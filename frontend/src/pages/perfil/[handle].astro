@@ -34,7 +34,7 @@ try {
       <>
         <header class="card stack">
           <div class="row">
-            <Avatar name={profile.fullName || profile.handle} size="xl" />
+            <Avatar client:load name={profile.fullName || profile.handle} src={profile.profilePicUrl} size="xl" />
             <div>
               <p class="eyebrow">{profile.role === 'brand' ? 'Perfil de marca' : 'Perfil de creador'} · Instagram</p>
               <h1>{profile.fullName || `@${profile.handle}`}</h1>

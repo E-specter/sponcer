@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 const INITIALS = 2;
 
 type AvatarSize = 'sm' | 'md' | 'lg' | 'xl';
@@ -28,8 +30,9 @@ export const initialsOf = (name: string): string =>
 /** Retrato o iniciales sobre tinta; siempre va junto al nombre, por eso es decorativo. */
 export function Avatar({ name, src, size = 'md' }: AvatarProps) {
   const cls = SIZE_CLASS[size];
-  return src ? (
-    <img className={cls} src={src} alt="" />
+  const [broken, setBroken] = useState(false);
+  return src && !broken ? (
+    <img className={cls} src={src} alt="" decoding="async" onError={() => setBroken(true)} />
   ) : (
     <span className={cls} aria-hidden="true">
       {initialsOf(name)}

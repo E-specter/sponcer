@@ -30,6 +30,8 @@ const card = (over: Partial<ProfileCard> = {}): ProfileCard => ({
   sector: null,
   minServicePricePen: PRICE,
   budgetMaxPen: null,
+  bio: null,
+  bioSource: null,
   ...over,
 });
 

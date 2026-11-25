@@ -13,6 +13,14 @@ const LEADING_AT = /^@/;
 // Probar: https://regex101.com/?regex=%5E%5Ba-z0-9._%5D%7B1%2C30%7D%24&testString=sofi.cocina_demo&flavor=javascript
 export const IG_HANDLE_REGEX = /^[a-z0-9._]{1,30}$/;
 
+// Ruta local servida por el frontend (imágenes de perfiles ficticios). Acepta "/fixtures/profiles/sofi.moda.demo.webp";
+// rechaza "fixtures/x.webp" (sin "/" inicial), "//cdn.com/x.webp" (protocolo relativo) y "/a/../b" (segmento "..").
+// Probar: https://regex101.com/?regex=%5E%5C%2F(%3F!%5C%2F)(%3F!.*%5C.%5C.)%5B%5Cw.%5C%2F-%5D%2B%24&testString=%2Ffixtures%2Fprofiles%2Fsofi.moda.demo.webp&flavor=javascript
+const ROOT_RELATIVE_PATH = /^\/(?!\/)(?!.*\.\.)[\w./-]+$/;
+
+/** Imagen de perfil: URL absoluta (Storage) o ruta local del frontend (fixtures). */
+export const ImageUrl = z.union([z.url(), z.string().regex(ROOT_RELATIVE_PATH)]);
+
 export const IsoDate = z.iso.datetime({ offset: true });
 
 /** Handle de Instagram normalizado: minúsculas, sin "@". */
