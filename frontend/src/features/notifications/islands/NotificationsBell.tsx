@@ -3,20 +3,10 @@ import { Bell } from 'lucide-react';
 import type { Notification } from '@sponcer/contracts';
 import { formatDate } from '../../../lib/labels';
 import { listNotifications, markRead } from '../api/notifications';
+import { KIND_TEXT, hrefFor } from '../notification-text';
 import { subscribeNotifications } from '../api/realtime';
 
 const ICON_SIZE = 18;
-
-const KIND_TEXT: Record<Notification['kind'], string> = {
-  match_created: 'Tienes un nuevo match',
-  quote_status_changed: 'Una cotización cambió de estado',
-  message_received: 'Tienes un mensaje nuevo',
-};
-
-function hrefFor(n: Notification): string {
-  if (n.kind === 'quote_status_changed') return '/panel/cotizaciones';
-  return n.payload.matchId ? `/mensajes/${n.payload.matchId}` : '/panel/matches';
-}
 
 /** Campana de notificaciones; las nuevas llegan por Supabase Realtime (solo lectura). */
 export default function NotificationsBell() {

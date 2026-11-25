@@ -35,8 +35,12 @@ export function ProfileCard(p: ProfileCardProps) {
         aria-labelledby={headingId}
       >
         <div className="pcard-head">
-          <div className="pcard-media" aria-hidden="true">
-            {p.imageUrl ? <img src={p.imageUrl} alt="" loading="lazy" /> : initialsOf(p.name)}
+          <div className={`pcard-media ${p.imageUrl ? '' : 'pcard-media-ph'}`} aria-hidden="true">
+            {p.imageUrl ? (
+              <img src={p.imageUrl} alt="" loading="lazy" />
+            ) : (
+              <span className="pcard-initials">{initialsOf(p.name)}</span>
+            )}
           </div>
           <div>
             <h3 id={headingId} className="pcard-name">

@@ -6,7 +6,7 @@ import { Notice } from '../../../components/ui/Notice';
 import { EmptyState, ErrorState, Skeleton } from '../../../components/ui/States';
 import { NICHE_LABEL } from '../../../lib/labels';
 import { messageOf } from '../../../components/ui/errors';
-import { activeProfileId, resolveActive } from '../../../lib/state/active-profile';
+import { useActiveProfile } from '../../../lib/state/use-active-profile';
 import { interact, loadFeed } from '../api/feed';
 import FeedCard from './FeedCard';
 import { EMPTY_FILTERS, filters, searchQuery } from './filters.store';
@@ -20,7 +20,7 @@ interface Notice {
 export default function Feed({ profiles }: { profiles: ProfileSummary[] }) {
   const f = useStore(filters);
   const query = useStore(searchQuery).trim().toLowerCase();
-  const active = resolveActive(profiles, useStore(activeProfileId));
+  const { active, ready } = useActiveProfile(profiles);
   const [items, setItems] = useState<FeedItem[]>([]);
   const [next, setNext] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -29,7 +29,7 @@ export default function Feed({ profiles }: { profiles: ProfileSummary[] }) {
   const [reloads, setReloads] = useState(0);
   const [loadError, setLoadError] = useState<string | null>(null);
 
-  const activeId = active?.id;
+  const activeId = ready ? active?.id : undefined;
   useEffect(() => {
     if (!activeId) return;
     let cancelled = false;

@@ -64,8 +64,8 @@ try {
           )}
         </header>
 
-        <div class="grid">
-          <IngestedCard ingested={profile.ingested} />
+        <div class="grid profile-sources">
+          <IngestedCard ingested={profile.ingested} handle={profile.handle} />
           <DeclaredCard declared={profile.declared} />
         </div>
 

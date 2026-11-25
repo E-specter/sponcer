@@ -6,7 +6,7 @@ import { Chip } from '../../../components/ui/Chip';
 import { Field } from '../../../components/ui/Field';
 import { SearchField } from '../../../components/ui/SearchField';
 import { NICHE_LABEL, TIER_LABEL } from '../../../lib/labels';
-import { activeProfileId, resolveActive } from '../../../lib/state/active-profile';
+import { useActiveProfile } from '../../../lib/state/use-active-profile';
 import { EMPTY_FILTERS, filters, searchQuery } from './filters.store';
 
 const ICON_SIZE = 18;
@@ -18,7 +18,7 @@ const toggle = <T extends string>(list: T[], value: T): T[] =>
 export default function FilterPanel({ profiles }: { profiles: ProfileSummary[] }) {
   const f = useStore(filters);
   const query = useStore(searchQuery);
-  const active = resolveActive(profiles, useStore(activeProfileId));
+  const { active } = useActiveProfile(profiles);
   const [advanced, setAdvanced] = useState(false);
 
   return (

@@ -1,10 +1,6 @@
-import { useStore } from '@nanostores/react';
 import type { ProfileSummary } from '@sponcer/contracts';
-import {
-  activeProfileId,
-  resolveActive,
-  setActiveProfile,
-} from '../../../lib/state/active-profile';
+import { setActiveProfile } from '../../../lib/state/active-profile';
+import { useActiveProfile } from '../../../lib/state/use-active-profile';
 
 interface Props {
   profiles: ProfileSummary[];
@@ -12,8 +8,7 @@ interface Props {
 
 /** Selector de perfil activo; solo aparece si el usuario tiene más de uno. */
 export default function ProfileSwitcher({ profiles }: Props) {
-  const stored = useStore(activeProfileId);
-  const active = resolveActive(profiles, stored);
+  const { active } = useActiveProfile(profiles);
   if (profiles.length <= 1) return null;
   return (
     <div className="row">

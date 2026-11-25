@@ -8,6 +8,7 @@ import { Logo } from '../components/ui/Logo';
 import { Tabs } from '../components/ui/Tabs';
 import { Tag } from '../components/ui/Tag';
 import ProfileSwitcher from '../features/profiles/islands/ProfileSwitcher';
+import SideNiches from '../features/profiles/islands/SideNiches';
 import ContextPanel from '../features/profiles/islands/ContextPanel';
 import NotificationsBell from '../features/notifications/islands/NotificationsBell';
 
@@ -89,6 +90,7 @@ const bottomLinks = [
           ))
         }
       </ul>
+      <SideNiches client:idle />
       <p class="side-nav-note">
         <strong>Sin ranking de popularidad.</strong>
         Aquí cuentan los puntos en común, no los seguidores.

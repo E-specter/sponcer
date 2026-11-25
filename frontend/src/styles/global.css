@@ -1359,3 +1359,123 @@ details > summary {
 .card h1 {
   font-size: var(--text-titulo);
 }
+
+/* ---------- ajustes F5 ---------- */
+.display-break {
+  max-inline-size: 13.2ch;
+}
+.chip-active {
+  background: var(--color-seleccion);
+  border-color: var(--color-violeta);
+  color: var(--color-violeta);
+  font-weight: 600;
+}
+/* Sin retrato en los fixtures: iniciales en un círculo de 64 px sobre fondo neutro. */
+.pcard-media-ph {
+  background: var(--color-neutro-suave);
+}
+.pcard-initials {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--color-tinta);
+  color: var(--color-blanco);
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+@container (min-width: 340px) {
+  .pcard-media-ph {
+    height: 96px;
+  }
+}
+.pcard-actions > .btn:first-child {
+  flex: 1 1 8rem;
+}
+.pcard-dismiss {
+  display: inline-grid;
+  place-items: center;
+  width: var(--control-h);
+  height: var(--control-h);
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: var(--color-texto-secundario);
+  cursor: pointer;
+}
+.pcard-dismiss:hover {
+  background: var(--color-neutro-suave);
+  color: var(--color-tinta);
+}
+.pcard-dismiss[disabled] {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+.pcard-quote {
+  flex: 1 1 100%;
+}
+.side-niches {
+  display: grid;
+  gap: var(--space-0-5);
+  margin-top: var(--space-1-5);
+}
+.side-niches .side-nav-title,
+.side-niches p {
+  margin: 0;
+}
+.news {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-1);
+}
+.news li {
+  display: grid;
+  gap: var(--space-0-5);
+  font-size: var(--text-control);
+}
+.card h2 {
+  font-size: var(--text-subtitulo);
+}
+.profile-sources .card {
+  padding: var(--space-1) var(--space-1-5);
+}
+.profile-sources .card h2 {
+  font-size: 1.125rem;
+}
+.ink-link-light {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: var(--text-nota);
+  font-weight: 600;
+  color: var(--color-violeta);
+}
+
+/* ---------- sin scroll horizontal en móvil ---------- */
+.header-account {
+  min-width: 0;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+.header-account select {
+  max-width: 9rem;
+  text-overflow: ellipsis;
+}
+@media (max-width: 600px) {
+  .header-account {
+    gap: 0.25rem;
+  }
+  .header-account .avatar {
+    display: none;
+  }
+  .site-header nav {
+    display: none;
+  }
+  .site-header-inner > .btn {
+    margin-left: auto;
+  }
+}

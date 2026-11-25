@@ -1,3 +1,4 @@
+import { X } from 'lucide-react';
 import type { FeedItem } from '@sponcer/contracts';
 import { Chip } from '../../../components/ui/Chip';
 import { ProfileCard } from '../../../components/ui/ProfileCard';
@@ -12,6 +13,7 @@ import {
 } from '../../../lib/labels';
 
 const PERCENT = 100;
+const ICON_SIZE = 18;
 
 interface Props {
   item: FeedItem;
@@ -55,17 +57,24 @@ export default function FeedCard({ item, busy, onInterest, onDismiss, viewerIsBr
           <button type="button" className="btn" disabled={busy} onClick={onInterest}>
             Me interesa
           </button>
-          {viewerIsBrand && !isBrand && (
-            <a className="btn btn-secondary" href={`/perfil/${card.handle}#servicios`}>
-              Solicitar cotización
-            </a>
-          )}
           <a className="btn btn-text" href={`/perfil/${card.handle}`}>
             Ver perfil
           </a>
-          <button type="button" className="btn btn-text" disabled={busy} onClick={onDismiss}>
-            Descartar
+          <button
+            type="button"
+            className="pcard-dismiss"
+            disabled={busy}
+            onClick={onDismiss}
+            aria-label={`Descartar a ${card.fullName || card.handle}`}
+            title="Descartar"
+          >
+            <X size={ICON_SIZE} strokeWidth={2} aria-hidden="true" />
           </button>
+          {viewerIsBrand && !isBrand && (
+            <a className="btn btn-secondary pcard-quote" href={`/perfil/${card.handle}#servicios`}>
+              Solicitar cotización
+            </a>
+          )}
         </>
       }
     />

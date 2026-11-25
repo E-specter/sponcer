@@ -1,16 +1,19 @@
-import { useStore } from '@nanostores/react';
 import { useEffect, useState } from 'react';
 import { ExternalLink } from 'lucide-react';
-import type { ProfileDetail, ProfileSummary } from '@sponcer/contracts';
+import type { Notification, ProfileDetail, ProfileSummary } from '@sponcer/contracts';
 import { Avatar } from '../../../components/ui/Avatar';
 import { Notice } from '../../../components/ui/Notice';
 import { Skeleton } from '../../../components/ui/States';
 import { Tag } from '../../../components/ui/Tag';
 import { callBff } from '../../../lib/api/bff';
+import { listNotifications } from '../../notifications/api/notifications';
+import { KIND_TEXT, hrefFor } from '../../notifications/notification-text';
 import { NICHE_LABEL } from '../../../lib/labels';
-import { activeProfileId, resolveActive } from '../../../lib/state/active-profile';
+import { activeDetail } from '../../../lib/state/active-detail';
+import { useActiveProfile } from '../../../lib/state/use-active-profile';
 
 const ICON_SIZE = 14;
+const LATEST_NOTIFICATIONS = 3;
 
 function declaredText(d: ProfileDetail['declared']): string {
   if (!d) return 'Aún no has completado tus datos.';
@@ -23,20 +26,24 @@ function declaredText(d: ProfileDetail['declared']): string {
 
 /** Panel tinta: el perfil activo con la procedencia de cada dato, y "Tus fuentes, tu control". */
 export default function ContextPanel({ profiles }: { profiles: ProfileSummary[] }) {
-  const active = resolveActive(profiles, useStore(activeProfileId));
+  const { active, ready } = useActiveProfile(profiles);
+  const [news, setNews] = useState<Notification[]>([]);
   const [detail, setDetail] = useState<ProfileDetail | null>(null);
   const [failed, setFailed] = useState(false);
 
-  const handle = active?.handle;
+  const handle = ready ? active?.handle : undefined;
   useEffect(() => {
     if (!handle) return;
     let cancelled = false;
     setDetail(null);
+    activeDetail.set(null);
     setFailed(false);
     (async () => {
       try {
         const d = await callBff('getProfile', { params: { handle } });
-        if (!cancelled) setDetail(d);
+        if (cancelled) return;
+        setDetail(d);
+        activeDetail.set(d);
       } catch {
         if (!cancelled) setFailed(true);
       }
@@ -45,6 +52,16 @@ export default function ContextPanel({ profiles }: { profiles: ProfileSummary[] 
       cancelled = true;
     };
   }, [handle]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        setNews((await listNotifications()).items.slice(0, LATEST_NOTIFICATIONS));
+      } catch {
+        setNews([]);
+      }
+    })();
+  }, []);
 
   if (!active) {
     return (
@@ -101,6 +118,20 @@ export default function ContextPanel({ profiles }: { profiles: ProfileSummary[] 
         <Notice kind="privacidad" title="Tu información no es un atajo.">
           No accedemos a contactos, mensajes ni datos privados.
         </Notice>
+      </section>
+      <section className="card" aria-labelledby="novedades">
+        <h2 id="novedades">Novedades</h2>
+        {news.length === 0 && <p className="small muted">No tienes novedades por ahora.</p>}
+        <ul className="news">
+          {news.map((n) => (
+            <li key={n.id}>
+              <span>{KIND_TEXT[n.kind]}</span>
+              <a className="btn btn-secondary" href={hrefFor(n)}>
+                {n.kind === 'message_received' ? 'Responder' : 'Abrir'}
+              </a>
+            </li>
+          ))}
+        </ul>
       </section>
     </>
   );
