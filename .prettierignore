@@ -1,0 +1,10 @@
+node_modules
+dist
+.astro
+coverage
+playwright-report
+test-results
+package-lock.json
+contracts/openapi.json
+db/supabase/seed.sql
+docs/**/*.md

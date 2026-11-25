@@ -1,0 +1,41 @@
+{
+  "name": "sponcer",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "contracts",
+    "backend",
+    "frontend",
+    "db"
+  ],
+  "engines": {
+    "node": ">=22.23"
+  },
+  "scripts": {
+    "dev": "concurrently -n api,web -c blue,magenta \"npm run dev -w backend\" \"npm run dev -w frontend\"",
+    "build": "npm run contracts:build && npm run build -w frontend",
+    "start": "concurrently -n api,web \"npm run start -w backend\" \"npm run start -w frontend\"",
+    "contracts:build": "npm run build -w contracts",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "lint": "eslint . && prettier --check .",
+    "lint:deps": "npm run lint:deps -w backend",
+    "format": "prettier --write .",
+    "db:start": "supabase start --workdir db",
+    "db:stop": "supabase stop --workdir db",
+    "db:reset": "npm run seed:build -w db && supabase db reset --workdir db",
+    "e2e": "npm run e2e -w frontend"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^26.6.9",
+    "concurrently": "^10.0.7",
+    "eslint": "^10.15.0",
+    "prettier": "^3.10.1",
+    "supabase": "^3.4.0",
+    "tsx": "^4.23.15",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.74.0",
+    "vitest": "^5.1.1"
+  }
+}
