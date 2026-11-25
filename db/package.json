@@ -1,0 +1,15 @@
+{
+  "name": "@sponcer/db",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "seed:build": "tsx scripts/build-seed.ts",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@sponcer/contracts": "*",
+    "@supabase/supabase-js": "^2.119.2"
+  }
+}
