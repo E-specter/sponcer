@@ -15,7 +15,11 @@ export type TransitionQuote = (
   quoteId: string,
   req: TransitionQuoteRequest,
 ) => R<Quote>;
-export type ListQuotes = (userId: string, profileId: string) => R<Quote[]>;
+export type ListQuotes = (
+  userId: string,
+  profileId: string,
+  page: { cursor?: string; limit: number },
+) => R<{ items: Quote[]; nextCursor: string | null }>;
 
 /** API pública del slice (la consume notifications para resolver contrapartes). */
 export interface QuotesApi {

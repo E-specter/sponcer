@@ -97,14 +97,32 @@ describe('TransitionQuote', () => {
   });
 });
 
+const PAGE = 50;
+
 describe('ListQuotes', () => {
   it('lista las del perfil propio y rechaza perfiles ajenos', async () => {
     const { list } = setup();
     const seeded = fixtureSocial.quotes[0]!;
     const owner = fixtureProfiles.find((p) => p.id === seeded.requesterProfileId)!.ownerUserId!;
-    const mine = await list(owner, seeded.requesterProfileId);
-    expect(mine.ok && mine.value.map((q) => q.id)).toContain(seeded.id);
-    const other = await list(STRANGER, brand.id);
+    const mine = await list(owner, seeded.requesterProfileId, { limit: PAGE });
+    expect(mine.ok && mine.value.items.map((q) => q.id)).toContain(seeded.id);
+    const other = await list(STRANGER, brand.id, { limit: PAGE });
     expect(!other.ok && other.error.code).toBe('FORBIDDEN');
+  });
+
+  it('pagina con cursor, más reciente primero, sin repetir ni perder', async () => {
+    const { list } = setup();
+    const seeded = fixtureSocial.quotes[0]!;
+    const owner = fixtureProfiles.find((p) => p.id === seeded.requesterProfileId)!.ownerUserId!;
+    const all = await list(owner, seeded.requesterProfileId, { limit: PAGE });
+    const first = await list(owner, seeded.requesterProfileId, { limit: 1 });
+    expect(first.ok && first.value.items).toHaveLength(1);
+    const dates = all.ok ? all.value.items.map((q) => q.createdAt) : [];
+    expect([...dates].sort().reverse()).toEqual(dates);
+    if (all.ok && all.value.items.length > 1) {
+      expect(first.ok && first.value.nextCursor).toBe('1');
+    } else {
+      expect(first.ok && first.value.nextCursor).toBeNull();
+    }
   });
 });
