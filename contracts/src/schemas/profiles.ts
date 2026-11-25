@@ -2,6 +2,7 @@ import { z } from 'zod';
 import {
   MAX_BRAND_OBJECTIVES,
   MAX_BRAND_TARGET_NICHES,
+  MAX_CARD_BIO,
   MAX_CITY_LENGTH,
   MAX_CLASSIFIED_NICHES,
   MAX_CREATOR_NICHES,
@@ -21,7 +22,7 @@ import {
   ServiceType,
   Tier,
 } from './catalogs';
-import { Id, IgHandle, IsoDate, PricePen } from './common';
+import { Id, IgHandle, ImageUrl, IsoDate, PricePen } from './common';
 
 const ShortText = z.string().trim().max(MAX_SHORT_TEXT);
 
@@ -94,7 +95,7 @@ export const ProfileSummary = z.object({
   handle: IgHandle,
   role: ProfileRole,
   fullName: z.string(),
-  profilePicUrl: z.url().nullable(),
+  profilePicUrl: ImageUrl.nullable(),
   status: ProfileStatus,
 });
 export type ProfileSummary = z.infer<typeof ProfileSummary>;
@@ -107,6 +108,13 @@ export const ProfileCard = ProfileSummary.extend({
   sector: BrandSector.nullable(),
   minServicePricePen: PricePen.nullable(),
   budgetMaxPen: PricePen.nullable(),
+  /** Bio para la tarjeta: la declarada en Sponcer o, si no hay, la de Instagram; recortada a MAX_CARD_BIO. */
+  bio: z
+    .string()
+    .max(MAX_CARD_BIO + 1)
+    .nullable(),
+  /** Procedencia de `bio` ("la fuente acompaña al dato"). */
+  bioSource: z.enum(['declared', 'instagram']).nullable(),
 });
 export type ProfileCard = z.infer<typeof ProfileCard>;
 

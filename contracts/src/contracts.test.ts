@@ -3,6 +3,7 @@ import {
   BrandDeclared,
   CLAIM_CODE_REGEX,
   IgHandle,
+  ImageUrl,
   QUOTE_STATUSES,
   QUOTE_TRANSITIONS,
   FOLLOWERS_MICRO,
@@ -25,6 +26,13 @@ describe('contratos', () => {
   it('el código de verificación se encuentra dentro de una bio', () => {
     expect(CLAIM_CODE_REGEX.test('hola 👋 sponcer-K7M2QX gracias')).toBe(true);
     expect(CLAIM_CODE_REGEX.test('sponcer-K0M2QX')).toBe(false);
+  });
+
+  it('acepta imágenes absolutas o rutas locales seguras', () => {
+    const ok = ['/fixtures/profiles/sofi.moda.demo.webp', 'https://x.supabase.co/storage/a.webp'];
+    const bad = ['//evil.com/x.webp', 'fixtures/x.webp', '/a/../b.webp'];
+    ok.forEach((v) => expect(ImageUrl.safeParse(v).success).toBe(true));
+    bad.forEach((v) => expect(ImageUrl.safeParse(v).success).toBe(false));
   });
 
   it('calcula el tier en los bordes', () => {
