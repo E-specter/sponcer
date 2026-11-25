@@ -11,7 +11,12 @@ import {
 } from '../../../../db/tests/support/supabase';
 import { composeApp } from '../../../src/compose';
 import { loadEnv } from '../../../src/config/env';
-import { createSupabaseIdentityProvider } from '../../../src/modules/auth/infrastructure/out/supabase/supabase-adapters';
+import {
+  createSupabaseClaimStore,
+  createSupabaseIdentityProvider,
+} from '../../../src/modules/auth/infrastructure/out/supabase/supabase-adapters';
+import { createSupabaseMessageRepository } from '../../../src/modules/chat/infrastructure/out/supabase/supabase-message-repository';
+import { createSupabaseNotificationRepository } from '../../../src/modules/notifications/infrastructure/out/supabase/supabase-adapters';
 import { createEventBus } from '../../../src/shared/events/event-bus';
 import { createProfilesModule } from '../../../src/modules/profiles';
 import {
@@ -201,6 +206,16 @@ describe.skipIf(!hasSupabase)('F2-B · revisión de adaptadores reales (Supabase
       expect(await repo.findByHandle('zz.no.existe.nunca')).toBeNull();
     });
 
+    // Cambio de `unwrap` (F4): 23505 (unique) se traduce a DomainError CONFLICT en vez de un Error genérico (500).
+    it('save de un handle ya usado por otro perfil se rechaza con DomainError CONFLICT, sin pisar al existente', async () => {
+      const existing = await world.newProfile('creator');
+      const before = (await repo.findById(existing.id))!;
+      await expect(repo.save({ ...before, id: randomUUID() })).rejects.toMatchObject({
+        code: 'CONFLICT',
+      });
+      expect(await repo.findByHandle(existing.handle)).toEqual(before);
+    });
+
     // F2-M-4 (corregido en F3-FIX-2): claimProfile hace findByHandle + upsert sin condición: dos reclamos concurrentes del
     // mismo handle libre terminan ambos en "verified" y el último escribe el dueño (o uno falla con 500 si
     // el handle no existía y el unique de ig_handle salta).
@@ -218,6 +233,69 @@ describe.skipIf(!hasSupabase)('F2-B · revisión de adaptadores reales (Supabase
       ]);
       const wins = results.filter((r) => r.status === 'fulfilled' && r.value.ok);
       expect(wins).toHaveLength(1);
+    });
+  });
+
+  describe('unwrap: 23505 (unique/PK duplicada) es un DomainError CONFLICT, no un 500', () => {
+    // Los mocks sobrescriben en silencio un id repetido; el real lo rechaza (insert, no upsert).
+    it('ClaimStore.save con un id de reclamo ya existente', async () => {
+      const user = await world.newUser();
+      const store = createSupabaseClaimStore(sb);
+      const claim = {
+        id: randomUUID(),
+        userId: user.id,
+        handle: world.newHandle(),
+        role: 'creator' as const,
+        codeHash: 'ab',
+        expiresAt: new Date('2099-01-01T00:00:00Z'),
+        consumed: false,
+      };
+      await store.save(claim);
+      await expect(store.save(claim)).rejects.toMatchObject({ code: 'CONFLICT' });
+    });
+
+    it('NotificationRepository.add con un id ya existente', async () => {
+      const user = await world.newUser();
+      const repo = createSupabaseNotificationRepository(sb);
+      const n = {
+        id: randomUUID(),
+        userId: user.id,
+        kind: 'match_created' as const,
+        payload: {},
+        readAt: null,
+        createdAt: iso(),
+      };
+      await repo.add(n);
+      await expect(repo.add(n)).rejects.toMatchObject({ code: 'CONFLICT' });
+    });
+
+    it('MessageRepository.add con un id ya existente', async () => {
+      const [creator, brand] = [await world.newProfile('creator'), await world.newProfile('brand')];
+      const repo = createSupabaseMessageRepository(sb);
+      const m = {
+        id: randomUUID(),
+        matchId: await world.newMatch(creator.id, brand.id),
+        senderProfileId: creator.id,
+        body: 'hola',
+        createdAt: iso(),
+      };
+      await repo.add(m);
+      await expect(repo.add(m)).rejects.toMatchObject({ code: 'CONFLICT' });
+    });
+
+    it('un error de BD que no es de negocio (FK sin mapear) sigue siendo un Error genérico', async () => {
+      const repo = createSupabaseNotificationRepository(sb);
+      const orphan = {
+        id: randomUUID(),
+        userId: randomUUID(),
+        kind: 'match_created' as const,
+        payload: {},
+        readAt: null,
+        createdAt: iso(),
+      };
+      const error = await repo.add(orphan).catch((e: unknown) => e);
+      expect(error).toBeInstanceOf(Error);
+      expect(error).not.toMatchObject({ code: 'CONFLICT' });
     });
   });
 

@@ -92,6 +92,15 @@ export function describeProfileRepositoryContract(
       expect(await repo.findById(other.id)).toEqual(asProfile(other));
     });
 
+    // unique(ig_handle): la ingesta bajo demanda depende de este CONFLICT para resolver la carrera (RF-01).
+    it('save de un handle que ya tiene otro perfil (otro id) se rechaza con DomainError CONFLICT', async () => {
+      const repo = await factory();
+      const clash: Profile = { ...asProfile(FIXTURE), id: NEW_ID };
+      await expect(repo.save(clash)).rejects.toMatchObject({ code: 'CONFLICT' });
+      expect(await repo.findById(NEW_ID)).toBeNull();
+      expect(await repo.findByHandle(FIXTURE.snapshot.handle)).toEqual(asProfile(FIXTURE));
+    });
+
     it('los removidos siguen legibles: claimProfile los usa como lista de bloqueo y el filtro es del caso de uso', async () => {
       const repo = await factory();
       await repo.save({ ...asProfile(FIXTURE), status: 'removed' });
