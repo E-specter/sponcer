@@ -126,6 +126,26 @@ describe.skipIf(!url || !key)('matching real (Supabase local)', () => {
     expect(items.map((i) => i.score)).toEqual([...items.map((i) => i.score)].sort((a, b) => b - a));
   });
 
+  it('un candidato sin embedding aparece igual (similitud 0), como en el mock, y q lo encuentra por handle', async () => {
+    const lonely = { id: randomUUID(), handle: `it_nobed_${suffix}.demo` };
+    const ins = await db.from('profiles').insert({
+      id: lonely.id,
+      role: 'brand',
+      ig_handle: lonely.handle,
+      status: 'unclaimed', // sin dueño: si fuera del demo, el feed lo excluiría como perfil propio
+      owner_user_id: null,
+      declared: null,
+    });
+    expect(ins.error).toBeNull();
+    const res = await request(app)
+      .get('/api/v1/feed')
+      .query({ profileId: creator.id, q: lonely.handle })
+      .set(AUTH);
+    const items = FeedItem.array().parse(res.body.items);
+    expect(items.map((i) => i.card.id)).toEqual([lonely.id]);
+    expect(items[0]?.reasons).not.toContain('similarity');
+  });
+
   it('interés recíproco crea un solo match, aunque se repita', async () => {
     const send = (actor: string, target: string) =>
       request(app)

@@ -38,6 +38,7 @@ const base: ProfileCard = {
   minServicePricePen: PRICE,
   budgetMaxPen: null,
   bio: null,
+  city: null,
   bioSource: null,
 };
 const cand = (card: Partial<ProfileCard>, embedding: number[] | null): Candidate => ({

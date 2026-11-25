@@ -5,6 +5,7 @@ import { err, ok } from '../../../../../shared/result';
 import type { ClassificationApi } from '../../../../classification';
 import type { ProfilesApi } from '../../../../profiles';
 import type { CandidateSearch } from '../../../application/ports/out/candidate-search';
+import type { Candidate } from '../../../domain/candidate';
 import type { InteractionRepository } from '../../../application/ports/out/interaction-repository';
 import type { MatchRepository } from '../../../application/ports/out/match-repository';
 import {
@@ -89,47 +90,64 @@ export function createSupabaseMatchRepository(db: SupabaseClient): MatchReposito
   };
 }
 
-/** Top-K por coseno vía RPC `match_candidates`; sin embedding del viewer cae al listado sin ranking vectorial. */
+/**
+ * Top-K por coseno vía RPC `match_candidates`. Los perfiles sin embedding (recién verificados) no salen de la RPC:
+ * cuando ya no quedan candidatos vectoriales se añaden con similitud 0 y se dispara su clasificación (igual que el mock).
+ */
 export function createSupabaseCandidateSearch(deps: {
   db: SupabaseClient;
   profiles: Pick<ProfilesApi, 'getCards' | 'listCandidates'>;
-  classification: Pick<ClassificationApi, 'getEmbedding'>;
+  classification: Pick<ClassificationApi, 'getEmbedding'> &
+    Partial<Pick<ClassificationApi, 'ensureClassified'>>;
 }): CandidateSearch {
-  const withEmbedding = async (card: Awaited<ReturnType<ProfilesApi['getCards']>>[number]) => ({
-    card,
-    embedding: await deps.classification.getEmbedding(card.id),
-  });
   return {
-    async find(viewerProfileId) {
+    async find(viewerProfileId, options) {
       const [card] = await deps.profiles.getCards([viewerProfileId]);
       if (!card) return err(new DomainError('NOT_FOUND', 'Perfil no encontrado'));
-      const viewer = await withEmbedding(card);
+      const viewer = { card, embedding: await deps.classification.getEmbedding(card.id) };
+      if (!viewer.embedding) void deps.classification.ensureClassified?.(viewerProfileId);
       const role = card.role === 'creator' ? 'brand' : 'creator';
-      if (!viewer.embedding) {
-        const cards = await deps.profiles.listCandidates(role);
-        return ok({ viewer, candidates: cards.map((c) => ({ card: c, embedding: null })) });
-      }
-      const { data, error } = await deps.db.rpc('match_candidates', {
-        p_embedding: `[${viewer.embedding.join(',')}]`,
-        p_role: role,
-        p_exclude: [viewerProfileId],
-        p_limit: CANDIDATE_POOL_LIMIT,
-      });
-      if (error) {
-        logger.warn('falló match_candidates', error.message);
-        return err(new DomainError('INTERNAL_ERROR', 'Falló la búsqueda de candidatos'));
-      }
-      const rows = data as CandidateRow[];
+      const limit = options?.limit ?? CANDIDATE_POOL_LIMIT;
+      const exclude = [...new Set([viewerProfileId, ...(options?.exclude ?? [])])];
+
+      const rows = await (async (): Promise<CandidateRow[] | null> => {
+        if (!viewer.embedding) return [];
+        const { data, error } = await deps.db.rpc('match_candidates', {
+          p_embedding: `[${viewer.embedding.join(',')}]`,
+          p_role: role,
+          p_exclude: exclude,
+          p_limit: limit,
+        });
+        if (error) {
+          logger.warn('falló match_candidates', error.message);
+          return null;
+        }
+        return data as CandidateRow[];
+      })();
+      if (!rows) return err(new DomainError('INTERNAL_ERROR', 'Falló la búsqueda de candidatos'));
+
+      const exhausted = rows.length < limit;
       const similarity = new Map(rows.map((r) => [r.profile_id, r.similarity]));
-      const cards = rows.length ? await deps.profiles.getCards(rows.map((r) => r.profile_id)) : [];
-      // La similitud ya viene de pgvector: no hace falta traer los embeddings de los candidatos.
+      const vectorCards = rows.length
+        ? await deps.profiles.getCards(rows.map((r) => r.profile_id))
+        : [];
+      const candidates: Candidate[] = vectorCards.map((c) => ({
+        card: c,
+        embedding: null,
+        similarity: similarity.get(c.id),
+      }));
+      if (!exhausted) return ok({ viewer, candidates, exhausted });
+
+      const skip = new Set([...exclude, ...similarity.keys()]);
+      const unembedded = (await deps.profiles.listCandidates(role)).filter((c) => !skip.has(c.id));
+      unembedded.forEach((c) => void deps.classification.ensureClassified?.(c.id));
       return ok({
         viewer,
-        candidates: cards.map((c) => ({
-          card: c,
-          embedding: null,
-          similarity: similarity.get(c.id),
-        })),
+        candidates: [
+          ...candidates,
+          ...unembedded.map((c) => ({ card: c, embedding: null, similarity: 0 })),
+        ],
+        exhausted,
       });
     },
   };

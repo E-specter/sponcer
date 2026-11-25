@@ -120,7 +120,7 @@ describe('interacciones y matches', () => {
       .get('/api/v1/matches')
       .query({ profileId: DEMO_BRAND })
       .set(AUTH);
-    const matches = Match.array().parse(list.body);
+    const matches = Match.array().parse(list.body.items);
     expect(matches.filter((m) => m.creator.id === INTERESTED_CREATOR)).toHaveLength(1);
   });
 

@@ -19,7 +19,8 @@ export type Interact = (
   request: InteractionRequest,
 ) => Promise<Result<InteractionResult, DomainError>>;
 
+/** Más reciente primero, paginado por cursor. */
 export type ListMatches = (
   userId: string,
-  profileId: string,
-) => Promise<Result<Match[], DomainError>>;
+  query: Pick<FeedQuery, 'profileId' | 'cursor' | 'limit'>,
+) => Promise<Result<{ items: Match[]; nextCursor: string | null }, DomainError>>;
