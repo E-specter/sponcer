@@ -16,3 +16,4 @@ Formato: Contexto → Opciones → Decisión → Consecuencias. Estados: `propue
 | [004](ADR-004-monorepo-contratos.md) | npm workspaces + `contracts/` | propuesto |
 | [005](ADR-005-backend-hexagonal.md) | Hexágono por slice, DI manual, dependency-cruiser | propuesto |
 | [006](ADR-006-frontend.md) | Astro v7 SSR + islas React; Realtime de solo lectura | propuesto |
+| [007](ADR-007-demo-publica.md) | Demo accesible con túneles de Cloudflare y acceso demo | propuesto |
