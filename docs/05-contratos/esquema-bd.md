@@ -39,3 +39,9 @@ Extensiones: `vector` (pgvector), con un índice HNSW sobre `profile_embeddings.
 | `transition_quote` | `(p_quote_id uuid, p_expected_status text, p_to text, p_actor uuid, p_amount int, p_note text, p_at timestamptz default now()) returns void` | `quotes` → `QuoteRepository.save` (transiciones), concurrencia optimista: actualiza estado e importe y añade el evento (con `at = p_at`) solo si el estado actual es `p_expected_status`; si no, SQLSTATE `SP409` (conflicto) |
 
 Todas son `security invoker`, `search_path=''` y con `execute` solo para `service_role`.
+
+## Storage
+
+| Bucket | Acceso | Límites | Uso |
+|---|---|---|---|
+| `profile-images` | **público de lectura** por URL (`<SUPABASE_URL>/storage/v1/object/public/profile-images/<ruta>`); sin políticas de escritura para `anon`/`authenticated`: solo el backend sube y borra con `service_role` | 2 MB por objeto; `image/jpeg`, `image/png`, `image/webp` | Foto de perfil de las fichas (`ProfileCard.profilePicUrl`, tipo `ImageUrl`): la ingesta real copia la foto de Instagram aquí (ruta sugerida `<handle>.webp`) y se borra al retirar la ficha |
