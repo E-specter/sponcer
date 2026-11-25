@@ -34,7 +34,8 @@ ultima_actualizacion: 2026-11-25
    - `frontend/.env`: `PUBLIC_API_MODE=http`, `PUBLIC_AUTH_MODE=supabase`, `PUBLIC_SUPABASE_URL` y `PUBLIC_SUPABASE_ANON_KEY` (la misma anon key).
 3. `npm ci`
 4. BD: `npm run db:start`; en una instalación nueva, `npm run db:reset` (aplica migraciones y seed; **borra datos**).
-5. `npm run build` (compila contracts y frontend; ~7 s). Regenera `contracts/openapi.json`: no es un cambio a versionar.
+5. `npm run model:prefetch -w backend`: descarga el modelo e5 (~110 MB, una sola vez) a `backend/.cache/models` (o `MODEL_CACHE_DIR`), fuera de `node_modules`, así que `npm ci` ya no lo borra. Sale con error si falla tras 3 intentos. Con la caché presente tarda ~2 s.
+6. `npm run build` (compila contracts y frontend; ~7 s). Regenera `contracts/openapi.json`: no es un cambio a versionar.
 6. `npm run start` (o dos terminales con `npm run start -w backend` y `npm run start -w frontend`).
 7. Smoke test:
 
