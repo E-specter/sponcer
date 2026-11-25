@@ -5,6 +5,7 @@ import { createEventBus } from '../../../../shared/events/event-bus';
 import { createProfilesModule } from '../../../profiles';
 import { createMockQuoteRepository } from '../../infrastructure/out/mock/mock-adapters';
 import { makeCreateQuote } from './create-quote';
+import { encodeCursor } from '../../../../shared/cursor';
 import { makeListQuotes } from './list-quotes';
 import { makeTransitionQuote } from './transition-quote';
 
@@ -120,7 +121,7 @@ describe('ListQuotes', () => {
     const dates = all.ok ? all.value.items.map((q) => q.createdAt) : [];
     expect([...dates].sort().reverse()).toEqual(dates);
     if (all.ok && all.value.items.length > 1) {
-      expect(first.ok && first.value.nextCursor).toBe('1');
+      expect(first.ok && first.value.nextCursor).toBe(encodeCursor(1));
     } else {
       expect(first.ok && first.value.nextCursor).toBeNull();
     }

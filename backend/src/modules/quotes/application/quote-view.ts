@@ -1,7 +1,17 @@
-import type { Quote, QuoteRecord } from '@sponcer/contracts';
+import type { ProfileCard, ProfileSummary, Quote, QuoteRecord } from '@sponcer/contracts';
 import { DomainError } from '../../../shared/errors';
 import { err, ok, type Result } from '../../../shared/result';
 import type { ProfilesApi } from '../../profiles';
+
+/** Exactamente `ProfileSummary` (el contrato no lleva la tarjeta completa): no depender del recorte del esquema. */
+const toSummary = (c: ProfileCard): ProfileSummary => ({
+  id: c.id,
+  handle: c.handle,
+  role: c.role,
+  fullName: c.fullName,
+  profilePicUrl: c.profilePicUrl,
+  status: c.status,
+});
 
 /** Enriquece el registro con las dos partes y el servicio (lo que devuelve la API). */
 export async function toQuoteViews(
@@ -17,7 +27,9 @@ export async function toQuoteViews(
       cards.get(r.requesterProfileId),
       services[i]?.service,
     ];
-    return creator && requester && service ? { ...r, creator, requester, service } : null;
+    return creator && requester && service
+      ? { ...r, creator: toSummary(creator), requester: toSummary(requester), service }
+      : null;
   });
   return views.every((v) => v !== null)
     ? ok(views)
