@@ -12,6 +12,8 @@ const EXPECT_TIMEOUT_MS = 15_000;
  */
 export default defineConfig({
   testDir: 'tests/e2e',
+  // Carpeta propia: Playwright vacía `outputDir` al empezar y no debe borrar las capturas de tests/visual.
+  outputDir: 'test-results/e2e',
   fullyParallel: false,
   workers: 1,
   retries: 0,
