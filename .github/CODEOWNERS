@@ -1,0 +1,22 @@
+# Asigna revisores automáticamente. NO activar "Require review from Code Owners"
+# (ver docs/06-desarrollo/proteccion-ramas.md). La última coincidencia gana.
+
+*                                   @E-specter
+/docs/                              @E-specter
+/docs/07-pruebas/                   @MPachas17-hub
+/contracts/                         @E-specter @lnaragio14 @esteban-abanto-2709
+/.github/                           @E-specter
+
+/backend/                           @E-specter
+/backend/src/modules/ingestion/     @E-specter
+/backend/src/modules/classification/ @lnaragio14
+/backend/src/modules/matching/      @lnaragio14
+/backend/src/modules/quotes/        @MPachas17-hub
+/backend/src/modules/notifications/ @esteban-abanto-2709
+/backend/src/modules/chat/          @esteban-abanto-2709
+/backend/tests/                     @MPachas17-hub
+
+/db/                                @MPachas17-hub
+
+/frontend/                          @esteban-abanto-2709
+/frontend/tests/                    @MPachas17-hub
