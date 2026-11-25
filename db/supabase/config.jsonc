@@ -231,7 +231,7 @@
 
     "rate_limit": {
       // Number of emails that can be sent per hour. Requires auth.email.smtp to be enabled.
-      "email_sent": 2,
+      "email_sent": 30,
       // Number of SMS messages that can be sent per hour. Requires auth.sms to be enabled.
       "sms_sent": 30,
       // Number of anonymous sign-ins that can be made per hour per IP address. Requires enable_anonymous_sign_ins = true.
@@ -274,16 +274,17 @@
       // Number of seconds before the email OTP expires (defaults to 1 hour).
       "otp_expiry": 3600,
 
-      // Use a production-ready SMTP server
-      // "smtp": {
-      //   "enabled": true,
-      //   "host": "smtp.sendgrid.net",
-      //   "port": 587,
-      //   "user": "apikey",
-      //   "pass": "env(SENDGRID_API_KEY)",
-      //   "admin_email": "admin@email.com",
-      //   "sender_name": "Admin"
-      // },
+      // Correo real con Brevo (ADR-008). Apagado por defecto (Mailpit local); se enciende al arrancar con
+      // SUPABASE_AUTH_EMAIL_SMTP_ENABLED=true y SMTP_USER / SMTP_PASS / SMTP_SENDER (ver docs/08-despliegue/demo-publica.md).
+      "smtp": {
+        "enabled": false,
+        "host": "smtp-relay.brevo.com",
+        "port": 587,
+        "user": "env(SMTP_USER)",
+        "pass": "env(SMTP_PASS)",
+        "admin_email": "env(SMTP_SENDER)",
+        "sender_name": "Sponcer",
+      },
 
       // Uncomment to customize email template
       // "template": {
