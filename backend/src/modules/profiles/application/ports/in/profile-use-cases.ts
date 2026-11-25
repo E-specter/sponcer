@@ -1,6 +1,7 @@
 import type {
   Declared,
   ProfileDetail,
+  ProfileRole,
   RemovalRequestItem,
   RemovalStatus,
   ReviewRemovalRequest,
@@ -40,3 +41,9 @@ export type AdminReviewRemoval = (
   requestId: string,
   req: ReviewRemovalRequest,
 ) => R<RemovalRequestItem>;
+
+export type AdminAddProfile = (
+  adminEmail: string,
+  handle: string,
+  role: ProfileRole,
+) => R<ProfileDetail>;

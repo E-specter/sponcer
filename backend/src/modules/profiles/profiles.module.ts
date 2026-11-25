@@ -1,6 +1,8 @@
 import type { Router } from 'express';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { AdapterMode } from '../../config/env';
+import { DomainError } from '../../shared/errors';
+import { err } from '../../shared/result';
 import { createWindowLimiter } from '../../shared/rate-limit';
 import type { OnDemandIngester } from './application/ports/out/on-demand-ingester';
 import type { EventBus } from '../../shared/events/event-bus';
@@ -12,6 +14,7 @@ import {
   makeAdminListRemovals,
   makeAdminReviewRemoval,
 } from './application/use-cases/admin-removals';
+import { makeAdminAddProfile } from './application/use-cases/admin-add-profile';
 import { makeClaimProfile } from './application/use-cases/claim-profile';
 import { makeGetProfile } from './application/use-cases/get-profile';
 import { makeProfileQueries } from './application/use-cases/profile-queries';
@@ -46,8 +49,8 @@ export function createProfilesModule(deps: {
   classifications?: ClassificationReader;
   /** Requerido con `adapter: 'real'` (cliente service_role). */
   supabase?: SupabaseClient;
-  /** `env.ADMIN_EMAILS`: pueden revisar pedidos de exclusión. */
-  adminEmails?: readonly string[];
+  /** ADMIN_EMAILS ∪ admin_users: pueden revisar exclusiones y dar altas manuales. */
+  isAdmin?: (email: string) => Promise<boolean>;
   now?: () => Date;
 }): ProfilesModule {
   const now = deps.now ?? (() => new Date());
@@ -78,7 +81,17 @@ export function createProfilesModule(deps: {
       claimProfile: makeClaimProfile({ claimer: a.claimer }),
     },
     router: createProfilesRouter({
-      adminEmails: deps.adminEmails ?? [],
+      isAdmin: deps.isAdmin ?? (async () => false),
+      adminAddProfile: async (...args) =>
+        deps.ingester
+          ? makeAdminAddProfile({
+              profiles: a.profiles,
+              writer: a.profiles,
+              assembler,
+              ingester: deps.ingester,
+              bus: deps.bus,
+            })(...args)
+          : err(new DomainError('UPSTREAM_ERROR', 'La ingesta no está disponible')),
       adminListRemovals: makeAdminListRemovals({
         requests: a.removals,
         reader: a.profiles,
