@@ -6,8 +6,10 @@ interface Props {
   description?: string;
   /** Clase del body (p. ej. `ink-page` para la portada en tinta). */
   bodyClass?: string;
+  /** Páginas con datos de perfiles: no indexables (RF-01, RNF-05). */
+  noindex?: boolean;
 }
-const { title, description = 'Sponcer empareja influencers con marcas para colaboraciones más relevantes.', bodyClass } = Astro.props;
+const { title, description = 'Sponcer empareja influencers con marcas para colaboraciones más relevantes.', bodyClass, noindex = false } = Astro.props;
 ---
 
 <!doctype html>
@@ -16,6 +18,7 @@ const { title, description = 'Sponcer empareja influencers con marcas para colab
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
     <link rel="icon" href="/assets/vinculo.svg" type="image/svg+xml" />
     <title>{title} · Sponcer</title>
   </head>

@@ -8,6 +8,7 @@ interface Props {
   /** Portada: cabecera y fondo en tinta, sin contenedor de lectura (la página compone su ancho). */
   ink?: boolean;
   bare?: boolean;
+  noindex?: boolean;
 }
 const { ink = false, bare = false, ...base } = Astro.props;
 ---

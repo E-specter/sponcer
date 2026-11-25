@@ -18,9 +18,11 @@ interface Props {
   busy: boolean;
   onInterest: () => void;
   onDismiss: () => void;
+  /** Perfil activo es marca (RF-10: puede solicitar cotización a creadores). */
+  viewerIsBrand: boolean;
 }
 
-export default function FeedCard({ item, busy, onInterest, onDismiss }: Props) {
+export default function FeedCard({ item, busy, onInterest, onDismiss, viewerIsBrand }: Props) {
   const { card, reasons, score } = item;
   const isBrand = card.role === 'brand';
   const metrics = [
@@ -53,6 +55,11 @@ export default function FeedCard({ item, busy, onInterest, onDismiss }: Props) {
           <button type="button" className="btn" disabled={busy} onClick={onInterest}>
             Me interesa
           </button>
+          {viewerIsBrand && !isBrand && (
+            <a className="btn btn-secondary" href={`/perfil/${card.handle}#servicios`}>
+              Solicitar cotización
+            </a>
+          )}
           <a className="btn btn-text" href={`/perfil/${card.handle}`}>
             Ver perfil
           </a>

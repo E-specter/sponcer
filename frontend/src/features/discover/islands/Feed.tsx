@@ -160,6 +160,7 @@ export default function Feed({ profiles }: { profiles: ProfileSummary[] }) {
             key={item.card.id}
             item={item}
             busy={busyId === item.card.id}
+            viewerIsBrand={active.role === 'brand'}
             onInterest={() => act(item, 'interest')}
             onDismiss={() => act(item, 'dismiss')}
           />

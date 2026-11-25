@@ -423,11 +423,11 @@ button.chip {
   position: relative;
   cursor: pointer;
 }
-/* Área táctil de 44 px sin agrandar el chip. */
-button.chip::after {
-  content: '';
-  position: absolute;
-  inset: -6px -2px;
+/* Objetivo táctil de 44 px (2.75u) en pantallas estrechas o táctiles; 32 px en escritorio. */
+@media (pointer: coarse), (max-width: 600px) {
+  button.chip {
+    min-height: var(--control-h);
+  }
 }
 .chip[aria-pressed='true'] {
   background: var(--color-seleccion);

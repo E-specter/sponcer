@@ -7,6 +7,9 @@ import { createSupabase } from './lib/supabase';
 /** Rutas que exigen sesión; las demás (landing, login, legales, exclusión) son públicas. */
 const PROTECTED_PREFIXES = ['/descubrir', '/perfil', '/panel', '/mensajes'];
 const BFF_PREFIX = '/bff/';
+/** Rutas con datos de perfiles: nunca indexables (RF-01, RNF-05). */
+const NOINDEX_PREFIXES = [...PROTECTED_PREFIXES, '/exclusion'];
+const NOINDEX_VALUE = 'noindex, nofollow';
 
 const isProtected = (pathname: string): boolean =>
   PROTECTED_PREFIXES.some((p) => pathname === p || pathname.startsWith(`${p}/`));
@@ -42,7 +45,11 @@ export const onRequest = defineMiddleware(async (context, next) => {
   Object.assign(context.locals, session);
   if (!session.user && isProtected(context.url.pathname)) return context.redirect('/login');
   try {
-    return await next();
+    const response = await next();
+    if (NOINDEX_PREFIXES.some((p) => context.url.pathname === p || context.url.pathname.startsWith(`${p}/`))) {
+      response.headers.set('X-Robots-Tag', NOINDEX_VALUE);
+    }
+    return response;
   } catch (e) {
     // Token caducado o rechazado por la API en SSR: cerrar la sesión local y volver a /login.
     if (!(e instanceof ApiError) || e.code !== 'UNAUTHORIZED') throw e;
