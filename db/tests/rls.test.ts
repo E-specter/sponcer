@@ -18,6 +18,7 @@ import {
  * Crea usuarios y filas temporales (prefijo `zz.` / dominio `audit.test`) y los borra al terminar.
  */
 const TABLES = [
+  'admin_users',
   'creator_services',
   'ig_snapshots',
   'ingestion_blocklist',
@@ -39,6 +40,8 @@ const READABLE_BY_AUTHENTICATED: Table[] = ['notifications', 'messages'];
 const NEVER_READABLE = TABLES.filter((t) => !READABLE_BY_AUTHENTICATED.includes(t));
 
 const RLS_DENIED = '42501';
+/** Columna clave de cada tabla (todas usan `id` salvo admin_users, cuya clave es el correo). */
+const keyOf = (t: Table) => (t === 'admin_users' ? 'email' : 'id');
 const EMBEDDING_DIMS = 384;
 const SETUP_TIMEOUT_MS = 60_000;
 const NO_ROW_UUID = '00000000-0000-4000-8000-000000000000';
@@ -165,6 +168,9 @@ describe.skipIf(!hasSupabase)('RLS (Supabase local)', () => {
       .eq('user_id', userA.id)
       .single<{ id: number }>();
     ids.profile_claim_attempts = String(attempt.data!.id);
+    ids.admin_users = `rls.${tag}@audit.test`;
+    const admin = await sb.from('admin_users').insert({ email: ids.admin_users });
+    if (admin.error) throw new Error(`seed admin_users: ${admin.error.message}`);
   }, SETUP_TIMEOUT_MS);
 
   afterAll(async () => {
@@ -172,6 +178,7 @@ describe.skipIf(!hasSupabase)('RLS (Supabase local)', () => {
     await sb.from('ig_snapshots').delete().like('ig_handle', handle);
     await sb.from('ingestion_blocklist').delete().like('ig_handle', handle);
     await sb.from('profile_removal_requests').delete().like('ig_handle', handle);
+    await sb.from('admin_users').delete().like('email', `%${tag}@audit.test`);
     await world.cleanup();
   }, SETUP_TIMEOUT_MS);
 
@@ -242,6 +249,7 @@ describe.skipIf(!hasSupabase)('RLS (Supabase local)', () => {
 
   describe('escritura denegada para authenticated y anon', () => {
     const insertRows: Record<Table, () => object> = {
+      admin_users: () => ({ email: `x${uniqueTag()}@audit.test` }),
       creator_services: () => ({ profile_id: own.pa, type: 'canje', format: 'reel', price_pen: 1 }),
       ig_snapshots: () => ({
         ig_handle: `${TEST_HANDLE_PREFIX}i${uniqueTag()}`,
@@ -288,6 +296,7 @@ describe.skipIf(!hasSupabase)('RLS (Supabase local)', () => {
     };
     // Una columna inocua por tabla para probar el UPDATE.
     const touch: Record<Table, Record<string, unknown>> = {
+      admin_users: { granted_by: 'hack@audit.test' },
       creator_services: { price_pen: 1 },
       ig_snapshots: { created_at: BENIGN_DATE },
       ingestion_blocklist: { reason: 'hack' },
@@ -318,10 +327,10 @@ describe.skipIf(!hasSupabase)('RLS (Supabase local)', () => {
         const { data } = await roles[role]()
           .from(table)
           .update(touch[table])
-          .eq('id', ids[table])
+          .eq(keyOf(table), ids[table])
           .select();
         expect(data ?? []).toEqual([]);
-        const check = await sb.from(table).select('*').eq('id', ids[table]).single();
+        const check = await sb.from(table).select('*').eq(keyOf(table), ids[table]).single();
         const changed = Object.entries(touch[table]).filter(
           ([k, v]) => k !== 'attempts' && check.data?.[k] === v,
         );
@@ -329,9 +338,13 @@ describe.skipIf(!hasSupabase)('RLS (Supabase local)', () => {
       });
 
       it.each(TABLES)('DELETE en %s no borra ninguna fila', async (table) => {
-        const { data } = await roles[role]().from(table).delete().eq('id', ids[table]).select();
+        const { data } = await roles[role]()
+          .from(table)
+          .delete()
+          .eq(keyOf(table), ids[table])
+          .select();
         expect(data ?? []).toEqual([]);
-        expect(await serviceCount(table, ['id', ids[table]])).toBe(1);
+        expect(await serviceCount(table, [keyOf(table), ids[table]])).toBe(1);
       });
     });
 
