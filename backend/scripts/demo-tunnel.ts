@@ -105,7 +105,7 @@ const build = spawnSync('npm', ['run', 'build', '-w', 'frontend'], {
 if (build.status !== 0) die('falló la compilación del frontend');
 
 if ((await status(BACKEND_HEALTH)) !== HTTP_OK) {
-  run('npm', ['run', 'start', '-w', 'backend']);
+  run('npm', ['run', 'start', '-w', 'backend'], { APP_URL: frontendUrl }); // destino de los enlaces de invitación
   if ((await waitFor(BACKEND_HEALTH, HTTP_OK, SERVER_TIMEOUT_MS)) !== HTTP_OK)
     die('el backend no arrancó');
 }

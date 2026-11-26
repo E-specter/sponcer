@@ -29,6 +29,7 @@ Desde el sprint de F1 a F3, el agente leader en la sesión de Eduard hace commit
 
 - **Autoría:** cada commit lleva `--author` del responsable del área (ver [responsables](../09-equipo/responsables.md)). El committer es Eduard. Los commits y los PR **no** llevan atribución de herramientas de IA.
 - **Commits:** atómicos por tarea y área. Se verifican antes del push con la suite equivalente al CI en un clon limpio.
+- **Desde el 2026-11-25 `main` y `develop` están protegidas:** cada tarea o fase va en una rama `<tipo>/<area>-<descripcion>` que sale de `develop` y vuelve por PR con el CI en verde (sin aprobación obligatoria). Las releases son PR de `develop` a `main`.
 - **Prohibido igual que antes:** force-push, reescritura de historia (`rebase`, `reset`) y borrado de ramas remotas.
 - **Permisos:** Eduard habilita `add`, `commit`, `switch` y `push` en su `.claude/settings.json` local. La plantilla [claude-settings.example.json](claude-settings.example.json) se mantiene estricta para el resto del equipo, cuyos agentes no escriben en git.
 

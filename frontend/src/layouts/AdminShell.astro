@@ -1,0 +1,74 @@
+---
+import App from './App.astro';
+import { getMe } from '../lib/session';
+
+interface Props {
+  section: 'exclusiones' | 'perfiles' | 'invitaciones' | 'administradores';
+  title: string;
+  lead: string;
+}
+
+const SECTIONS = [
+  { id: 'exclusiones', label: 'Exclusiones' },
+  { id: 'perfiles', label: 'Perfiles' },
+  { id: 'invitaciones', label: 'Invitaciones' },
+  { id: 'administradores', label: 'Administradores' },
+] as const;
+
+const { section, title, lead } = Astro.props;
+const me = await getMe(Astro.locals);
+// Quien no es administrador ve un 404: no se revela que el panel existe.
+if (!me.isAdmin) Astro.response.status = 404;
+---
+
+<App title={me.isAdmin ? title : 'No encontrado'}>
+  {
+    me.isAdmin ? (
+      <>
+        <header class="page-head">
+          <p class="eyebrow">Administración / {section}</p>
+          <h1>{title}</h1>
+          <p class="lead">{lead}</p>
+        </header>
+        <nav class="admin-nav" aria-label="Secciones de administración">
+          {SECTIONS.map((s) => (
+            <a href={`/admin/${s.id}`} aria-current={s.id === section ? 'page' : undefined}>
+              {s.label}
+            </a>
+          ))}
+        </nav>
+        <slot />
+      </>
+    ) : (
+      <section class="card">
+        <h1>Página no encontrada</h1>
+        <p>No existe o no tienes acceso.</p>
+        <a class="btn" href="/descubrir">Volver a descubrir</a>
+      </section>
+    )
+  }
+</App>
+
+<style>
+  .admin-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-block: 1rem;
+  }
+  .admin-nav a {
+    padding: 0.5rem 0.875rem;
+    border-radius: 999px;
+    border: 1px solid var(--border, #d9d9e3);
+    text-decoration: none;
+    color: inherit;
+    min-height: 2.75rem;
+    display: inline-flex;
+    align-items: center;
+  }
+  .admin-nav a[aria-current='page'] {
+    font-weight: 600;
+    color: var(--violet-600, #6d28d9);
+    border-color: currentColor;
+  }
+</style>

@@ -1,0 +1,12 @@
+---
+import AdminShell from '../../layouts/AdminShell.astro';
+import AdminProfiles from '../../features/admin/islands/AdminProfiles';
+---
+
+<AdminShell
+  section="perfiles"
+  title="Agregar perfiles"
+  lead="Crea una ficha previa a partir de un @handle de una cuenta pública profesional."
+>
+  <AdminProfiles client:load />
+</AdminShell>

@@ -20,6 +20,8 @@ const EnvSchema = z
   .object({
     PORT: z.coerce.number().int().positive().default(DEFAULT_PORT),
     NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
+    // Origen público del frontend (destino de los enlaces de invitación); por defecto el local.
+    APP_URL: z.url().default('http://localhost:4321'),
     CORS_ORIGIN: z.string().default('http://localhost:4321'),
     SUPABASE_URL: Optional,
     SUPABASE_SERVICE_ROLE_KEY: Optional,

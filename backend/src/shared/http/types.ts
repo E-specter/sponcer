@@ -2,4 +2,6 @@
 export interface AuthUser {
   userId: string;
   email: string;
+  /** `false` si el correo no está verificado; ausente = sin dato (mock). */
+  emailConfirmed?: boolean;
 }

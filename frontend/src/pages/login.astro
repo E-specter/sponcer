@@ -21,6 +21,11 @@ if (Astro.url.searchParams.has('expired')) {
   message = 'Tu sesión expiró. Ingresa de nuevo.';
 }
 
+if (Astro.url.searchParams.get('error') === 'enlace') {
+  failed = true;
+  message = 'El enlace no es válido o caducó. Pide uno nuevo.';
+}
+
 if (Astro.request.method === 'POST' && PUBLIC_AUTH_MODE === 'supabase') {
   const email = String((await Astro.request.formData()).get('email') ?? '').trim();
   if (!email) {

@@ -1,0 +1,12 @@
+---
+import AdminShell from '../../layouts/AdminShell.astro';
+import AdminInvitations from '../../features/admin/islands/AdminInvitations';
+---
+
+<AdminShell
+  section="invitaciones"
+  title="Invitar por correo"
+  lead="Envía un enlace de acceso a una persona para que entre a Sponcer."
+>
+  <AdminInvitations client:load />
+</AdminShell>
