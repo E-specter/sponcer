@@ -85,10 +85,8 @@ test.describe('F6 · quien no es administrador', () => {
     expect(await adminRowCount(victim)).toBe(0);
   });
 
-  // DEFECTO F6-M1: AdminShell fija `Astro.response.status = 404` dentro de un layout, cuando la respuesta ya empezó a
-  // enviarse: el no-admin ve el texto "no encontrado" pero con HTTP 200 (e2e-12 de F5 exigía 404). `test.fail` se
-  // invierte al corregirlo (fijar el estado en la página, antes de renderizar el layout).
-  test.fail('un usuario normal recibe HTTP 404 (no 200) en /admin/*', async ({ page, context }) => {
+  // F6-M1 (corregido): el middleware responde 404 real a quien no es administrador en /admin/*.
+  test('un usuario normal recibe HTTP 404 (no 200) en /admin/*', async ({ page, context }) => {
     await loginAs(context, await world.newUser());
     await inSeries(SECTIONS, async (section) => {
       const response = await page.goto(`/admin/${section}`);
@@ -213,40 +211,66 @@ test.describe('F6 · panel de administración', () => {
     await expect(page.getByText(`Invitación enviada a ${fresh}.`)).toBeVisible();
     const link = await magicLinkFor(fresh);
     expect(new URL(link).searchParams.get('type')).toBe('invite');
-    expect(new URL(link).searchParams.get('redirect_to')?.endsWith('/auth/callback')).toBe(true);
+    expect(new URL(link).pathname).toBe('/auth/callback');
 
     const existing = await world.newUser();
     await page.getByLabel('Correo electrónico').fill(existing.email);
     await page.getByRole('button', { name: 'Enviar invitación' }).click();
     await expect(page.getByText(`${existing.email} ya tiene cuenta`)).toBeVisible();
     const access = await magicLinkFor(existing.email);
-    expect(new URL(access).searchParams.get('redirect_to')?.endsWith('/auth/callback')).toBe(true);
+    expect(new URL(access).pathname).toBe('/auth/callback');
+    expect(new URL(access).searchParams.get('type')).toBe('email');
 
     await page.getByLabel('Correo electrónico').fill('esto-no-es-un-correo');
     await page.getByRole('button', { name: 'Enviar invitación' }).click();
     await expect(page.getByText('Escribe un correo válido.')).toBeVisible();
   });
 
-  // DEFECTO F6-A2: el enlace de invitación (y el de acceso a un correo ya registrado) usa el flujo implícito de
-  // Supabase: vuelve a /auth/callback#access_token=... (fragmento), pero el callback solo canjea `?code=` (PKCE) y
-  // manda a /login. La persona invitada NO queda con sesión. `test.fail` se invierte cuando se corrija.
-  test.fail(
-    'la persona invitada que sigue el enlace del correo queda con sesión en /descubrir',
-    async ({ page, context }) => {
-      const { user: adminUser, recognized } = await newAdmin(world);
-      test.skip(!recognized, `El backend no tiene ${E2E_ADMIN_EMAIL} en ADMIN_EMAILS`);
-      const token = (await sessionFor(adminUser)).accessToken;
-      const fresh = `e2e-acepta-${uniqueTag()}@${E2E_EMAIL_DOMAIN}`;
-      world.trackEmail(fresh);
-      const sent = await apiAs(token).call('POST', '/api/v1/admin/invitations', { email: fresh });
-      expect(sent.status).toBe(HTTP_OK);
-      // El navegador de la persona invitada: contexto limpio, sin sesión.
-      await context.clearCookies();
-      await forwardConfiguredOrigin(context);
-      await page.goto(await magicLinkFor(fresh));
-      await expect(page).toHaveURL(`${BASE_URL}/descubrir`, { timeout: MAIL_RECEIVED_TIMEOUT_MS });
-    },
-  );
+  // F6-A2 (corregido): las plantillas del correo apuntan a /auth/callback?token_hash=...&type=... y el callback usa verifyOtp.
+  test('la persona invitada que sigue el enlace del correo queda con sesión en /descubrir', async ({
+    page,
+    context,
+  }) => {
+    const { user: adminUser, recognized } = await newAdmin(world);
+    test.skip(!recognized, `El backend no tiene ${E2E_ADMIN_EMAIL} en ADMIN_EMAILS`);
+    const token = (await sessionFor(adminUser)).accessToken;
+    const fresh = `e2e-acepta-${uniqueTag()}@${E2E_EMAIL_DOMAIN}`;
+    world.trackEmail(fresh);
+    const sent = await apiAs(token).call('POST', '/api/v1/admin/invitations', { email: fresh });
+    expect(sent.status).toBe(HTTP_OK);
+    // El navegador de la persona invitada: contexto limpio, sin sesión.
+    await context.clearCookies();
+    await forwardConfiguredOrigin(context);
+    const link = await magicLinkFor(fresh);
+    await page.goto(link);
+    await expect(page).toHaveURL(`${BASE_URL}/descubrir`, { timeout: MAIL_RECEIVED_TIMEOUT_MS });
+    const cookie = (await context.cookies()).find((c) => c.name.endsWith('-auth-token'));
+    expect(cookie?.httpOnly).toBe(true);
+    await page.goto('/panel');
+    await expect(page.getByText(`Sesión: ${fresh}`)).toBeVisible();
+    // El enlace es de un solo uso: repetirlo (otra persona o un escáner) no abre otra sesión.
+    await context.clearCookies();
+    const again = await context.request.get(link, { maxRedirects: 0 });
+    expect(again.status()).toBe(HTTP_FOUND);
+    expect(again.headers().location).toBe('/login?error=enlace');
+  });
+
+  test('un usuario existente entra con el enlace mágico del login (plantilla magic_link)', async ({
+    page,
+    context,
+  }) => {
+    const user = await world.newUser();
+    await page.goto('/login');
+    await page.getByLabel('Correo electrónico').fill(user.email);
+    await page.getByRole('button', { name: 'Enviarme el enlace' }).click();
+    await expect(page.getByRole('status')).toContainText('Revisa tu correo');
+    const link = await magicLinkFor(user.email);
+    expect(new URL(link).pathname).toBe('/auth/callback');
+    expect(new URL(link).searchParams.get('type')).toBe('email');
+    await page.goto(link);
+    await expect(page).toHaveURL(`${BASE_URL}/descubrir`);
+    expect((await context.cookies()).some((c) => c.name.endsWith('-auth-token'))).toBe(true);
+  });
 
   test('alta por @handle: crea la ficha previa, rechaza duplicados y respeta exclusiones y cuentas no profesionales', async ({
     page,

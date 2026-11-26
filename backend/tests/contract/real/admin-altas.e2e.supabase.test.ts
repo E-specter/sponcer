@@ -30,6 +30,7 @@ const MAILPIT = process.env.E2E_MAILPIT_URL ?? 'http://127.0.0.1:55524';
 const MAIL_TRIES = 60;
 const POLL_MS = 250;
 const BURST = 12;
+const INVITES_PER_HOUR = 20;
 const USERS_PAGE = 1000;
 const APP_URL = 'https://audit-f6.trycloudflare.com/';
 const PASSWORD = 'Audit-test-Passw0rd!';
@@ -281,10 +282,37 @@ describe.skipIf(!hasSupabase)('F6 · altas manuales y administradores (Supabase 
       const victim = emailOf('sinregistrar');
       await post(admin.jwt, api.adminGrantAdmin.path, { email: victim });
       const signup = await anonClient().auth.signUp({ email: victim, password: PASSWORD });
-      const jwt = signup.data.session?.access_token;
-      // Con el signup cerrado o con confirmación, no hay sesión: el test también pasa por ahí.
-      if (!jwt) return;
-      expect(await me(jwt)).toBe(false);
+      // enable_confirmations=true: el registro público no devuelve sesión hasta que el dueño abra su correo.
+      expect(signup.error).toBeNull();
+      expect(signup.data.session).toBeNull();
+      const login = await anonClient().auth.signInWithPassword({
+        email: victim,
+        password: PASSWORD,
+      });
+      expect(login.data.session).toBeNull();
+      expect(login.error?.code).toBe('email_not_confirmed');
+    });
+  });
+
+  describe('límite de invitaciones por administrador (F6-M3)', () => {
+    it('la invitación 21 de una hora de un administrador da 429 RATE_LIMITED y otro administrador no se ve afectado', async () => {
+      const named = await newActor();
+      await post(admin.jwt, api.adminGrantAdmin.path, { email: named.user.email });
+      const sent = await Array.from({ length: INVITES_PER_HOUR }, (_, i) => i).reduce<
+        Promise<number[]>
+      >(
+        async (acc, i) => [
+          ...(await acc),
+          (await post(named.jwt, api.adminInviteUser.path, { email: emailOf(`lim${i}`) })).status,
+        ],
+        Promise.resolve([]),
+      );
+      expect(sent).toEqual(sent.map(() => STATUS.OK));
+      const over = await post(named.jwt, api.adminInviteUser.path, { email: emailOf('lim-extra') });
+      expect([over.status, over.body.error.code]).toEqual([STATUS.TOO_MANY, 'RATE_LIMITED']);
+      expect(await authUsersFor(emailOf('lim-extra'))).toEqual([]);
+      const other = await post(admin.jwt, api.adminInviteUser.path, { email: emailOf('otro') });
+      expect(other.status).toBe(STATUS.OK);
     });
   });
 

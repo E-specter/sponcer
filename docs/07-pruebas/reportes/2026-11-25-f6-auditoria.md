@@ -1,6 +1,6 @@
 ---
 responsable: audit
-estado: observaciones
+estado: aprobado con observaciones menores
 ultima_actualizacion: 2026-11-25
 ---
 
@@ -87,3 +87,28 @@ Resultados: backend `unit` 57 archivos / 729 tests pasan; `real-db` pasan (mi ar
 ## Incidente durante la auditoría
 
 Compilé el frontend dos veces sobre `frontend/dist`, que en ese momento servía la demo pública en :4321 (túneles de Cloudflare activos). Restauré el build con las mismas variables que usa `demo:tunnel` (URLs de los túneles obtenidas de `/quicktunnel`, `PUBLIC_DEMO_LOGIN=true`); el hash del CSS que sirve el proceso en marcha vuelve a existir y `/login` responde 200 por el túnel. Si algo se ve raro en la demo, basta con repetir `npm run demo:tunnel`. Detuve los procesos que arranqué (:3100, :4421, :4521).
+
+## Re-verificación (tras las correcciones A1, A2, M1 y M3)
+
+Veredicto: **APROBADO**; quedan solo los hallazgos bajos. Probado sobre el árbol de trabajo con el stack local reiniciado con las plantillas (Mailpit). Backend en :3100 (`APP_URL=http://localhost:4421`) y frontend compilado en `frontend/dist-audit` (otra `outDir`, borrada al terminar) en :4421; **no toqué `frontend/dist`** (la demo en :4321 sigue respondiendo 200).
+
+| Hallazgo | Estado | Evidencia |
+|---|---|---|
+| A1 signUp público usurpa admin | **Resuelto** | `GOTRUE_MAILER_AUTOCONFIRM=false`. `signUp` con un correo nombrado admin: sin sesión (`session` nulo) y `signInWithPassword` da `email_not_confirmed`. El test ya no es `it.fails` (ahora afirma que no hay sesión) |
+| A2 invitación sin sesión | **Resuelto** | El correo trae `/auth/callback?token_hash=…&type=invite` (o `type=email` en el enlace de acceso); abrirlo deja sesión (cookie httpOnly) en `/descubrir` y `/panel` muestra el correo. El enlace es de un solo uso (repetirlo da 302 a `/login?error=enlace`) |
+| M1 404 en `/admin/*` | **Resuelto** | `e2e-12` verde y `e2e-15` ya sin `test.fail`, en los 3 navegadores |
+| M3 límite de invitaciones | **Resuelto** | La invitación 21 de una hora de un mismo administrador da 429 `RATE_LIMITED` sin crear usuario; otro admin no se ve afectado (real-db) |
+
+Flujos pedidos, con Supabase real y Mailpit:
+
+1. Invitar un correo ficticio desde `/admin/invitaciones` y abrir el enlace de Mailpit: queda con sesión en `/descubrir` (e2e-15).
+2. Magic link de un usuario existente desde el login del frontend: sesión (e2e-15, test nuevo). `login.astro:38` pasa `emailRedirectTo` = `/auth/callback`; sin él, la plantilla cae en `{{ .SiteURL }}/auth/callback`, así que el enlace siempre pasa por el callback.
+3. `signUp` público con correo nombrado admin: sin sesión ni `isAdmin` (real-db).
+
+Resultados: Playwright `e2e-12` + `e2e-15` en chromium, firefox y webkit: **39/39 pasan** (antes 3 rojos + 2 `test.fail`). `e2e-01` pasa con las plantillas (el helper `support/mailpit.ts` ahora reconoce también enlaces `/auth/callback?token_hash=`). Backend: `unit` 731 pasan, `real-db` 216 pasan (mi archivo 27/27), `db` (RLS) 160/160, `lint:deps` verde, `tsc`, `eslint` y `prettier --check --end-of-line auto` limpios en `backend/tests`, `db/tests`, `frontend/tests`.
+
+Notas que quedan (bajas):
+- Las bajas de la sección anterior siguen abiertas (carrera del último admin, registro de auditoría solo en stdout, reinvitar en <1 s da 502, 12 altas simultáneas con peticiones colgadas en el Supabase local, mensajes mock vs real, verificación del interruptor SMTP de Brevo).
+- Con el enlace directo `/auth/callback?token_hash=` no hay PKCE: lo abre cualquier navegador y un escáner de correo que haga GET podría consumirlo (un solo uso). Es el costo de poder invitar desde el backend; aceptable, pero conviene saberlo.
+- El contador de M3 vive en memoria del backend: se reinicia con él. Una corrida completa de `e2e-15` gasta 9 invitaciones del administrador de prueba (3 por navegador); dos corridas completas en menos de una hora sin reiniciar el backend dan 429.
+- La plantilla `invite.html` usa `RedirectTo` (= `APP_URL`): `APP_URL` debe apuntar al frontend que atiende el enlace (en E2E, `http://localhost:4421`).
