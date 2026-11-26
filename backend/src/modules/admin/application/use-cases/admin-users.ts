@@ -3,6 +3,7 @@ import { type AdminDirectory } from '../../../../shared/admin';
 import { DomainError } from '../../../../shared/errors';
 import { logger } from '../../../../shared/logger';
 import { err, ok, type Result } from '../../../../shared/result';
+import type { WindowLimiter } from '../../../../shared/rate-limit';
 import type { InvitationSender } from '../ports/out/invitation-sender';
 
 type R<T> = Promise<Result<T, DomainError>>;
@@ -16,6 +17,8 @@ export function makeAdminUsers(d: {
   admins: AdminDirectory;
   invites: InvitationSender;
   now: () => Date;
+  /** Tope de invitaciones por administrador (el correo de Supabase es un cupo global, F6-M3). */
+  inviteLimiter?: WindowLimiter;
 }) {
   const forbidden = () => err(new DomainError('FORBIDDEN', 'Solo administradores'));
   const guarded =
@@ -49,6 +52,8 @@ export function makeAdminUsers(d: {
       return ok(await d.admins.list());
     }),
     invite: guarded(async (admin, email: string): R<Invitation> => {
+      if (d.inviteLimiter && !d.inviteLimiter.tryTake(admin))
+        return err(new DomainError('RATE_LIMITED', 'Demasiadas invitaciones, prueba en una hora'));
       const status = await d.invites.invite(norm(email));
       audit(admin, 'invite-user', norm(email));
       return ok({ email: norm(email), status, invitedAt: d.now().toISOString() });

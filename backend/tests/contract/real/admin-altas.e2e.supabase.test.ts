@@ -275,20 +275,17 @@ describe.skipIf(!hasSupabase)('F6 · altas manuales y administradores (Supabase 
 
     // DEFECTO ALTO (F6-A1): el registro público de Supabase (enable_signup + enable_confirmations=false) entrega una
     // sesión con el correo YA "confirmado" sin que el dueño lo verifique. Quien conozca un correo de admin que aún no
-    // se registró (ADMIN_EMAILS o nombrado en la app) se hace administrador con `signUp`. Cuando se corrija (exigir
-    // correo verificado o cerrar el signup con contraseña) este test pasará y `it.fails` avisará para quitarlo.
-    it.fails(
-      'un correo nombrado admin pero no registrado no se puede usurpar con el registro público',
-      async () => {
-        const victim = emailOf('sinregistrar');
-        await post(admin.jwt, api.adminGrantAdmin.path, { email: victim });
-        const signup = await anonClient().auth.signUp({ email: victim, password: PASSWORD });
-        const jwt = signup.data.session?.access_token;
-        // Con el signup cerrado o con confirmación, no hay sesión: el test también pasa por ahí.
-        if (!jwt) return;
-        expect(await me(jwt)).toBe(false);
-      },
-    );
+    // se registró (ADMIN_EMAILS o nombrado en la app) se hace administrador con `signUp`. Corregido con
+    // enable_confirmations=true: el signUp ya no devuelve sesión.
+    it('un correo nombrado admin pero no registrado no se puede usurpar con el registro público', async () => {
+      const victim = emailOf('sinregistrar');
+      await post(admin.jwt, api.adminGrantAdmin.path, { email: victim });
+      const signup = await anonClient().auth.signUp({ email: victim, password: PASSWORD });
+      const jwt = signup.data.session?.access_token;
+      // Con el signup cerrado o con confirmación, no hay sesión: el test también pasa por ahí.
+      if (!jwt) return;
+      expect(await me(jwt)).toBe(false);
+    });
   });
 
   describe('RLS de admin_users desde la API pública (PostgREST)', () => {
@@ -323,7 +320,8 @@ describe.skipIf(!hasSupabase)('F6 · altas manuales y administradores (Supabase 
       expect(res.body).toMatchObject({ email, status: 'sent' });
       let body: string | null = null;
       expect(await waitFor(async () => (body = await mailTo(email)) !== null)).toBe(true);
-      expect(body).toContain('redirect_to=https://audit-f6.trycloudflare.com/auth/callback');
+      expect(body).toContain('https://audit-f6.trycloudflare.com/auth/callback?token_hash=');
+      expect(body).toContain('type=invite');
       expect(await authUsersFor(email)).toHaveLength(1);
     });
 

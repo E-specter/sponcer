@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { loadEnv } from '../config/env';
-import { isAdminEmail } from './admin';
+import { adminEmailOf, isAdminEmail } from './admin';
 
 describe('ADMIN_EMAILS', () => {
   it('se normaliza (comas, espacios, mayúsculas) y vacío por defecto', () => {
@@ -13,5 +13,13 @@ describe('ADMIN_EMAILS', () => {
 
   it('un correo inválido rompe el arranque', () => {
     expect(() => loadEnv({ ADMIN_EMAILS: 'no-es-correo' })).toThrow();
+  });
+});
+
+describe('adminEmailOf', () => {
+  it('correo sin verificar nunca llega como admin', () => {
+    expect(adminEmailOf({ email: 'a@x.pe', emailConfirmed: false })).toBe('');
+    expect(adminEmailOf({ email: 'a@x.pe', emailConfirmed: true })).toBe('a@x.pe');
+    expect(adminEmailOf({ email: 'a@x.pe' })).toBe('a@x.pe');
   });
 });

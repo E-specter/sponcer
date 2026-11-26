@@ -4,6 +4,10 @@ import type { AdminEntry } from '@sponcer/contracts';
 export const isAdminEmail = (adminEmails: readonly string[], email: string): boolean =>
   adminEmails.includes(email.trim().toLowerCase());
 
+/** Correo a usar para decidir `isAdmin`: vacío (nunca admin) si el correo no está verificado (F6-A1). */
+export const adminEmailOf = (u: { email: string; emailConfirmed?: boolean }): string =>
+  u.emailConfirmed === false ? '' : u.email;
+
 export interface AppAdmin {
   email: string;
   grantedBy: string | null;

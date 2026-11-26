@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { createAdminDirectory, createInMemoryAdminStore } from '../../../../shared/admin';
+import { createWindowLimiter } from '../../../../shared/rate-limit';
 import { makeAdminUsers } from './admin-users';
 
 const FORBIDDEN_CALLS = 4;
@@ -17,6 +18,7 @@ const setup = (env: string[]) => {
       },
     },
     now: () => NOW,
+    inviteLimiter: createWindowLimiter({ limit: 2, windowMs: 3_600_000, now: () => NOW }),
   });
   return { uc, sent, admins };
 };
@@ -75,5 +77,16 @@ describe('administradores', () => {
       invitedAt: NOW.toISOString(),
     });
     expect(sent).toEqual(['ya@x.pe']);
+  });
+});
+
+describe('límite de invitaciones', () => {
+  it('la 3.ª invitación del mismo admin es RATE_LIMITED y no envía correo', async () => {
+    const { uc, sent } = setup(['a@x.pe']);
+    await uc.invite('a@x.pe', 'n1@x.pe');
+    await uc.invite('a@x.pe', 'n2@x.pe');
+    const r = await uc.invite('a@x.pe', 'n3@x.pe');
+    expect(!r.ok && r.error.code).toBe('RATE_LIMITED');
+    expect(sent).toHaveLength(2);
   });
 });
