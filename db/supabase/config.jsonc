@@ -261,7 +261,8 @@
       // addresses. If disabled, only the new email is required to confirm.
       "double_confirm_changes": true,
       // If enabled, users need to confirm their email address before signing in.
-      "enable_confirmations": false,
+      // Obligatorio (F6-A1): sin él, un signUp público obtiene sesión con el correo "confirmado" sin el clic de su dueño.
+      "enable_confirmations": true,
       // If enabled, users will need to reauthenticate or have logged in recently to change their password.
       "secure_password_change": false,
       // If enabled, users will need to provide their current password to change their password, unless
@@ -286,13 +287,21 @@
         "sender_name": "Sponcer",
       },
 
-      // Uncomment to customize email template
-      // "template": {
-      //   "invite": {
-      //     "subject": "You have been invited",
-      //     "content_path": "./supabase/templates/invite.html"
-      //   }
-      // },
+      // Plantillas en español. El enlace apunta a /auth/callback?token_hash=...&type=... (el frontend lo canjea con verifyOtp).
+      "template": {
+        "invite": {
+          "subject": "Te invitaron a Sponcer",
+          "content_path": "./supabase/templates/invite.html",
+        },
+        "magic_link": {
+          "subject": "Tu enlace de acceso a Sponcer",
+          "content_path": "./supabase/templates/magic_link.html",
+        },
+        "confirmation": {
+          "subject": "Confirma tu correo en Sponcer",
+          "content_path": "./supabase/templates/confirmation.html",
+        },
+      },
 
       // Uncomment to customize notification email template
       // "notification": {
