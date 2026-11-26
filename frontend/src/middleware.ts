@@ -3,6 +3,7 @@ import { defineMiddleware } from 'astro:middleware';
 import { demoUser } from '@sponcer/contracts/fixtures';
 import { ApiError } from './lib/api/errors';
 import { isCrossSiteForm } from './lib/csrf';
+import { getMe } from './lib/session';
 import { createSupabase } from './lib/supabase';
 
 /** Rutas que exigen sesión; las demás (landing, login, legales, exclusión) son públicas. */
@@ -12,6 +13,7 @@ const BFF_PREFIX = '/bff/';
 const NOINDEX_PREFIXES = [...PROTECTED_PREFIXES, '/exclusion'];
 const NOINDEX_VALUE = 'noindex, nofollow';
 const HTTP_FORBIDDEN = 403;
+const HTTP_NOT_FOUND = 404;
 
 const isProtected = (pathname: string): boolean =>
   PROTECTED_PREFIXES.some((p) => pathname === p || pathname.startsWith(`${p}/`));
@@ -50,6 +52,20 @@ export const onRequest = defineMiddleware(async (context, next) => {
   Object.assign(context.locals, session);
   if (!session.user && isProtected(context.url.pathname)) return context.redirect('/login');
   try {
+    // 404 real (no 200 con texto) para quien no es admin: el layout ya no puede cambiar el estado en streaming.
+    const { pathname } = context.url;
+    if (
+      (pathname === '/admin' || pathname.startsWith('/admin/')) &&
+      !(await getMe(context.locals)).isAdmin
+    ) {
+      return new Response(
+        '<!doctype html><title>No encontrado</title><h1>Página no encontrada</h1>',
+        {
+          status: HTTP_NOT_FOUND,
+          headers: { 'content-type': 'text/html; charset=utf-8', 'X-Robots-Tag': NOINDEX_VALUE },
+        },
+      );
+    }
     const response = await next();
     if (
       NOINDEX_PREFIXES.some(
