@@ -76,6 +76,18 @@ where c.brand_profile_id = q.requester_profile_id and c.name = 'General';
 alter table public.quotes alter column campaign_id set not null;
 
 create index quotes_campaign_idx on public.quotes (campaign_id);
+-- El esquema anterior permitía varias abiertas al mismo creador: queda la más reciente, las demás se cancelan.
+with dup as (
+  select id, status, requester_profile_id from (
+    select id, status, requester_profile_id,
+      row_number() over (partition by campaign_id, creator_profile_id order by created_at desc, id desc) rn
+    from public.quotes where status in ('draft', 'sent', 'negotiating', 'accepted')
+  ) t where rn > 1
+), upd as (
+  update public.quotes q set status = 'cancelled', updated_at = now() from dup where q.id = dup.id returning q.id
+)
+insert into public.quote_events (quote_id, from_status, to_status, actor_profile_id, note)
+select id, status, 'cancelled', requester_profile_id, 'cancelada al migrar a campañas: duplicada' from dup;
 -- Una sola cotización abierta (no terminal) por creador y campaña; respaldo de la regla del backend ante carreras.
 create unique index quotes_open_per_creator_campaign_idx on public.quotes (campaign_id, creator_profile_id)
   where status in ('draft', 'sent', 'negotiating', 'accepted');
