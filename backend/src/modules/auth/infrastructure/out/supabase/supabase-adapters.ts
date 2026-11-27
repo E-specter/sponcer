@@ -89,8 +89,17 @@ export const createSupabaseAccountStore = (supabase: SupabaseClient): AccountSto
         },
       };
     const c = unwrap(
-      await supabase.from('companies').select('*').eq('owner_user_id', userId).single<CompanyRow>(),
+      await supabase
+        .from('companies')
+        .select('*')
+        .eq('owner_user_id', userId)
+        .maybeSingle<CompanyRow>(),
     );
+    if (!c) {
+      // Cuenta Empresa sin fila de companies: se degrada para no dejar a la persona fuera de la app.
+      console.error('[auth] cuenta company sin fila en companies', { userId });
+      return { accountKind: 'company', company: null, influencer: null };
+    }
     return {
       accountKind: 'company',
       influencer: null,

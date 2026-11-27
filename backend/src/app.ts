@@ -1,5 +1,11 @@
 import cors from 'cors';
-import express, { Router, type ErrorRequestHandler, type RequestHandler } from 'express';
+import express, {
+  Router,
+  type ErrorRequestHandler,
+  type Request,
+  type RequestHandler,
+  type Response,
+} from 'express';
 import { rateLimit } from 'express-rate-limit';
 import { api, type ErrorBody } from '@sponcer/contracts';
 import type { Env } from './config/env';
@@ -24,13 +30,19 @@ const MINUTE_MS = 60_000;
 const HOUR_MS = 60 * MINUTE_MS;
 const CLAIM_LIMIT_PER_MINUTE = 30;
 const REMOVAL_LIMIT_PER_HOUR = 20;
+const REGISTER_LIMIT_PER_HOUR = 5;
 
 /** Rate limit por IP en endpoints públicos o caros. Cada `createApp` crea contadores propios. */
 // shortcut: tras un proxy hay que configurar `trust proxy`, si no todos comparten IP; al desplegar.
-const limiter = (windowMs: number, limit: number): RequestHandler =>
+const limiter = (
+  windowMs: number,
+  limit: number,
+  keyGenerator?: (req: Request, res: Response) => string,
+): RequestHandler =>
   rateLimit({
     windowMs,
     limit,
+    ...(keyGenerator && { keyGenerator }),
     standardHeaders: 'draft-7',
     legacyHeaders: false,
     handler: (_req, res) =>
@@ -63,6 +75,14 @@ export function createApp(deps: AppDeps) {
   app.post(api.startClaim.path, limiter(MINUTE_MS, CLAIM_LIMIT_PER_MINUTE));
   app.post(api.verifyClaim.path, limiter(MINUTE_MS, CLAIM_LIMIT_PER_MINUTE));
   app.post(api.requestRemoval.path, limiter(HOUR_MS, REMOVAL_LIMIT_PER_HOUR));
+  app.post(
+    api.register.path,
+    limiter(
+      HOUR_MS,
+      REGISTER_LIMIT_PER_HOUR,
+      (_req, res) => (res.locals.user as { userId: string } | undefined)?.userId ?? 'anon',
+    ),
+  );
   app.use(health, ...deps.routers);
   app.use(notFound);
   app.use(onError);
