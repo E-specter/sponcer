@@ -366,47 +366,36 @@ describe.skipIf(!hasSupabase)('F7 · empresas, campañas y visibilidad (Supabase
 
     // F7-M1: /registration no tiene límite de peticiones. Con un solo usuario (sin registrar) se prueban DNI/RUC
     // indefinidamente: 409 `document_taken` revela que ese DNI ya es de una empresa. El DNI es dato personal.
-    it.fails(
-      'F7-M1 · /registration limita los intentos (hoy 60 intentos seguidos con 409 y sin 429)',
-      async () => {
-        const victim = await newActor();
-        const dni = dniOf();
-        taken.push(dni);
-        await register(victim, companyBody(dni, { personType: 'natural', documentType: 'dni' }));
-        const prober = await newActor();
-        const statuses: number[] = [];
-        for (let i = 0; i < 60; i += 1)
-          statuses.push(
-            (
-              await register(
-                prober,
-                companyBody(dni, { personType: 'natural', documentType: 'dni' }),
-              )
-            ).status,
-          );
-        expect(statuses).toContain(STATUS.TOO_MANY);
-      },
-      60_000,
-    );
+    it('F7-M1 · /registration limita los intentos (hoy 60 intentos seguidos con 409 y sin 429)', async () => {
+      const victim = await newActor();
+      const dni = dniOf();
+      taken.push(dni);
+      await register(victim, companyBody(dni, { personType: 'natural', documentType: 'dni' }));
+      const prober = await newActor();
+      const statuses: number[] = [];
+      for (let i = 0; i < 60; i += 1)
+        statuses.push(
+          (await register(prober, companyBody(dni, { personType: 'natural', documentType: 'dni' })))
+            .status,
+        );
+      expect(statuses).toContain(STATUS.TOO_MANY);
+    }, 60_000);
     // F7-B3: si falta la fila de `companies` de una cuenta Empresa (p. ej. borrada a mano; un test de F7 la borró de demo@),
     // `AccountStore.get` usa `.single()` y /me responde 500: la persona queda fuera de TODA la app (el middleware llama a /me).
-    it.fails(
-      'F7-B3 · /me no responde 500 si a una cuenta Empresa le falta su fila de companies',
-      async () => {
-        const c = await newCompany();
-        await sb.from('companies').delete().eq('id', c.companyId);
-        const me = await get(c.actor, api.me.path);
-        expect(me.status).toBe(STATUS.OK);
-      },
-    );
+    it('F7-B3 · /me no responde 500 si a una cuenta Empresa le falta su fila de companies', async () => {
+      const c = await newCompany();
+      await sb.from('companies').delete().eq('id', c.companyId);
+      const me = await get(c.actor, api.me.path);
+      expect(me.status).toBe(STATUS.OK);
+    });
 
-    it('cotizar a una ficha sin dueño se acepta (crea la cotización): nadie la recibirá hasta que se reclame', async () => {
+    it('cotizar a una ficha sin dueño se rechaza por destinatario (VALIDATION_ERROR)', async () => {
       const c = await newCompany();
       const orphan = await world.newProfile('creator');
       const camp = await newCampaign(c);
       const res = await quote(c, camp.id, [{ creatorProfileId: orphan.id }]);
-      // Decisión de producto pendiente (informativo): no hay aviso ni dueño; cuenta contra el límite por hora.
-      expect(res.body.created).toHaveLength(1);
+      expect(res.body.created).toHaveLength(0);
+      expect(res.body.failed[0].code).toBe('VALIDATION_ERROR');
     });
   });
 
@@ -528,7 +517,7 @@ describe.skipIf(!hasSupabase)('F7 · empresas, campañas y visibilidad (Supabase
     });
 
     // F7-B1: el contrato dice "null o [] explícitos vacían", pero `description` no admite null: no se puede vaciar.
-    it.fails('F7-B1 · PATCH description:null vacía la descripción', async () => {
+    it('F7-B1 · PATCH description:null vacía la descripción', async () => {
       const c = await newCompany();
       const camp = await newCampaign(c);
       const res = await patch(c.actor, campaignUrl(camp.id), {
@@ -559,7 +548,7 @@ describe.skipIf(!hasSupabase)('F7 · empresas, campañas y visibilidad (Supabase
 
     // F7-M2: PATCH lee-modifica-escribe el registro completo (upsert por id) sin control de concurrencia. Una edición
     // de campos concurrente con "cerrar" puede reescribir el estado viejo y REABRIR la campaña (cerrada → activa).
-    it.fails('F7-M2 · una edición concurrente no reabre una campaña cerrada', async () => {
+    it('F7-M2 · una edición concurrente no reabre una campaña cerrada', async () => {
       const c = await newCompany();
       const outcomes = await Promise.all(
         Array.from({ length: 12 }, async (_, i) => {
@@ -838,7 +827,7 @@ describe.skipIf(!hasSupabase)('F7 · empresas, campañas y visibilidad (Supabase
       const [c, other] = [await newCompany(), await newCompany()];
       const ids: string[] = [];
       for (let i = 0; i < QUOTES_PER_BRAND_PER_HOUR + 5; i += 1)
-        ids.push((await world.newProfile('creator')).id);
+        ids.push((await world.newProfile('creator', other.actor.user.id)).id);
       const camp = await newCampaign(c);
       const batches = [ids.slice(0, 20), ids.slice(20, 40), ids.slice(40, 55), ids.slice(55, 65)];
       const sent: Awaited<ReturnType<typeof quote>>[] = [];
