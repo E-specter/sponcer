@@ -2,7 +2,12 @@ import { constants } from 'node:http2';
 import request from 'supertest';
 import { expect } from 'vitest';
 import { api, ErrorBody, type Endpoint } from '@sponcer/contracts';
-import { demoUser, fixtureProfiles, fixtureUsers } from '@sponcer/contracts/fixtures';
+import {
+  demoInfluencer,
+  demoUser,
+  fixtureProfiles,
+  fixtureUsers,
+} from '@sponcer/contracts/fixtures';
 import { composeApp } from '../../src/compose';
 import { loadEnv } from '../../src/config/env';
 
@@ -80,10 +85,16 @@ export function expectError(
 }
 
 // ---- datos de fixtures ----
-export const OTHER_USER = fixtureUsers.find((u) => u.id !== demoUser.id)!;
+// Otra Influencer (dueña de otro creador) y otra Empresa, distintas de las demo (ADR-009).
+export const OTHER_USER = fixtureUsers.find(
+  (u) => u.accountKind === 'influencer' && u.id !== demoInfluencer.id,
+)!;
+export const OTHER_COMPANY = fixtureUsers.find(
+  (u) => u.accountKind === 'company' && u.id !== demoUser.id,
+)!;
 const owned = (userId: string, role: 'creator' | 'brand') =>
   fixtureProfiles.find((p) => p.ownerUserId === userId && p.role === role)!;
-export const demoCreator = owned(demoUser.id, 'creator');
+export const demoCreator = owned(demoInfluencer.id, 'creator');
 export const demoBrand = owned(demoUser.id, 'brand');
 export const otherCreator = owned(OTHER_USER.id, 'creator');
 export const unclaimedCreator = fixtureProfiles.find(
