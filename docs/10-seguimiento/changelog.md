@@ -10,6 +10,22 @@ Formato [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). Versiones c
 
 ## [Sin publicar]
 
+## [1.3.0] - 2026-11-27
+
+### Añadido
+
+- Administradores nombrados desde la app (además de `ADMIN_EMAILS`), invitaciones por correo y alta de perfiles por @handle (ADR-008).
+- Panel de administración con cuatro secciones: exclusiones, perfiles, invitaciones y administradores.
+- Correo real opcional con Brevo y plantillas de correo en español.
+
+### Seguridad
+
+- El registro exige confirmar el correo y los permisos de administrador solo se dan con el correo confirmado.
+- Protección de ramas en `main` y `develop`: todo entra por PR con CI en verde.
+
+### Corregido
+
+- `/admin/*` responde 404 real a quien no es administrador.
 ## [1.2.1] - 2026-11-25
 
 ### Corregido
