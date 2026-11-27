@@ -51,6 +51,7 @@ const newCampaign = {
   brandProfileId: andina.id,
   name: 'Fiestas Patrias',
   kind: 'season' as const,
+  description: null,
   startsOn: '2027-07-01',
   endsOn: null,
   budgetPen: BUDGET,

@@ -57,6 +57,14 @@ export const makeCreateQuote =
         fail(target, 'NOT_FOUND', 'Creador no encontrado');
         continue;
       }
+      if (!(await d.profiles.getOwnerUserId(creator.id))) {
+        fail(
+          target,
+          'VALIDATION_ERROR',
+          'Ese perfil aún no tiene dueño; no puede recibir cotizaciones',
+        );
+        continue;
+      }
       const found = target.serviceId ? await d.profiles.getService(target.serviceId) : null;
       if (target.serviceId && found?.creatorProfileId !== creator.id) {
         fail(target, 'VALIDATION_ERROR', 'El servicio no pertenece a ese creador');

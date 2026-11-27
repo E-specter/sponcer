@@ -107,4 +107,16 @@ export const createSupabaseCampaignRepository = (supabase: SupabaseClient): Camp
   async save(campaign) {
     unwrap(await supabase.from('campaigns').upsert(campaignToRow(campaign)));
   },
+  async update(campaign, expectedStatus) {
+    const { id, created_at: _created, ...row } = campaignToRow(campaign);
+    const rows = unwrap(
+      await supabase
+        .from('campaigns')
+        .update(row)
+        .eq('id', id)
+        .eq('status', expectedStatus)
+        .select('id'),
+    );
+    return rows.length > 0;
+  },
 });

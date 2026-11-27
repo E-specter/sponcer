@@ -99,7 +99,9 @@ export const makeUpdateCampaign =
       updatedAt: d.now().toISOString(),
     };
     if (next.endsOn && next.endsOn < next.startsOn) return invalidDates();
-    await d.campaigns.save(next);
+    // Condicional al estado leído: un cierre concurrente no se pisa ni se reabre.
+    if (!(await d.campaigns.update(next, current.status)))
+      return err(new DomainError('CONFLICT', 'La campaña cambió mientras la editabas; reintenta'));
     return ok(await withStats(d, next));
   };
 

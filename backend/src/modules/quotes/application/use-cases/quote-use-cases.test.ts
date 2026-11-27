@@ -172,7 +172,7 @@ describe('CreateQuote', () => {
     ]);
     const none = await create(demoUser.id, {
       ...req,
-      targets: [{ creatorProfileId: profile('mateo.deportes.demo').id }],
+      targets: [{ creatorProfileId: camila.id }],
     });
     expect(!none.ok && none.error.code).toBe('RATE_LIMITED');
   });

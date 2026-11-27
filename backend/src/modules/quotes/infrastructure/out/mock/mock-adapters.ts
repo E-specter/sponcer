@@ -41,5 +41,10 @@ export function createMockCampaignRepository(): CampaignRepository {
         .filter((c) => c.brandProfileId === brandProfileId && (!status || c.status === status))
         .sort((a, b) => b.createdAt.localeCompare(a.createdAt) || a.id.localeCompare(b.id)),
     save: async (c) => void byId.set(c.id, c),
+    update: async (c, expected) => {
+      if (byId.get(c.id)?.status !== expected) return false;
+      byId.set(c.id, c);
+      return true;
+    },
   };
 }
