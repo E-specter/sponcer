@@ -13,12 +13,16 @@ import {
 
 /**
  * RLS contra Supabase local (RNF-03): por cada tabla, el caso permitido y los denegados.
- * Solo `notifications` (propias) y `messages` (de matches donde el usuario es dueño de un perfil)
- * tienen política de lectura para `authenticated`; todo lo demás es solo del backend (service_role).
+ * Solo `notifications` (propias), `messages` (de matches donde el usuario es dueño de un perfil) y
+ * `profile_views` (visitas a perfiles propios) tienen política de lectura para `authenticated`; todo lo demás es solo del backend (service_role).
  * Crea usuarios y filas temporales (prefijo `zz.` / dominio `audit.test`) y los borra al terminar.
  */
 const TABLES = [
+  'accounts',
   'admin_users',
+  'campaigns',
+  'companies',
+  'consents',
   'creator_services',
   'ig_snapshots',
   'ingestion_blocklist',
@@ -31,17 +35,25 @@ const TABLES = [
   'profile_classifications',
   'profile_embeddings',
   'profile_removal_requests',
+  'profile_views',
   'profiles',
   'quote_events',
   'quotes',
 ] as const;
 type Table = (typeof TABLES)[number];
-const READABLE_BY_AUTHENTICATED: Table[] = ['notifications', 'messages'];
+const READABLE_BY_AUTHENTICATED: Table[] = ['notifications', 'messages', 'profile_views'];
 const NEVER_READABLE = TABLES.filter((t) => !READABLE_BY_AUTHENTICATED.includes(t));
 
 const RLS_DENIED = '42501';
-/** Columna clave de cada tabla (todas usan `id` salvo admin_users, cuya clave es el correo). */
-const keyOf = (t: Table) => (t === 'admin_users' ? 'email' : 'id');
+/** Columna clave de cada tabla (`id` salvo las que tienen otra clave natural). */
+const KEY_OF: Partial<Record<Table, string>> = {
+  accounts: 'user_id',
+  admin_users: 'email',
+  consents: 'user_id',
+  profile_views: 'viewer_profile_id',
+};
+const keyOf = (t: Table) => KEY_OF[t] ?? 'id';
+const TODAY = new Date().toISOString().slice(0, 10);
 const EMBEDDING_DIMS = 384;
 const SETUP_TIMEOUT_MS = 60_000;
 const NO_ROW_UUID = '00000000-0000-4000-8000-000000000000';
@@ -111,7 +123,38 @@ describe.skipIf(!hasSupabase)('RLS (Supabase local)', () => {
       kind: 'match_created',
       payload: { tag },
     });
+    ids.campaigns = await insert('campaigns', {
+      brand_profile_id: pb.id,
+      name: `c-${tag}`,
+      kind: 'general',
+      starts_on: TODAY,
+      status: 'active',
+    });
+    ids.companies = await insert('companies', {
+      owner_user_id: userA.id,
+      person_type: 'juridica',
+      document_type: 'ruc',
+      document_number: `9${Date.now()}`,
+      legal_name: 'Empresa de prueba',
+      city: 'lima',
+    });
+    const raw = async (table: Table, row: object) => {
+      const res = await sb.from(table).insert(row);
+      if (res.error) throw new Error(`seed ${table}: ${res.error.message}`);
+    };
+    await raw('accounts', { user_id: userA.id, account_kind: 'company' });
+    ids.accounts = userA.id;
+    await raw('consents', { user_id: userA.id, version: 'test', terms: true, privacy: true });
+    ids.consents = userA.id;
+    // pb (visitante) vio la ficha de pa (visitada): solo el dueño de pa (A) puede leerla.
+    await raw('profile_views', {
+      viewer_profile_id: pb.id,
+      viewed_profile_id: pa.id,
+      viewed_on: TODAY,
+    });
+    ids.profile_views = pb.id;
     const quote = await insert('quotes', {
+      campaign_id: ids.campaigns,
       service_id: service,
       creator_profile_id: pa.id,
       requester_profile_id: pb.id,
@@ -229,6 +272,17 @@ describe.skipIf(!hasSupabase)('RLS (Supabase local)', () => {
 
     // R-1 (corregido en 20261125001300): la política usa is_match_participant (security definer); antes consultaba
     // matches/profiles con RLS sin políticas y nadie podía leer mensajes, tampoco por Realtime.
+    it('profile_views: el dueño de la ficha vista la lee; el visitante y otros no', async () => {
+      const a = await asA.from('profile_views').select('viewer_profile_id');
+      expect(a.error).toBeNull();
+      expect((a.data ?? []).map((v) => v.viewer_profile_id)).toEqual([own.pb]);
+      const [b, c] = await Promise.all([
+        asB.from('profile_views').select('viewer_profile_id').eq('viewed_profile_id', own.pa!),
+        asC.from('profile_views').select('viewer_profile_id').eq('viewed_profile_id', own.pa!),
+      ]);
+      expect([b.data, c.data]).toEqual([[], []]);
+    });
+
     it('R-1: lee los mensajes de los matches donde es dueño de un perfil (A: M1 y M2; B: solo M1)', async () => {
       const a = await asA.from('messages').select('id').in('id', [ids.messages, own.messageM2!]);
       expect((a.data ?? []).map((m) => m.id).sort()).toEqual([ids.messages, own.messageM2].sort());
@@ -249,7 +303,24 @@ describe.skipIf(!hasSupabase)('RLS (Supabase local)', () => {
 
   describe('escritura denegada para authenticated y anon', () => {
     const insertRows: Record<Table, () => object> = {
+      accounts: () => ({ user_id: own.userC, account_kind: 'company' }),
       admin_users: () => ({ email: `x${uniqueTag()}@audit.test` }),
+      campaigns: () => ({
+        brand_profile_id: own.pb,
+        name: 'x',
+        kind: 'general',
+        starts_on: TODAY,
+        status: 'active',
+      }),
+      companies: () => ({
+        owner_user_id: own.userC,
+        person_type: 'natural',
+        document_type: 'dni',
+        document_number: `${uniqueTag()}`,
+        legal_name: 'x',
+        city: 'lima',
+      }),
+      consents: () => ({ user_id: own.userC, version: 'x', terms: true, privacy: true }),
       creator_services: () => ({ profile_id: own.pa, type: 'canje', format: 'reel', price_pen: 1 }),
       ig_snapshots: () => ({
         ig_handle: `${TEST_HANDLE_PREFIX}i${uniqueTag()}`,
@@ -276,6 +347,11 @@ describe.skipIf(!hasSupabase)('RLS (Supabase local)', () => {
       profile_classifications: () => ({ profile_id: own.pc, tier: 'mega' }),
       profile_embeddings: () => ({ profile_id: own.pc, embedding: zeros, model: 'x' }),
       profile_removal_requests: () => ({ ig_handle: 'x', email: 'a@b.pe' }),
+      profile_views: () => ({
+        viewer_profile_id: own.pa,
+        viewed_profile_id: own.pb,
+        viewed_on: TODAY,
+      }),
       profiles: () => ({
         ig_handle: `${TEST_HANDLE_PREFIX}p${uniqueTag()}`,
         role: 'creator',
@@ -287,6 +363,7 @@ describe.skipIf(!hasSupabase)('RLS (Supabase local)', () => {
         actor_profile_id: own.pa,
       }),
       quotes: () => ({
+        campaign_id: ids.campaigns,
         service_id: own.service,
         creator_profile_id: own.pa,
         requester_profile_id: own.pb,
@@ -296,7 +373,11 @@ describe.skipIf(!hasSupabase)('RLS (Supabase local)', () => {
     };
     // Una columna inocua por tabla para probar el UPDATE.
     const touch: Record<Table, Record<string, unknown>> = {
+      accounts: { about: 'hack' },
       admin_users: { granted_by: 'hack@audit.test' },
+      campaigns: { status: 'closed' },
+      companies: { trade_name: 'hack' },
+      consents: { terms: false },
       creator_services: { price_pen: 1 },
       ig_snapshots: { created_at: BENIGN_DATE },
       ingestion_blocklist: { reason: 'hack' },
@@ -309,6 +390,7 @@ describe.skipIf(!hasSupabase)('RLS (Supabase local)', () => {
       profile_classifications: { tier: 'mega' },
       profile_embeddings: { model: 'hack' },
       profile_removal_requests: { status: 'applied' },
+      profile_views: { count: 99 },
       profiles: { status: 'removed' },
       quote_events: { note: 'editado' },
       quotes: { status: 'accepted' },
