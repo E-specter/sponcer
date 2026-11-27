@@ -20,15 +20,16 @@ export type CampaignStatus = z.infer<typeof CampaignStatus>;
 
 const CalendarDate = z.iso.date();
 
+// Sin defaults: en un PATCH parcial un campo ausente no se toca; `null` o `[]` explícitos lo vacían.
 const CampaignFields = z.object({
   name: z.string().trim().min(MIN_NAME).max(MAX_CAMPAIGN_NAME),
   kind: CampaignKind,
   description: z.string().trim().max(MAX_SHORT_TEXT).optional(),
   startsOn: CalendarDate,
-  endsOn: CalendarDate.nullable().default(null),
-  budgetPen: PricePen.nullable().default(null),
-  targetNiches: z.array(Niche).max(MAX_BRAND_TARGET_NICHES).default([]),
-  targetCities: z.array(City).max(MAX_CAMPAIGN_CITIES).default([]),
+  endsOn: CalendarDate.nullable(),
+  budgetPen: PricePen.nullable(),
+  targetNiches: z.array(Niche).max(MAX_BRAND_TARGET_NICHES),
+  targetCities: z.array(City).max(MAX_CAMPAIGN_CITIES),
 });
 
 const endsAfterStart = (c: { startsOn?: string; endsOn?: string | null }) =>
@@ -40,6 +41,10 @@ const ENDS_MESSAGE = {
 
 /** Solo un perfil `brand` propio crea campañas. Nace en `draft` salvo `activate: true`. */
 export const CreateCampaignRequest = CampaignFields.extend({
+  endsOn: CampaignFields.shape.endsOn.default(null),
+  budgetPen: CampaignFields.shape.budgetPen.default(null),
+  targetNiches: CampaignFields.shape.targetNiches.default([]),
+  targetCities: CampaignFields.shape.targetCities.default([]),
   brandProfileId: Id,
   activate: z.boolean().default(false),
 }).refine(endsAfterStart, ENDS_MESSAGE);
