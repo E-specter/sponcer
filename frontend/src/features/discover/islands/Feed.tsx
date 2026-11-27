@@ -122,8 +122,8 @@ export default function Feed({ profiles }: { profiles: ProfileSummary[] }) {
       <div className="criteria">
         <span>
           Viendo como <strong>@{active.handle}</strong> (
-          {active.role === 'brand' ? 'marca' : 'creador'}):{' '}
-          {active.role === 'brand' ? 'creadores' : 'marcas'} con afinidad
+          {active.role === 'brand' ? 'marca' : 'influencer'}):{' '}
+          {active.role === 'brand' ? 'influencers' : 'marcas'} con afinidad
         </span>
         <span>Orden: compatibilidad</span>
       </div>
@@ -165,7 +165,7 @@ export default function Feed({ profiles }: { profiles: ProfileSummary[] }) {
             key={item.card.id}
             item={item}
             busy={busyId === item.card.id}
-            viewerIsBrand={active.role === 'brand'}
+            viewerBrandId={active.role === 'brand' ? active.id : null}
             onInterest={() => act(item, 'interest')}
             onDismiss={() => act(item, 'dismiss')}
           />

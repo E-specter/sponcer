@@ -1,8 +1,9 @@
 ---
 import { PUBLIC_AUTH_MODE } from 'astro:env/client';
-import { Compass, FileText, ShieldAlert, ShieldCheck, UserRound, Users } from 'lucide-react';
+import { Compass, Eye, FileText, Megaphone, ShieldAlert, ShieldCheck, UserRound, Users } from 'lucide-react';
 import Base from './Base.astro';
 import { getMe } from '../lib/session';
+import { ACCOUNT_KIND_LABEL, accountName } from '../lib/labels';
 import { Avatar } from '../components/ui/Avatar';
 import { Logo } from '../components/ui/Logo';
 import { Tabs } from '../components/ui/Tabs';
@@ -21,7 +22,9 @@ const BOTTOM_ICON = 20;
 
 const me = await getMe(Astro.locals);
 const path = Astro.url.pathname;
-const displayName = me.email.split('@')[0] ?? me.email;
+const kind = me.account.accountKind;
+const displayName = accountName(me.account, me.email.split('@')[0] ?? me.email);
+const isCompany = kind === 'company';
 
 // /mensajes cuelga de Matches (cada conversación nace de un match).
 const section = path.startsWith('/mensajes') ? '/panel/matches' : path;
@@ -31,15 +34,21 @@ const tabs = [
   { href: '/descubrir', label: 'Descubrir' },
   { href: '/panel/matches', label: 'Matches' },
   { href: '/panel/cotizaciones', label: 'Cotizaciones' },
+  ...(isCompany ? [{ href: '/campanas', label: 'Campañas' }] : []),
+  { href: '/visibilidad', label: 'Visibilidad' },
   { href: '/panel', label: 'Mi panel' },
   ...(me.isAdmin ? [{ href: '/admin', label: 'Administración' }] : []),
 ];
 const adminLink = { href: '/admin', label: 'Administración', Icon: ShieldAlert };
+// Con seis elementos, la etiqueta larga no cabe en 414 px.
+const bottomAdminLink = { ...adminLink, label: 'Admin' };
 const sideLinks = [
   { href: '/descubrir', label: 'Para ti', Icon: Compass },
   { href: '/panel/matches', label: 'Matches', Icon: Users },
   { href: '/panel/cotizaciones', label: 'Cotizaciones', Icon: FileText },
-  { href: '/panel', label: 'Mis perfiles', Icon: UserRound },
+  ...(isCompany ? [{ href: '/campanas', label: 'Campañas', Icon: Megaphone }] : []),
+  { href: '/visibilidad', label: 'Visibilidad', Icon: Eye },
+  { href: '/panel', label: isCompany ? 'Mis marcas' : 'Mis cuentas', Icon: UserRound },
   { href: '/privacidad', label: 'Privacidad', Icon: ShieldCheck },
   ...(me.isAdmin ? [adminLink] : []),
 ];
@@ -47,8 +56,11 @@ const bottomLinks = [
   { href: '/descubrir', label: 'Descubrir', Icon: Compass },
   { href: '/panel/matches', label: 'Matches', Icon: Users },
   { href: '/panel/cotizaciones', label: 'Cotizaciones', Icon: FileText },
+  isCompany
+    ? { href: '/campanas', label: 'Campañas', Icon: Megaphone }
+    : { href: '/visibilidad', label: 'Visibilidad', Icon: Eye },
   { href: '/panel', label: 'Panel', Icon: UserRound },
-  ...(me.isAdmin ? [adminLink] : []),
+  ...(me.isAdmin ? [bottomAdminLink] : []),
 ];
 ---
 
@@ -63,8 +75,9 @@ const bottomLinks = [
       <div class="header-account">
         <div class="who">
           <strong>{displayName}</strong>
+          {kind && <span class="who-kind">{ACCOUNT_KIND_LABEL[kind]}</span>}
         </div>
-        <ProfileSwitcher client:load profiles={me.profiles} />
+        <ProfileSwitcher client:load profiles={me.profiles} accountKind={kind} ownerName={displayName} />
         <NotificationsBell client:idle />
         <Avatar name={displayName} />
         {

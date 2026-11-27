@@ -1,4 +1,7 @@
 import type {
+  Account,
+  CampaignKind,
+  CampaignStatus,
   BrandSector,
   CampaignObjective,
   City,
@@ -153,3 +156,27 @@ export const formatCount = (n: number): string => numberFormat.format(n);
 export const formatPen = (n: number): string => moneyFormat.format(n);
 export const formatDate = (iso: string): string => dateFormat.format(new Date(iso));
 export const formatPercent = (n: number): string => `${n.toFixed(1)} %`;
+
+export const CAMPAIGN_KIND_LABEL: Record<CampaignKind, string> = {
+  season: 'Temporada',
+  general: 'General',
+  segment: 'Segmento',
+  other: 'Otro',
+};
+
+export const CAMPAIGN_STATUS_LABEL: Record<CampaignStatus, string> = {
+  draft: 'Borrador',
+  active: 'Activa',
+  closed: 'Cerrada',
+};
+
+/** Nombre del perfil según su rol: "marca" (de una Empresa) o "influencer". */
+export const ROLE_LABEL = { brand: 'Marca', creator: 'Influencer' } as const;
+
+/** Nombre a mostrar de la cuenta: nombre comercial o razón social de la Empresa; nombre del Influencer. */
+export const accountName = (a: Account, fallback: string): string =>
+  a.company?.tradeName ?? a.company?.legalName ?? a.influencer?.displayName ?? fallback;
+
+export const ACCOUNT_KIND_LABEL = { company: 'Empresa', influencer: 'Influencer' } as const;
+/** Tipo de perfil que administra cada tipo de cuenta (ADR-009). */
+export const ROLE_OF_ACCOUNT = { company: 'brand', influencer: 'creator' } as const;

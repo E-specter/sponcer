@@ -1,13 +1,26 @@
 import { PUBLIC_AUTH_MODE } from 'astro:env/client';
 import { defineMiddleware } from 'astro:middleware';
-import { demoUser } from '@sponcer/contracts/fixtures';
+import { demoInfluencer, demoUser } from '@sponcer/contracts/fixtures';
 import { ApiError } from './lib/api/errors';
+import { mockNewUser } from './lib/api/mock/domain';
 import { isCrossSiteForm } from './lib/csrf';
 import { getMe } from './lib/session';
 import { createSupabase } from './lib/supabase';
 
 /** Rutas que exigen sesión; las demás (landing, login, legales, exclusión) son públicas. */
-const PROTECTED_PREFIXES = ['/descubrir', '/perfil', '/panel', '/mensajes', '/admin'];
+const PROTECTED_PREFIXES = [
+  '/descubrir',
+  '/perfil',
+  '/panel',
+  '/mensajes',
+  '/admin',
+  '/campanas',
+  '/visibilidad',
+  '/registro',
+];
+const MOCK_USER_COOKIE = 'sponcer_mock_user';
+const ONBOARDING_PATH = '/registro';
+const NEW_USER_COOKIE = 'nuevo';
 const BFF_PREFIX = '/bff/';
 /** Rutas con datos de perfiles: nunca indexables (RF-01, RNF-05). */
 const NOINDEX_PREFIXES = [...PROTECTED_PREFIXES, '/exclusion'];
@@ -25,11 +38,13 @@ async function resolveSession(
   context: Parameters<Parameters<typeof defineMiddleware>[0]>[0],
 ): Promise<Session> {
   if (PUBLIC_AUTH_MODE === 'mock') {
-    // Modo mock: siempre hay sesión demo; el token es `mock:<userId>`.
-    return {
-      user: { id: demoUser.id, email: demoUser.email },
-      accessToken: `mock:${demoUser.id}`,
-    };
+    // Modo mock: siempre hay sesión demo; el token es `mock:<userId>`. La cookie elige otra cuenta.
+    const pick = context.cookies.get(MOCK_USER_COOKIE)?.value ?? '';
+    const fresh = pick.startsWith(NEW_USER_COOKIE)
+      ? mockNewUser(pick.slice(NEW_USER_COOKIE.length))
+      : null;
+    const user = fresh ?? (pick === 'influencer' ? demoInfluencer : demoUser);
+    return { user: { id: user.id, email: user.email }, accessToken: `mock:${user.id}` };
   }
   const { pathname } = context.url;
   if (!isProtected(pathname) && !pathname.startsWith(BFF_PREFIX)) return ANONYMOUS;
@@ -65,6 +80,15 @@ export const onRequest = defineMiddleware(async (context, next) => {
           headers: { 'content-type': 'text/html; charset=utf-8', 'X-Robots-Tag': NOINDEX_VALUE },
         },
       );
+    }
+    // Registro pendiente (ADR-009): toda ruta protegida lleva al onboarding.
+    if (
+      session.user &&
+      isProtected(pathname) &&
+      pathname !== ONBOARDING_PATH &&
+      (await getMe(context.locals)).account.accountKind === null
+    ) {
+      return context.redirect(ONBOARDING_PATH);
     }
     const response = await next();
     if (

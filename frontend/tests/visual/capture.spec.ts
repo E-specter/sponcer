@@ -15,11 +15,18 @@ interface FixtureProfile {
   ownerUserId: string | null;
 }
 const profiles = readJson<FixtureProfile[]>('profiles.json');
-const demoUser = readJson<{ id: string }[]>('users.json')[0];
-const social = readJson<{ matches: { id: string }[] }>('social.json');
+const users = readJson<{ id: string }[]>('users.json');
+// F7: el usuario demo es una Empresa (marcas); la Influencer demo es el segundo usuario.
+const demoUser = users[0];
+const demoInfluencer = users[1];
+const social = readJson<{
+  matches: { id: string }[];
+  campaigns: { id: string; name: string }[];
+}>('social.json');
 
 const mine = (role: 'creator' | 'brand') => {
-  const found = profiles.find((p) => p.ownerUserId === demoUser?.id && p.role === role);
+  const owner = role === 'brand' ? demoUser : demoInfluencer;
+  const found = profiles.find((p) => p.ownerUserId === owner?.id && p.role === role);
   if (!found) throw new Error(`El usuario demo no tiene un perfil ${role} en los fixtures`);
   return found;
 };
@@ -29,6 +36,11 @@ const firstOther = (role: 'creator' | 'brand') => {
   return found.snapshot.handle;
 };
 const matchId = social.matches[0]?.id ?? '';
+const campaignId = social.campaigns.find((c) => c.name === 'Verano 2027')?.id ?? '';
+/** Cuenta mock por tipo de perfil activo: las marcas son de la Empresa demo (sin cookie). */
+const COOKIE_OF_ROLE = { brand: null, creator: 'influencer' } as const;
+const BASE = process.env.VISUAL_BASE_URL ?? 'http://localhost:4521';
+const MOCK_USER_COOKIE = 'sponcer_mock_user';
 
 const ACTIVE_PROFILE_KEY = 'sponcer.activeProfileId';
 const OUT_DIR = 'test-results/visual';
@@ -46,6 +58,8 @@ interface Screen {
   path: string;
   /** Perfil activo del usuario demo al abrir la pantalla. */
   as?: 'creator' | 'brand';
+  /** Usuario recién llegado (registro pendiente). */
+  fresh?: boolean;
 }
 
 const SCREENS: Screen[] = [
@@ -59,11 +73,16 @@ const SCREENS: Screen[] = [
   { name: 'matches', path: '/panel/matches', as: 'creator' },
   { name: 'cotizaciones', path: '/panel/cotizaciones', as: 'brand' },
   { name: 'mensajes', path: `/mensajes/${matchId}`, as: 'creator' },
-  { name: 'admin-exclusiones', path: '/admin/exclusiones', as: 'creator' },
-  { name: 'admin-perfiles', path: '/admin/perfiles', as: 'creator' },
-  { name: 'admin-invitaciones', path: '/admin/invitaciones', as: 'creator' },
-  { name: 'admin-administradores', path: '/admin/administradores', as: 'creator' },
+  { name: 'admin-exclusiones', path: '/admin/exclusiones', as: 'brand' },
+  { name: 'admin-perfiles', path: '/admin/perfiles', as: 'brand' },
+  { name: 'admin-invitaciones', path: '/admin/invitaciones', as: 'brand' },
+  { name: 'admin-administradores', path: '/admin/administradores', as: 'brand' },
   { name: 'privacidad', path: '/privacidad' },
+  { name: 'registro', path: '/registro', fresh: true },
+  { name: 'campanas', path: '/campanas', as: 'brand' },
+  { name: 'campana-detalle', path: `/campanas/${campaignId}`, as: 'brand' },
+  { name: 'visibilidad-marca', path: '/visibilidad', as: 'brand' },
+  { name: 'visibilidad-influencer', path: '/visibilidad', as: 'creator' },
 ];
 
 const HTTP_ERROR_MIN = 400;
@@ -152,6 +171,9 @@ VIEWPORTS.forEach(({ width, height }) => {
       const problems = watchProblems(page);
       await page.setViewportSize({ width, height });
       const activeId = screen.as ? mine(screen.as).id : null;
+      const cookie = screen.fresh ? 'nuevo' : COOKIE_OF_ROLE[screen.as ?? 'brand'];
+      if (cookie)
+        await page.context().addCookies([{ name: MOCK_USER_COOKIE, value: cookie, url: BASE }]);
       if (activeId) {
         await page.addInitScript(
           ([key, id]) => localStorage.setItem(key as string, id as string),

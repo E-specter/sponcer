@@ -8,6 +8,7 @@ import DeclaredCard from '../../features/profiles/components/DeclaredCard.astro'
 import { Avatar } from '../../components/ui/Avatar';
 import { Chip } from '../../components/ui/Chip';
 import { Tag } from '../../components/ui/Tag';
+import ViewRecorder from '../../features/visibility/islands/ViewRecorder';
 import ServiceCatalog from '../../features/quotes/islands/ServiceCatalog';
 
 const handle = Astro.params.handle ?? '';
@@ -36,7 +37,7 @@ try {
           <div class="row">
             <Avatar client:load name={profile.fullName || profile.handle} src={profile.profilePicUrl} size="xl" />
             <div>
-              <p class="eyebrow">{profile.role === 'brand' ? 'Perfil de marca' : 'Perfil de creador'} · Instagram</p>
+              <p class="eyebrow">{profile.role === 'brand' ? 'Perfil de marca' : 'Perfil de influencer'} · Instagram</p>
               <h1>{profile.fullName || `@${profile.handle}`}</h1>
               <p class="muted small">@{profile.handle}</p>
             </div>
@@ -76,11 +77,26 @@ try {
               client:load
               services={profile.services}
               myProfiles={me.profiles}
-              viewedRole={profile.role}
+              target={{
+                id: profile.id,
+                handle: profile.handle,
+                role: profile.role,
+                fullName: profile.fullName,
+                profilePicUrl: profile.profilePicUrl,
+                status: profile.status,
+              }}
               isOwner={profile.isOwner}
             />
           </section>
         )}
+
+        <ViewRecorder
+          client:idle
+          viewedProfileId={profile.id}
+          viewedRole={profile.role}
+          isOwner={profile.isOwner}
+          myProfiles={me.profiles}
+        />
 
         <p class="small">
           ¿Eres el titular y no quieres aparecer?{' '}

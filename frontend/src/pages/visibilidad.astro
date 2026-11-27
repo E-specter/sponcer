@@ -1,0 +1,19 @@
+---
+import App from '../layouts/App.astro';
+import { getMe } from '../lib/session';
+import VisibilityPanel from '../features/visibility/islands/VisibilityPanel';
+
+const me = await getMe(Astro.locals);
+---
+
+<App title="Visibilidad">
+  <header class="page-head">
+    <p class="eyebrow">Tu espacio / visibilidad</p>
+    <h1>Visibilidad</h1>
+    <p class="lead">
+      Quién mostró interés en tu perfil sin que haya match y quién vio tu ficha. Solo cuentan perfiles del
+      tipo opuesto.
+    </p>
+  </header>
+  <VisibilityPanel client:load profiles={me.profiles} />
+</App>

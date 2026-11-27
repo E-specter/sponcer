@@ -1,5 +1,6 @@
 import { X } from 'lucide-react';
 import type { FeedItem } from '@sponcer/contracts';
+import QuoteDialog from '../../campaigns/islands/QuoteDialog';
 import { Chip } from '../../../components/ui/Chip';
 import { ProfileCard } from '../../../components/ui/ProfileCard';
 import {
@@ -21,11 +22,11 @@ interface Props {
   busy: boolean;
   onInterest: () => void;
   onDismiss: () => void;
-  /** Perfil activo es marca (RF-10: puede solicitar cotización a creadores). */
-  viewerIsBrand: boolean;
+  /** Marca activa (puede cotizar sin match, ADR-009); null si el perfil activo es influencer. */
+  viewerBrandId: string | null;
 }
 
-export default function FeedCard({ item, busy, onInterest, onDismiss, viewerIsBrand }: Props) {
+export default function FeedCard({ item, busy, onInterest, onDismiss, viewerBrandId }: Props) {
   const { card, reasons, score } = item;
   const isBrand = card.role === 'brand';
   const metrics = [
@@ -47,11 +48,11 @@ export default function FeedCard({ item, busy, onInterest, onDismiss, viewerIsBr
       subtitle={
         card.city
           ? `${CITY_LABEL[card.city]} · Ubicación declarada`
-          : `${isBrand ? 'Marca' : 'Creador'}${card.sector ? ` · ${SECTOR_LABEL[card.sector]}` : ''} · @${card.handle}`
+          : `${isBrand ? 'Marca' : 'Influencer'}${card.sector ? ` · ${SECTOR_LABEL[card.sector]}` : ''} · @${card.handle}`
       }
       imageUrl={card.profilePicUrl}
       faceFocus={!isBrand}
-      provenance={`${isBrand ? 'Marca' : 'Creador'} · Instagram`}
+      provenance={`${isBrand ? 'Marca' : 'Influencer'} · Instagram`}
       bio={card.bio}
       sourceLine={
         card.bioSource === 'instagram'
@@ -83,10 +84,12 @@ export default function FeedCard({ item, busy, onInterest, onDismiss, viewerIsBr
           >
             <X size={ICON_SIZE} strokeWidth={2} aria-hidden="true" />
           </button>
-          {viewerIsBrand && !isBrand && (
-            <a className="btn btn-secondary pcard-quote" href={`/perfil/${card.handle}#servicios`}>
-              Solicitar cotización
-            </a>
+          {viewerBrandId && !isBrand && (
+            <QuoteDialog
+              brandProfileId={viewerBrandId}
+              target={card}
+              variant="btn btn-secondary pcard-quote"
+            />
           )}
         </>
       }
