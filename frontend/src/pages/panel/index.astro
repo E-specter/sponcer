@@ -2,11 +2,13 @@
 import App from '../../layouts/App.astro';
 import { call } from '../../lib/api';
 import { getMe } from '../../lib/session';
+import { ACCOUNT_KIND_LABEL, ROLE_OF_ACCOUNT, accountName } from '../../lib/labels';
 import ClaimFlow from '../../features/panel/islands/ClaimFlow';
 import DeclaredForm from '../../features/panel/islands/DeclaredForm';
 import ServicesEditor from '../../features/panel/islands/ServicesEditor';
 
 const me = await getMe(Astro.locals);
+const kind = me.account.accountKind;
 const token = Astro.locals.accessToken;
 const details = await Promise.all(
   me.profiles.map((p) => call('getProfile', { params: { handle: p.handle }, token })),
@@ -17,17 +19,20 @@ const details = await Promise.all(
   <header class="page-head">
     <p class="eyebrow">Tu espacio / perfiles</p>
     <h1>Mi panel</h1>
-    <p class="lead">Sesión: {me.email}. Aquí editas lo que declaras en Sponcer; lo ingerido de Instagram es de solo lectura.</p>
+    <p class="lead">
+      {kind ? `${ACCOUNT_KIND_LABEL[kind]} ${accountName(me.account, me.email)}` : me.email}
+      · Sesión: {me.email}. Aquí editas lo que declaras en Sponcer; lo ingerido de Instagram es de solo lectura.
+    </p>
   </header>
 
   <section aria-labelledby="mis-perfiles" class="stack">
-    <h2 id="mis-perfiles">Mis perfiles</h2>
+    <h2 id="mis-perfiles">{kind === 'company' ? 'Mis marcas' : 'Mis cuentas'}</h2>
     {me.profiles.length === 0 && <p class="card">Aún no tienes perfiles. Reclama el primero abajo.</p>}
     {
       details.map((d) => (
         <article class="card stack" aria-labelledby={`p-${d.id}`}>
           <h3 id={`p-${d.id}`}>
-            @{d.handle} <span class="badge">{d.role === 'brand' ? 'Marca' : 'Creador'}</span>{' '}
+            @{d.handle} <span class="badge">{d.role === 'brand' ? 'Marca' : 'Influencer'}</span>{' '}
             <span class="badge badge-success">Verificado</span>
           </h3>
           <p>
@@ -48,5 +53,5 @@ const details = await Promise.all(
     }
   </section>
 
-  <ClaimFlow client:load />
+  <ClaimFlow client:load fixedRole={kind ? ROLE_OF_ACCOUNT[kind] : undefined} />
 </App>

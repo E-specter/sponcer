@@ -1,0 +1,20 @@
+---
+import App from '../../layouts/App.astro';
+import { getMe } from '../../lib/session';
+import CampaignsPanel from '../../features/campaigns/islands/CampaignsPanel';
+
+const me = await getMe(Astro.locals);
+if (me.account.accountKind === 'influencer') return Astro.redirect('/panel');
+---
+
+<App title="Campañas">
+  <header class="page-head">
+    <p class="eyebrow">Tu espacio / campañas</p>
+    <h1>Campañas</h1>
+    <p class="lead">
+      Agrupa tus cotizaciones por temporada, segmento u otro objetivo y mira su avance. Cada marca de tu
+      empresa tiene sus propias campañas.
+    </p>
+  </header>
+  <CampaignsPanel client:load profiles={me.profiles} />
+</App>

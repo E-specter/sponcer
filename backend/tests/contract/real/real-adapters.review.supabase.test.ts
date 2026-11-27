@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { api, type QuoteRecord } from '@sponcer/contracts';
-import { demoUser, fixtureProfiles } from '@sponcer/contracts/fixtures';
+import { demoInfluencer, demoUser, fixtureProfiles } from '@sponcer/contracts/fixtures';
 import {
   createWorld,
   hasSupabase,
@@ -41,7 +41,7 @@ const SEED_BRAND = fixtureProfiles.find(
   (p) => p.ownerUserId === demoUser.id && p.role === 'brand',
 )!;
 const SEED_CREATOR_DECLARED = fixtureProfiles.find(
-  (p) => p.ownerUserId === demoUser.id && p.role === 'creator',
+  (p) => p.ownerUserId === demoInfluencer.id && p.role === 'creator',
 )!.declared!;
 
 const svc = (description: string, pricePen: number) => ({
@@ -100,10 +100,13 @@ describe.skipIf(!hasSupabase)('F2-B · revisión de adaptadores reales (Supabase
       const env = loadEnv({ ADAPTER_PROFILES: 'real', ADAPTER_QUOTES: 'real', ...supabaseEnv() });
       composed = composeApp(env);
       await composed.backfill;
-      creator = await world.newProfile('creator', demoUser.id);
+      creator = await world.newProfile('creator', demoInfluencer.id);
     }, SETUP_TIMEOUT_MS);
 
+    // La Influencer demo es dueña del creador; la Empresa demo, de las marcas (ADR-009).
     const asDemo = (verb: 'get' | 'put' | 'patch' | 'post', path: string, body?: unknown) =>
+      call(composed.app, verb, path, demoInfluencer.id, body);
+    const asCompany = (verb: 'get' | 'put' | 'patch' | 'post', path: string, body?: unknown) =>
       call(composed.app, verb, path, demoUser.id, body);
     const profilePath = (h: string) => api.getProfile.path.replace(':handle', h);
 
@@ -133,7 +136,7 @@ describe.skipIf(!hasSupabase)('F2-B · revisión de adaptadores reales (Supabase
     it('un usuario que no es dueño recibe 403 sobre el perfil real', async () => {
       const path = api.putServices.path.replace(':profileId', creator.id);
       const other = fixtureProfiles.find(
-        (p) => p.ownerUserId !== demoUser.id && p.ownerUserId,
+        (p) => p.ownerUserId !== demoInfluencer.id && p.ownerUserId,
       )!.ownerUserId!;
       const res = await call(composed.app, 'put', path, other, { services: [] });
       expectError(res, STATUS.FORBIDDEN, 'FORBIDDEN');
@@ -156,12 +159,21 @@ describe.skipIf(!hasSupabase)('F2-B · revisión de adaptadores reales (Supabase
       const saved = await asDemo('put', servicesPath, {
         services: [svc('con-cotizacion', PRICE_A)],
       });
-      const quote = await asDemo('post', api.createQuote.path, {
+      const campaign = await asCompany('post', api.createCampaign.path, {
+        brandProfileId: SEED_BRAND.id,
+        name: 'F2-A-1',
+        kind: 'general',
+        startsOn: '2026-12-01',
+        activate: true,
+      });
+      const quote = await asCompany('post', api.createQuote.path, {
         requesterProfileId: SEED_BRAND.id,
-        serviceId: saved.body[0].id,
+        campaignId: campaign.body.id,
+        targets: [{ creatorProfileId: creator.id, serviceId: saved.body[0].id }],
         message: 'hola',
       });
       expect(quote.status, JSON.stringify(quote.body)).toBe(STATUS.OK);
+      expect(quote.body.created).toHaveLength(1);
       const res = await asDemo('put', servicesPath, { services: [] });
       expect(res.status).toBe(STATUS.CONFLICT);
     });
@@ -358,6 +370,7 @@ describe.skipIf(!hasSupabase)('F2-B · revisión de adaptadores reales (Supabase
       const at = iso();
       await quotes.save({
         id: randomUUID(),
+        campaignId: await world.newCampaign(brand.id),
         serviceId: service!.id,
         creatorProfileId: creator.id,
         requesterProfileId: brand.id,
@@ -386,6 +399,7 @@ describe.skipIf(!hasSupabase)('F2-B · revisión de adaptadores reales (Supabase
       });
       const base: QuoteRecord = {
         id: randomUUID(),
+        campaignId: await world.newCampaign(brand.id),
         serviceId: service!.id,
         creatorProfileId: creator.id,
         requesterProfileId: brand.id,
@@ -424,6 +438,7 @@ describe.skipIf(!hasSupabase)('F2-B · revisión de adaptadores reales (Supabase
       const at = iso();
       await quotes.save({
         id: randomUUID(),
+        campaignId: await world.newCampaign(brand.id),
         serviceId: service!.id,
         creatorProfileId: creator.id,
         requesterProfileId: brand.id,

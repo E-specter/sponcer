@@ -35,7 +35,12 @@ test.beforeAll(async () => {
   const profile = await creator.api.profile(creator.handle);
   const service = profile.services[0];
   if (!service) throw new Error('El creador de prueba no tiene servicios');
-  await brand.api.createQuote(brand.profileId, service.id, 'Cotización de prueba de accesibilidad');
+  await brand.api.createQuote(
+    brand.profileId,
+    creator.profileId,
+    service.id,
+    'Cotización de prueba de accesibilidad',
+  );
   scenario = { creator, brand, matchId };
 });
 
@@ -205,8 +210,8 @@ VIEWPORTS.forEach((viewport) => {
     expect(await violationsOf(page)).toEqual([]);
 
     await visit(page, `/perfil/${scenario.creator.handle}`);
-    await page.getByRole('button', { name: 'Solicitar cotización' }).click();
-    await page.getByRole('button', { name: 'Enviar solicitud' }).click();
+    await page.getByRole('button', { name: 'Cotizar (propuesta abierta)' }).click();
+    await page.getByRole('button', { name: 'Enviar cotización' }).click();
     await expect(page.locator('.field-error').first()).toBeVisible();
     expect(await violationsOf(page)).toEqual([]);
   });

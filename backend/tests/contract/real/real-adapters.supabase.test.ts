@@ -120,6 +120,7 @@ describe.skipIf(!hasSupabase)('adaptadores reales (Supabase local)', () => {
           await world.newProfile('brand'),
         ];
         return {
+          campaignId: await world.newCampaign(requester.id),
           serviceId: await world.newService(creator.id),
           creatorProfileId: creator.id,
           requesterProfileId: requester.id,

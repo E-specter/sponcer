@@ -1,7 +1,7 @@
 import { constants } from 'node:http2';
 import request from 'supertest';
 import { beforeAll, describe, expect, it } from 'vitest';
-import { demoUser, fixtureProfiles } from '@sponcer/contracts/fixtures';
+import { demoInfluencer, demoUser, fixtureProfiles } from '@sponcer/contracts/fixtures';
 import { composeApp } from './compose';
 import { loadEnv } from './config/env';
 
@@ -10,16 +10,16 @@ const CREATED_RANGE = 299;
 const NEW_HANDLE = 'nuevo.smoke.demo';
 
 const byHandle = (h: string) => fixtureProfiles.find((p) => p.snapshot.handle === h)!;
-const creator = byHandle('sofi.moda.demo'); // del usuario demo
+const creator = byHandle('sofi.moda.demo'); // de la Influencer demo
 const brand = byHandle('kallpa.sport.demo'); // de otro usuario
-const brandOwner = brand.ownerUserId!;
+const brandOwner = brand.ownerUserId!; // otra Empresa
 const demoBrand = fixtureProfiles.find((p) => p.role === 'brand' && p.ownerUserId === demoUser.id)!;
 
 describe('composeApp (humo de integración, modo mock)', () => {
   let app: ReturnType<typeof composeApp>['app'];
   const as = (userId: string) => ({ Authorization: `Bearer mock:${userId}` });
-  const get = (path: string, userId = demoUser.id) => request(app).get(path).set(as(userId));
-  const post = (path: string, body: object, userId = demoUser.id) =>
+  const get = (path: string, userId = demoInfluencer.id) => request(app).get(path).set(as(userId));
+  const post = (path: string, body: object, userId = demoInfluencer.id) =>
     request(app).post(path).set(as(userId)).send(body);
 
   beforeAll(async () => {
@@ -33,7 +33,8 @@ describe('composeApp (humo de integración, modo mock)', () => {
     expect((await request(app).get('/api/v1/health')).status).toBe(OK);
     const me = await get('/api/v1/me');
     expect(me.status).toBe(OK);
-    expect(me.body.userId).toBe(demoUser.id);
+    expect(me.body.userId).toBe(demoInfluencer.id);
+    expect(me.body.account.accountKind).toBe('influencer');
   });
 
   it('getProfile trae la clasificación real del pipeline', async () => {
@@ -46,7 +47,7 @@ describe('composeApp (humo de integración, modo mock)', () => {
     const f1 = await get(`/api/v1/feed?profileId=${creator.id}`);
     expect(f1.status).toBe(OK);
     expect(f1.body.items.length).toBeGreaterThan(0);
-    const f2 = await get(`/api/v1/feed?profileId=${demoBrand.id}`);
+    const f2 = await get(`/api/v1/feed?profileId=${demoBrand.id}`, demoUser.id);
     expect(f2.status).toBe(OK);
     expect(f2.body.items.length).toBeGreaterThan(0);
   });
@@ -85,19 +86,33 @@ describe('composeApp (humo de integración, modo mock)', () => {
     expect(kinds).toContain('message_received');
   });
 
-  it('cotización: crear y transicionar', async () => {
-    const service = byHandle('sofi.moda.demo').services[0]!;
+  it('cotización sin match dentro de una campaña activa: crear y transicionar', async () => {
+    const campaign = await post(
+      '/api/v1/campaigns',
+      {
+        brandProfileId: brand.id,
+        name: 'Humo',
+        kind: 'general',
+        startsOn: '2026-12-01',
+        activate: true,
+      },
+      brandOwner,
+    );
+    expect(campaign.status).toBeLessThanOrEqual(CREATED_RANGE);
     const created = await post(
       '/api/v1/quotes',
       {
         requesterProfileId: brand.id,
-        serviceId: service.id,
+        campaignId: campaign.body.id,
+        targets: [{ creatorProfileId: creator.id }],
         message: 'Quiero cotizar',
       },
       brandOwner,
     );
     expect(created.status).toBeLessThanOrEqual(CREATED_RANGE);
-    const moved = await post(`/api/v1/quotes/${created.body.id}/transitions`, {
+    expect(created.body.failed).toEqual([]);
+    const quote = created.body.created[0];
+    const moved = await post(`/api/v1/quotes/${quote.id}/transitions`, {
       actorProfileId: creator.id,
       to: 'accepted',
     });

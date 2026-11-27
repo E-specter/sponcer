@@ -40,4 +40,9 @@ export const E2E_HANDLE_PREFIX = 'e2e.';
 export const E2E_ADMIN_EMAIL = process.env.E2E_ADMIN_EMAIL ?? `e2e-admin@${E2E_EMAIL_DOMAIN}`;
 /** Cuenta sembrada que usa el acceso demo y contraseña que el frontend recibe en `DEMO_PASSWORD`. */
 export const E2E_DEMO_ACCOUNT = 'usuario4@sponcer.local';
+/**
+ * Contraseña real de las cuentas demo (DEMO_PASSWORD de backend/.env), si existe. Los E2E de acceso demo fijan una
+ * contraseña propia y al terminar deben dejar esta (así no rompen la demo pública que corre en paralelo).
+ */
+export const DEMO_PASSWORD_TO_RESTORE = pick('DEMO_PASSWORD');
 export const E2E_DEMO_PASSWORD = process.env.E2E_DEMO_PASSWORD ?? 'E2E-demo-Passw0rd!';

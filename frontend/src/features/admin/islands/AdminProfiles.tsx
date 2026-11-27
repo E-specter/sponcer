@@ -51,7 +51,7 @@ export default function AdminProfiles() {
             value={role}
             onChange={(e) => setRole(e.target.value === 'brand' ? 'brand' : 'creator')}
           >
-            <option value="creator">Creador</option>
+            <option value="creator">Influencer</option>
             <option value="brand">Marca</option>
           </select>
         </Field>

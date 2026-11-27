@@ -1,7 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import { api } from '@sponcer/contracts';
 import { decodeCursor, encodeCursor } from '../../src/shared/cursor';
-import { demoUser, fixtureProfiles, fixtureSocial } from '@sponcer/contracts/fixtures';
+import {
+  demoInfluencer,
+  demoUser,
+  fixtureProfiles,
+  fixtureSocial,
+} from '@sponcer/contracts/fixtures';
 import {
   buildTestApp,
   call,
@@ -33,13 +38,16 @@ const foreignBrands = fixtureProfiles.filter(
 /** Creadores de otros usuarios con servicios (a quienes la marca del demo puede cotizar). */
 const foreignCreatorsWithServices = fixtureProfiles.filter(
   (p) =>
-    p.role === 'creator' && p.ownerUserId && p.ownerUserId !== demoUser.id && p.services.length > 0,
+    p.role === 'creator' &&
+    p.ownerUserId &&
+    p.ownerUserId !== demoInfluencer.id &&
+    p.services.length > 0,
 );
 
 async function makeMatches(t: TestApp) {
   await Promise.all(
     foreignBrands.map(async (brand) => {
-      await call(t.app, 'post', api.interact.path, demoUser.id, {
+      await call(t.app, 'post', api.interact.path, demoInfluencer.id, {
         actorProfileId: demoCreator.id,
         targetProfileId: brand.id,
         kind: 'interest',
@@ -54,20 +62,27 @@ async function makeMatches(t: TestApp) {
 }
 
 async function makeQuotes(t: TestApp) {
-  await Promise.all(
-    foreignCreatorsWithServices.map((creator) =>
-      call(t.app, 'post', api.createQuote.path, demoUser.id, {
-        requesterProfileId: demoBrand.id,
-        serviceId: creator.services[0]!.id,
-        message: 'Hola, me interesa tu servicio',
-      }),
-    ),
-  );
+  const campaign = await call(t.app, 'post', api.createCampaign.path, demoUser.id, {
+    brandProfileId: demoBrand.id,
+    name: 'Paginación',
+    kind: 'general',
+    startsOn: '2026-12-01',
+    activate: true,
+  });
+  await call(t.app, 'post', api.createQuote.path, demoUser.id, {
+    requesterProfileId: demoBrand.id,
+    campaignId: campaign.body.id,
+    targets: foreignCreatorsWithServices.map((creator) => ({
+      creatorProfileId: creator.id,
+      serviceId: creator.services[0]!.id,
+    })),
+    message: 'Hola, me interesa tu servicio',
+  });
 }
 
 type Fetch = (t: TestApp, query: string) => ReturnType<typeof call>;
 const fetchMatches: Fetch = (t, q) =>
-  call(t.app, 'get', `${api.matches.path}?profileId=${demoCreator.id}${q}`, demoUser.id);
+  call(t.app, 'get', `${api.matches.path}?profileId=${demoCreator.id}${q}`, demoInfluencer.id);
 const fetchQuotes: Fetch = (t, q) =>
   call(t.app, 'get', `${api.listQuotes.path}?profileId=${demoBrand.id}${q}`, demoUser.id);
 

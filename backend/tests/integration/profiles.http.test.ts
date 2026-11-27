@@ -7,7 +7,7 @@ import {
   MAX_SHORT_TEXT,
   NICHES,
 } from '@sponcer/contracts';
-import { demoUser, fixtureProfiles } from '@sponcer/contracts/fixtures';
+import { demoInfluencer, demoUser, fixtureProfiles } from '@sponcer/contracts/fixtures';
 import {
   buildTestApp,
   call,
@@ -59,7 +59,7 @@ describe('GET /profiles/:handle', () => {
   });
 
   it('200 de un perfil propio: cumple el esquema y marca isOwner', async () => {
-    const res = await get(await buildTestApp(), demoCreator.snapshot.handle, demoUser.id);
+    const res = await get(await buildTestApp(), demoCreator.snapshot.handle, demoInfluencer.id);
     expect(res.status).toBe(STATUS.OK);
     expectMatchesContract(api.getProfile, res.body);
     expect(res.body).toMatchObject({ id: demoCreator.id, isOwner: true, role: 'creator' });
@@ -67,7 +67,7 @@ describe('GET /profiles/:handle', () => {
   });
 
   it('200 de un perfil ajeno: isOwner false y sin datos de su dueño', async () => {
-    const res = await get(await buildTestApp(), otherCreator.snapshot.handle, demoUser.id);
+    const res = await get(await buildTestApp(), otherCreator.snapshot.handle, demoInfluencer.id);
     expect(res.status).toBe(STATUS.OK);
     expectMatchesContract(api.getProfile, res.body);
     expect(res.body.isOwner).toBe(false);
@@ -76,7 +76,11 @@ describe('GET /profiles/:handle', () => {
   });
 
   it('200 de una ficha sin dueño (RF-01): declared null', async () => {
-    const res = await get(await buildTestApp(), unclaimedCreator.snapshot.handle, demoUser.id);
+    const res = await get(
+      await buildTestApp(),
+      unclaimedCreator.snapshot.handle,
+      demoInfluencer.id,
+    );
     expectMatchesContract(api.getProfile, res.body);
     expect(res.body).toMatchObject({ isOwner: false, status: 'unclaimed', declared: null });
   });
@@ -84,30 +88,32 @@ describe('GET /profiles/:handle', () => {
   it('404 NOT_FOUND si la ficha existe pero fue retirada (handle bloqueado)', async () => {
     const t = await buildTestApp();
     const handle = demoCreator.snapshot.handle;
-    await call(t.app, 'post', removalPath(handle), demoUser.id, { email: demoUser.email });
-    expectError(await get(t, handle, demoUser.id), STATUS.NOT_FOUND, 'NOT_FOUND');
+    await call(t.app, 'post', removalPath(handle), demoInfluencer.id, {
+      email: demoInfluencer.email,
+    });
+    expectError(await get(t, handle, demoInfluencer.id), STATUS.NOT_FOUND, 'NOT_FOUND');
   });
 
   it.each(['%00', '..%2F..%2Fetc%2Fpasswd', "'%20OR%201%3D1"])(
     'no revienta con el handle hostil %s',
     async (h) => {
-      const res = await get(await buildTestApp(), h, demoUser.id);
+      const res = await get(await buildTestApp(), h, demoInfluencer.id);
       expect(res.status).toBeLessThan(STATUS.SERVER_ERROR);
     },
   );
 
   it('M-3: el handle de la ruta es insensible a mayúsculas y al @, como IgHandle', async () => {
     const t = await buildTestApp();
-    const upper = await get(t, demoCreator.snapshot.handle.toUpperCase(), demoUser.id);
+    const upper = await get(t, demoCreator.snapshot.handle.toUpperCase(), demoInfluencer.id);
     expect(upper.status).toBe(STATUS.OK);
     expect(upper.body.id).toBe(demoCreator.id);
-    const withAt = await get(t, `%40${demoCreator.snapshot.handle}`, demoUser.id);
+    const withAt = await get(t, `%40${demoCreator.snapshot.handle}`, demoInfluencer.id);
     expect(withAt.body.id).toBe(demoCreator.id);
   });
 
   it('un handle de la ruta con formato inválido es 400, no 404', async () => {
     expectError(
-      await get(await buildTestApp(), 'con%20espacio', demoUser.id),
+      await get(await buildTestApp(), 'con%20espacio', demoInfluencer.id),
       STATUS.BAD_REQUEST,
       'VALIDATION_ERROR',
     );
@@ -122,7 +128,7 @@ describe('GET /profiles/:handle · ingesta bajo demanda (RF-01)', () => {
 
   it('un handle profesional desconocido se ingiere: 200 con una ficha unclaimed de rol creator', async () => {
     const t = await buildTestApp();
-    const res = await get(t, NEW_HANDLE, demoUser.id);
+    const res = await get(t, NEW_HANDLE, demoInfluencer.id);
     expect(res.status, JSON.stringify(res.body)).toBe(STATUS.OK);
     expectMatchesContract(api.getProfile, res.body);
     expect(res.body).toMatchObject({
@@ -137,7 +143,7 @@ describe('GET /profiles/:handle · ingesta bajo demanda (RF-01)', () => {
 
   it('es idempotente: repetir la consulta devuelve la misma ficha, sin duplicarla ni repetir el evento', async () => {
     const t = await buildTestApp();
-    const first = await get(t, NEW_HANDLE, demoUser.id);
+    const first = await get(t, NEW_HANDLE, demoInfluencer.id);
     const eventsAfterFirst = t.events.length;
     const second = await get(t, NEW_HANDLE, OTHER_USER.id);
     expect(second.status).toBe(STATUS.OK);
@@ -147,7 +153,7 @@ describe('GET /profiles/:handle · ingesta bajo demanda (RF-01)', () => {
 
   it('la ficha creada se reclama sin duplicarse (ADR-002 paso 4)', async () => {
     const t = await buildTestApp();
-    const created = await get(t, NEW_HANDLE, demoUser.id);
+    const created = await get(t, NEW_HANDLE, demoInfluencer.id);
     const claim = await call(t.app, 'post', claimsPath, demoUser.id, {
       handle: NEW_HANDLE,
       role: 'brand',
@@ -163,7 +169,7 @@ describe('GET /profiles/:handle · ingesta bajo demanda (RF-01)', () => {
   it('un handle ya conocido no consume el cupo de ingestas', async () => {
     const t = await buildTestApp();
     const calls = Array.from({ length: ON_DEMAND_LIMIT + OVER_LIMIT }, () =>
-      get(t, demoCreator.snapshot.handle, demoUser.id),
+      get(t, demoCreator.snapshot.handle, demoInfluencer.id),
     );
     expect((await Promise.all(calls)).every((r) => r.status === STATUS.OK)).toBe(true);
   });
@@ -171,11 +177,11 @@ describe('GET /profiles/:handle · ingesta bajo demanda (RF-01)', () => {
   it('el límite es de 10 ingestas nuevas por hora y usuario: la 11.ª da 429 RATE_LIMITED', async () => {
     const t = await buildTestApp();
     const within = await Promise.all(
-      Array.from({ length: ON_DEMAND_LIMIT }, (_, n) => get(t, handleN(n), demoUser.id)),
+      Array.from({ length: ON_DEMAND_LIMIT }, (_, n) => get(t, handleN(n), demoInfluencer.id)),
     );
     expect(within.every((r) => r.status === STATUS.OK)).toBe(true);
     expectError(
-      await get(t, handleN(ON_DEMAND_LIMIT), demoUser.id),
+      await get(t, handleN(ON_DEMAND_LIMIT), demoInfluencer.id),
       STATUS.TOO_MANY,
       'RATE_LIMITED',
     );
@@ -186,10 +192,10 @@ describe('GET /profiles/:handle · ingesta bajo demanda (RF-01)', () => {
   it('el cupo se libera pasada la hora', async () => {
     const t = await buildTestApp();
     await Promise.all(
-      Array.from({ length: ON_DEMAND_LIMIT }, (_, n) => get(t, handleN(n), demoUser.id)),
+      Array.from({ length: ON_DEMAND_LIMIT }, (_, n) => get(t, handleN(n), demoInfluencer.id)),
     );
     t.advanceMinutes(MINUTES_PER_HOUR + OVER_LIMIT);
-    expect((await get(t, handleN(ON_DEMAND_LIMIT), demoUser.id)).status).toBe(STATUS.OK);
+    expect((await get(t, handleN(ON_DEMAND_LIMIT), demoInfluencer.id)).status).toBe(STATUS.OK);
   });
 
   it('sin sesión no se ingiere nada (401)', async () => {
@@ -215,7 +221,7 @@ describe('PATCH /profiles/:profileId/declared', () => {
 
   it('403 FORBIDDEN si el perfil es de otro usuario, y no cambia nada ni publica evento', async () => {
     const t = await buildTestApp();
-    const res = await patch(t, otherCreator.id, demoUser.id, {
+    const res = await patch(t, otherCreator.id, demoInfluencer.id, {
       ...CREATOR_DECLARED,
       niches: ['gaming'],
     });
@@ -227,7 +233,7 @@ describe('PATCH /profiles/:profileId/declared', () => {
 
   it('403 sobre una ficha sin dueño (nadie puede editarla)', async () => {
     expectError(
-      await patch(await buildTestApp(), unclaimedCreator.id, demoUser.id, CREATOR_DECLARED),
+      await patch(await buildTestApp(), unclaimedCreator.id, demoInfluencer.id, CREATOR_DECLARED),
       STATUS.FORBIDDEN,
       'FORBIDDEN',
     );
@@ -235,7 +241,7 @@ describe('PATCH /profiles/:profileId/declared', () => {
 
   it.each([UNKNOWN_UUID, 'no-es-uuid'])('404 NOT_FOUND con el profileId %s', async (id) => {
     expectError(
-      await patch(await buildTestApp(), id, demoUser.id, CREATOR_DECLARED),
+      await patch(await buildTestApp(), id, demoInfluencer.id, CREATOR_DECLARED),
       STATUS.NOT_FOUND,
       'NOT_FOUND',
     );
@@ -244,12 +250,12 @@ describe('PATCH /profiles/:profileId/declared', () => {
   it('200: el dueño actualiza, la respuesta cumple el esquema y se publica el evento', async () => {
     const t = await buildTestApp();
     const next = { ...CREATOR_DECLARED, niches: ['gaming', 'musica'], city: 'lima' };
-    const res = await patch(t, demoCreator.id, demoUser.id, next);
+    const res = await patch(t, demoCreator.id, demoInfluencer.id, next);
     expect(res.status).toBe(STATUS.OK);
     expectMatchesContract(api.updateDeclared, res.body);
     expect(res.body.declared).toMatchObject({ niches: ['gaming', 'musica'], city: 'lima' });
     expect(t.events).toEqual([{ type: 'ProfileDeclaredDataChanged', profileId: demoCreator.id }]);
-    const reread = await get(t, demoCreator.snapshot.handle, demoUser.id);
+    const reread = await get(t, demoCreator.snapshot.handle, demoInfluencer.id);
     expect(reread.body.declared).toEqual(res.body.declared);
   });
 
@@ -264,7 +270,7 @@ describe('PATCH /profiles/:profileId/declared', () => {
 
   it('ignora campos de más (ownerUserId, status): no hay asignación masiva', async () => {
     const t = await buildTestApp();
-    const res = await patch(t, demoCreator.id, demoUser.id, {
+    const res = await patch(t, demoCreator.id, demoInfluencer.id, {
       ...CREATOR_DECLARED,
       ownerUserId: OTHER_USER.id,
       status: 'removed',
@@ -272,13 +278,13 @@ describe('PATCH /profiles/:profileId/declared', () => {
     });
     expect(res.status).toBe(STATUS.OK);
     expect(res.body).toMatchObject({ status: 'verified', isOwner: true });
-    expect((await get(t, demoCreator.snapshot.handle, demoUser.id)).body.isOwner).toBe(true);
+    expect((await get(t, demoCreator.snapshot.handle, demoInfluencer.id)).body.isOwner).toBe(true);
   });
 
   it('400 si el rol del cuerpo no coincide con el del perfil (marca sobre creador)', async () => {
     const t = await buildTestApp();
     expectError(
-      await patch(t, demoCreator.id, demoUser.id, BRAND_DECLARED),
+      await patch(t, demoCreator.id, demoInfluencer.id, BRAND_DECLARED),
       STATUS.BAD_REQUEST,
       'VALIDATION_ERROR',
     );
@@ -311,7 +317,11 @@ describe('PATCH /profiles/:profileId/declared', () => {
     const t = await buildTestApp();
     const id =
       (body as { role?: string } | undefined)?.role === 'brand' ? demoBrand.id : demoCreator.id;
-    expectError(await patch(t, id, demoUser.id, body), STATUS.BAD_REQUEST, 'VALIDATION_ERROR');
+    expectError(
+      await patch(t, id, demoInfluencer.id, body),
+      STATUS.BAD_REQUEST,
+      'VALIDATION_ERROR',
+    );
   });
 });
 
@@ -330,7 +340,7 @@ describe('PUT /profiles/:profileId/services', () => {
   it('403 si el perfil es de otro usuario, y su catálogo no cambia', async () => {
     const t = await buildTestApp();
     expectError(
-      await put(t, otherCreator.id, demoUser.id, { services: [VALID_SERVICE] }),
+      await put(t, otherCreator.id, demoInfluencer.id, { services: [VALID_SERVICE] }),
       STATUS.FORBIDDEN,
       'FORBIDDEN',
     );
@@ -348,7 +358,7 @@ describe('PUT /profiles/:profileId/services', () => {
 
   it('404 con un perfil inexistente', async () => {
     expectError(
-      await put(await buildTestApp(), UNKNOWN_UUID, demoUser.id, { services: [] }),
+      await put(await buildTestApp(), UNKNOWN_UUID, demoInfluencer.id, { services: [] }),
       STATUS.NOT_FOUND,
       'NOT_FOUND',
     );
@@ -356,7 +366,7 @@ describe('PUT /profiles/:profileId/services', () => {
 
   it('200: reemplaza el catálogo y la ficha lo refleja', async () => {
     const t = await buildTestApp();
-    const res = await put(t, demoCreator.id, demoUser.id, {
+    const res = await put(t, demoCreator.id, demoInfluencer.id, {
       services: [VALID_SERVICE, { ...VALID_SERVICE, pricePen: 1 }],
     });
     expect(res.status).toBe(STATUS.OK);
@@ -365,7 +375,7 @@ describe('PUT /profiles/:profileId/services', () => {
       'Reel de prueba',
       'Reel de prueba',
     ]);
-    expect((await get(t, demoCreator.snapshot.handle, demoUser.id)).body.services).toEqual(
+    expect((await get(t, demoCreator.snapshot.handle, demoInfluencer.id)).body.services).toEqual(
       res.body,
     );
   });
@@ -373,11 +383,11 @@ describe('PUT /profiles/:profileId/services', () => {
   it('los ids de las filas idénticas se conservan (las cotizaciones apuntan a ellos)', async () => {
     const t = await buildTestApp();
     const unchanged = demoCreator.services.map(({ id: _id, ...rest }) => rest);
-    const same = await put(t, demoCreator.id, demoUser.id, { services: unchanged });
+    const same = await put(t, demoCreator.id, demoInfluencer.id, { services: unchanged });
     expect(same.body.map((s: { id: string }) => s.id)).toEqual(
       demoCreator.services.map((s) => s.id),
     );
-    const grown = await put(t, demoCreator.id, demoUser.id, {
+    const grown = await put(t, demoCreator.id, demoInfluencer.id, {
       services: [...unchanged, VALID_SERVICE],
     });
     expect(grown.body.slice(0, unchanged.length).map((s: { id: string }) => s.id)).toEqual(
@@ -387,7 +397,9 @@ describe('PUT /profiles/:profileId/services', () => {
   });
 
   it('200 con [] vacía el catálogo', async () => {
-    const res = await put(await buildTestApp(), demoCreator.id, demoUser.id, { services: [] });
+    const res = await put(await buildTestApp(), demoCreator.id, demoInfluencer.id, {
+      services: [],
+    });
     expect(res.status).toBe(STATUS.OK);
     expect(res.body).toEqual([]);
   });
@@ -395,9 +407,11 @@ describe('PUT /profiles/:profileId/services', () => {
   it('200 en el límite exacto de servicios, 400 un servicio más', async () => {
     const t = await buildTestApp();
     const many = (n: number) => ({ services: Array.from({ length: n }, () => VALID_SERVICE) });
-    expect((await put(t, demoCreator.id, demoUser.id, many(MAX_SERVICES))).status).toBe(STATUS.OK);
+    expect((await put(t, demoCreator.id, demoInfluencer.id, many(MAX_SERVICES))).status).toBe(
+      STATUS.OK,
+    );
     expectError(
-      await put(t, demoCreator.id, demoUser.id, many(MAX_SERVICES + OVER)),
+      await put(t, demoCreator.id, demoInfluencer.id, many(MAX_SERVICES + OVER)),
       STATUS.BAD_REQUEST,
       'VALIDATION_ERROR',
     );
@@ -422,11 +436,11 @@ describe('PUT /profiles/:profileId/services', () => {
   ])('400 VALIDATION_ERROR con %s y el catálogo queda intacto', async (_name, body) => {
     const t = await buildTestApp();
     expectError(
-      await put(t, demoCreator.id, demoUser.id, body),
+      await put(t, demoCreator.id, demoInfluencer.id, body),
       STATUS.BAD_REQUEST,
       'VALIDATION_ERROR',
     );
-    expect((await get(t, demoCreator.snapshot.handle, demoUser.id)).body.services).toEqual(
+    expect((await get(t, demoCreator.snapshot.handle, demoInfluencer.id)).body.services).toEqual(
       demoCreator.services,
     );
   });
@@ -458,12 +472,12 @@ describe('POST /profiles/:handle/removal-requests (público, Ley 29733)', () => 
   it('el dueño verificado retira su ficha: desaparece, no se edita y no se puede reclamar de nuevo', async () => {
     const t = await buildTestApp();
     const handle = demoCreator.snapshot.handle;
-    await remove(t, handle, { email: demoUser.email }, demoUser.id);
-    expectError(await get(t, handle, demoUser.id), STATUS.NOT_FOUND, 'NOT_FOUND');
-    const me = await call(t.app, 'get', api.me.path, demoUser.id);
+    await remove(t, handle, { email: demoInfluencer.email }, demoInfluencer.id);
+    expectError(await get(t, handle, demoInfluencer.id), STATUS.NOT_FOUND, 'NOT_FOUND');
+    const me = await call(t.app, 'get', api.me.path, demoInfluencer.id);
     expect(me.body.profiles.map((p: { id: string }) => p.id)).not.toContain(demoCreator.id);
     expectError(
-      await call(t.app, 'patch', declaredPath(demoCreator.id), demoUser.id, CREATOR_DECLARED),
+      await call(t.app, 'patch', declaredPath(demoCreator.id), demoInfluencer.id, CREATOR_DECLARED),
       STATUS.NOT_FOUND,
       'NOT_FOUND',
     );
@@ -485,25 +499,25 @@ describe('POST /profiles/:handle/removal-requests (público, Ley 29733)', () => 
       STATUS.BAD_REQUEST,
       'VALIDATION_ERROR',
     );
-    expect((await get(t, otherCreator.snapshot.handle, demoUser.id)).status).toBe(STATUS.OK);
+    expect((await get(t, otherCreator.snapshot.handle, demoInfluencer.id)).status).toBe(STATUS.OK);
   });
 
   it('A-1: un anónimo no retira nada: la ficha sigue visible y la respuesta es la misma', async () => {
     const t = await buildTestApp();
     const handle = otherCreator.snapshot.handle;
     const anon = await remove(t, handle, { email: 'cualquiera@atacante.pe' });
-    const stranger = await remove(t, handle, { email: 'otro@atacante.pe' }, demoUser.id);
+    const stranger = await remove(t, handle, { email: 'otro@atacante.pe' }, demoInfluencer.id);
     const owner = await remove(t, 'cuenta.que.no.existe', { email: EMAIL }, OTHER_USER.id);
     expect([anon.status, stranger.status, owner.status]).toEqual([STATUS.OK, STATUS.OK, STATUS.OK]);
     expect([stranger.body, owner.body]).toEqual([anon.body, anon.body]);
     expect((await get(t, handle, OTHER_USER.id)).status).toBe(STATUS.OK);
-    expect((await get(t, handle, demoUser.id)).body.status).toBe('verified');
+    expect((await get(t, handle, demoInfluencer.id)).body.status).toBe('verified');
   });
 
   it('A-1: un usuario autenticado que no es el dueño tampoco retira la ficha de otro', async () => {
     const t = await buildTestApp();
     await remove(t, demoCreator.snapshot.handle, { email: OTHER_USER.email }, OTHER_USER.id);
-    expect((await get(t, demoCreator.snapshot.handle, demoUser.id)).status).toBe(STATUS.OK);
+    expect((await get(t, demoCreator.snapshot.handle, demoInfluencer.id)).status).toBe(STATUS.OK);
   });
 
   it('A-1: el dueño de un perfil no puede retirar con su sesión el perfil de otro', async () => {
@@ -517,11 +531,11 @@ describe('POST /profiles/:handle/removal-requests (público, Ley 29733)', () => 
     await remove(
       t,
       demoCreator.snapshot.handle.toUpperCase(),
-      { email: demoUser.email },
-      demoUser.id,
+      { email: demoInfluencer.email },
+      demoInfluencer.id,
     );
     expectError(
-      await get(t, demoCreator.snapshot.handle, demoUser.id),
+      await get(t, demoCreator.snapshot.handle, demoInfluencer.id),
       STATUS.NOT_FOUND,
       'NOT_FOUND',
     );
@@ -545,12 +559,10 @@ describe('POST /profiles/:handle/removal-requests (público, Ley 29733)', () => 
 
 describe('datos sembrados', () => {
   it('los fixtures usados por estos tests existen (si cambian, los casos se rompen aquí y no en silencio)', () => {
-    expect(
-      fixtureProfiles
-        .filter((p) => p.ownerUserId === demoUser.id)
-        .map((p) => p.role)
-        .sort(),
-    ).toEqual(['brand', 'creator']);
+    const rolesOf = (id: string) =>
+      fixtureProfiles.filter((p) => p.ownerUserId === id).map((p) => p.role);
+    expect(rolesOf(demoInfluencer.id)).toEqual(['creator']);
+    expect(rolesOf(demoUser.id)).toEqual(['brand', 'brand']);
     expect(demoCreator.services.length).toBeGreaterThan(0);
     expect(otherCreator.declared).not.toBeNull();
   });

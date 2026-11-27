@@ -2,6 +2,8 @@
 // Uso: npm run demo:accounts -w backend
 export {}; // fuerza modo módulo (await de nivel superior)
 const DEMO_DOMAIN = '@sponcer.local';
+// Una cuenta de cada tipo (ADR-009): Empresa e Influencer. Si falta alguna, el seed no está al día.
+const REQUIRED = ['demo@sponcer.local', 'demo-influencer@sponcer.local'];
 const PAGE_SIZE = 1000;
 const EXIT_ERROR = 1;
 const MIN_PASSWORD_LENGTH = 6;
@@ -33,6 +35,9 @@ if (!listRes.ok) fail(`no se pudo listar usuarios (HTTP ${listRes.status})`);
 const { users } = (await listRes.json()) as { users: AdminUser[] };
 const demo = users.filter((u) => u.email?.endsWith(DEMO_DOMAIN));
 if (demo.length === 0) fail(`no hay usuarios ${DEMO_DOMAIN}; ejecuta el seed (npm run db:reset)`);
+
+const missing = REQUIRED.filter((e) => !demo.some((u) => u.email === e));
+if (missing.length > 0) fail(`faltan ${missing.join(', ')}; ejecuta el seed (npm run db:reset)`);
 
 const updated = await Promise.all(
   demo.map(async (u) => {

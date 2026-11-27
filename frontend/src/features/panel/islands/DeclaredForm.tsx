@@ -29,7 +29,7 @@ const OBJECTIVE_OPTIONS = CAMPAIGN_OBJECTIVES.map((value) => ({
 }));
 const ACCOUNT_LABEL: Record<AccountType, string> = {
   business: 'Negocio',
-  creator: 'Creador',
+  creator: 'Influencer',
   unknown: 'No lo sé',
 };
 
@@ -146,7 +146,7 @@ export default function DeclaredForm({ profileId, role, initial }: Props) {
           />
           <CheckboxGroup
             id={id('target')}
-            legend="Nichos de creadores que buscas"
+            legend="Nichos de influencers que buscas"
             options={NICHE_OPTIONS}
             value={targetNiches}
             onChange={setTargetNiches}

@@ -4,6 +4,8 @@ import type { QuoteRecord } from '@sponcer/contracts';
 import type { QuoteRepository } from '../../../src/modules/quotes/application/ports/out/quote-repository';
 
 export interface QuoteScenario {
+  /** Campaña existente de la marca solicitante (en BD real, FK a campaigns). */
+  campaignId: string;
   /** Servicio existente del creador (en BD real, FK a creator_services). */
   serviceId: string;
   creatorProfileId: string;
@@ -45,6 +47,7 @@ const quote = (
   over: Partial<QuoteRecord> = {},
 ): QuoteRecord => ({
   id: randomUUID(),
+  campaignId: s.campaignId,
   serviceId: s.serviceId,
   creatorProfileId: s.creatorProfileId,
   requesterProfileId: s.requesterProfileId,
@@ -137,6 +140,41 @@ export function describeQuoteRepositoryContract(
       expect((await repo.listByProfile(s.requesterProfileId)).map((x) => x.id)).toEqual([q.id]);
       expect((await repo.listByProfile(s.creatorProfileId)).map((x) => x.id)).toEqual([q.id]);
       expect(await repo.listByProfile(s.strangerProfileId)).toEqual([]);
+    });
+
+    it('listByCampaign devuelve solo las de esa campaña', async () => {
+      const { repo, newScenario } = await factory();
+      const [one, two] = [await newScenario(), await newScenario()];
+      const mine = quote(one, [event(one, 1, null, 'sent')]);
+      await repo.save(mine);
+      await repo.save(quote(two, [event(two, 1, null, 'sent')]));
+      expect((await repo.listByCampaign(one.campaignId)).map((x) => x.id)).toEqual([mine.id]);
+    });
+
+    it('serviceId nulo (propuesta abierta) se guarda y vuelve como null', async () => {
+      const { repo, newScenario } = await factory();
+      const s = await newScenario();
+      const q = quote(s, [event(s, 1, null, 'sent')], { serviceId: null });
+      await repo.save(q);
+      expect((await repo.findById(q.id))?.serviceId).toBeNull();
+    });
+
+    it('una segunda cotización abierta al mismo creador en la campaña es CONFLICT; tras cerrar la primera, no', async () => {
+      const { repo, newScenario } = await factory();
+      const s = await newScenario();
+      const first = quote(s, [event(s, 1, null, 'sent')]);
+      await repo.save(first);
+      await expect(repo.save(quote(s, [event(s, 1, null, 'sent')]))).rejects.toMatchObject({
+        code: 'CONFLICT',
+      });
+      await repo.save({
+        ...first,
+        status: 'cancelled',
+        history: [...first.history, event(s, TWO, 'sent', 'cancelled')],
+        updatedAt: at(TWO),
+      });
+      await repo.save(quote(s, [event(s, TWO, null, 'sent')]));
+      expect(await repo.listByCampaign(s.campaignId)).toHaveLength(TWO);
     });
 
     it('listByProfile no mezcla cotizaciones de otros escenarios (ACL)', async () => {

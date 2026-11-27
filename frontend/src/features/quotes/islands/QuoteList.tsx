@@ -23,6 +23,10 @@ interface Props {
   profile: ProfileSummary;
   quotes: Quote[];
   nextCursor: string | null;
+  /** Campaña fija (detalle de campaña) o preseleccionada en el filtro. */
+  campaignId?: string;
+  /** Sin filtro de campaña (el detalle de campaña ya está filtrado). */
+  hideFilter?: boolean;
 }
 
 /** Transiciones válidas desde `status` para quien actúa como `role` (QUOTE_TRANSITIONS + QUOTE_TRANSITION_ACTOR). */
@@ -35,7 +39,18 @@ export const allowedTransitions = (
     return actor === 'any' || actor === role;
   });
 
-export default function QuoteList({ profile, quotes: initial, nextCursor }: Props) {
+export default function QuoteList({
+  profile,
+  quotes: initial,
+  nextCursor,
+  campaignId = '',
+  hideFilter = false,
+}: Props) {
+  const [filter, setFilter] = useState(campaignId);
+  // Campañas conocidas por las cotizaciones recibidas al cargar (suficiente para filtrar).
+  const [campaigns] = useState(() => [
+    ...new Map(initial.map((q) => [q.campaign.id, q.campaign.name])),
+  ]);
   const [quotes, setQuotes] = useState(initial);
   const [cursor, setCursor] = useState(nextCursor);
   const [loadingMore, setLoadingMore] = useState(false);
@@ -48,13 +63,25 @@ export default function QuoteList({ profile, quotes: initial, nextCursor }: Prop
     if (!cursor) return;
     setLoadingMore(true);
     try {
-      const page = await listQuotes(profile.id, cursor);
+      const page = await listQuotes(profile.id, cursor, filter);
       setQuotes((prev) => [...prev, ...page.items]);
       setCursor(page.nextCursor);
     } catch (e) {
       setError(messageOf(e));
     } finally {
       setLoadingMore(false);
+    }
+  }
+
+  async function applyFilter(id: string) {
+    setFilter(id);
+    setError(null);
+    try {
+      const page = await listQuotes(profile.id, undefined, id);
+      setQuotes(page.items);
+      setCursor(page.nextCursor);
+    } catch (e) {
+      setError(messageOf(e));
     }
   }
 
@@ -77,10 +104,31 @@ export default function QuoteList({ profile, quotes: initial, nextCursor }: Prop
     }
   }
 
-  if (quotes.length === 0) return <p className="muted">Sin cotizaciones para este perfil.</p>;
+  const filterField = !hideFilter && campaigns.length > 1 && (
+    <div className="field">
+      <label htmlFor={`qf-${profile.id}`}>Filtrar por campaña</label>
+      <select id={`qf-${profile.id}`} value={filter} onChange={(e) => applyFilter(e.target.value)}>
+        <option value="">Todas las campañas</option>
+        {campaigns.map(([id, name]) => (
+          <option key={id} value={id}>
+            {name}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+
+  if (quotes.length === 0)
+    return (
+      <div className="stack">
+        {filterField}
+        <p className="muted">Sin cotizaciones para este perfil.</p>
+      </div>
+    );
 
   return (
     <div className="stack">
+      {filterField}
       <div aria-live="polite">{error && <Alert kind="error">{error}</Alert>}</div>
       {quotes.map((q) => {
         const role = q.requesterProfileId === profile.id ? 'requester' : 'creator';
@@ -97,8 +145,10 @@ export default function QuoteList({ profile, quotes: initial, nextCursor }: Prop
               <span className="muted small">Actualizada {formatDate(q.updatedAt)}</span>
             </p>
             <p className="small muted">
-              Servicio: {SERVICE_TYPE_LABEL[q.service.type]} ·{' '}
-              {SERVICE_FORMAT_LABEL[q.service.format]} · {formatPen(q.service.pricePen)}
+              Campaña: {q.campaign.name} ·{' '}
+              {q.service
+                ? `Servicio: ${SERVICE_TYPE_LABEL[q.service.type]} · ${SERVICE_FORMAT_LABEL[q.service.format]} · ${formatPen(q.service.pricePen)}`
+                : 'Propuesta abierta'}
             </p>
             <p>{q.message}</p>
             <details>

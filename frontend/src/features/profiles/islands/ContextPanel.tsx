@@ -79,7 +79,7 @@ export default function ContextPanel({ profiles }: { profiles: ProfileSummary[] 
           <div>
             <h2>{active.fullName ?? `@${active.handle}`}</h2>
             <p className="muted">
-              {active.role === 'brand' ? 'Marca' : 'Creador'} · @{active.handle}
+              {active.role === 'brand' ? 'Marca' : 'Influencer'} · @{active.handle}
             </p>
           </div>
         </div>

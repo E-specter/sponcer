@@ -8,6 +8,7 @@ import type { CandidateSearch } from '../../../application/ports/out/candidate-s
 import type { Candidate } from '../../../domain/candidate';
 import type { InteractionRepository } from '../../../application/ports/out/interaction-repository';
 import type { MatchRepository } from '../../../application/ports/out/match-repository';
+import type { ProfileViewRepository } from '../../../application/ports/out/profile-view-repository';
 import {
   interactionToRow,
   matchToRow,
@@ -48,6 +49,59 @@ export function createSupabaseInteractionRepository(db: SupabaseClient): Interac
       const { data, error } = await db.from('interactions').select().eq('actor_profile_id', actor);
       if (error) return fail('listByActor', error.message);
       return (data as InteractionRow[]).map(rowToInteraction);
+    },
+    async listByTarget(target) {
+      const { data, error } = await db
+        .from('interactions')
+        .select()
+        .eq('target_profile_id', target);
+      if (error) return fail('listByTarget', error.message);
+      return (data as InteractionRow[]).map(rowToInteraction);
+    },
+  };
+}
+
+interface ProfileViewRow {
+  viewer_profile_id: string;
+  viewed_on: string;
+  count: number;
+  last_at: string;
+}
+
+/** Tabla `profile_views` (ADR-009): PK (viewer, viewed, viewed_on); escribe solo el service role. */
+export function createSupabaseProfileViewRepository(db: SupabaseClient): ProfileViewRepository {
+  return {
+    // ON CONFLICT DO NOTHING: sin fila devuelta = ya había visita ese día.
+    async recordOnce(viewer, viewed, day, at) {
+      const { data, error } = await db
+        .from('profile_views')
+        .upsert(
+          {
+            viewer_profile_id: viewer,
+            viewed_profile_id: viewed,
+            viewed_on: day,
+            count: 1,
+            last_at: at,
+          },
+          { onConflict: 'viewer_profile_id,viewed_profile_id,viewed_on', ignoreDuplicates: true },
+        )
+        .select();
+      if (error) return fail('recordOnce', error.message);
+      return data.length > 0;
+    },
+    async listSince(viewed, sinceDay) {
+      const { data, error } = await db
+        .from('profile_views')
+        .select('viewer_profile_id,viewed_on,count,last_at')
+        .eq('viewed_profile_id', viewed)
+        .gte('viewed_on', sinceDay);
+      if (error) return fail('listSince', error.message);
+      return (data as ProfileViewRow[]).map((r) => ({
+        viewerProfileId: r.viewer_profile_id,
+        viewedOn: r.viewed_on,
+        count: r.count,
+        lastAt: r.last_at,
+      }));
     },
   };
 }

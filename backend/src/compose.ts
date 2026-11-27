@@ -101,6 +101,7 @@ export function composeApp(env: Env, opts: { now?: () => Date } = {}) {
     profiles: profiles.api,
     classification: classification.api,
     weights: env.MATCH_WEIGHTS,
+    isAdmin: admins.isAdmin,
   });
   const quotes = createQuotesModule({
     adapter: env.ADAPTER_QUOTES,

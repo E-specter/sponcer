@@ -4,8 +4,10 @@ import {
   QUOTE_TRANSITION_ACTOR,
   api,
   type EndpointName,
+  type Account,
   type ProfileCard,
   type QuoteRecord,
+  type VisibilityItem,
   type RemovalRequestItem,
   type VerifyClaimResult,
 } from '@sponcer/contracts';
@@ -13,7 +15,11 @@ import { demoUser, fixtureUsers, type FixtureProfile } from '@sponcer/contracts/
 import type { RawArgs } from '../http';
 import type { ParsedArgs, Result } from '../types';
 import {
+  isMockNewUser,
+  campaignOf,
   enrichQuote,
+  isOpenQuote,
+  withStats,
   fail,
   findProfile,
   notify,
@@ -42,6 +48,8 @@ const randomCode = (): string =>
   `sponcer-${Array.from({ length: CODE_LENGTH }, () => CODE_ALPHABET[Math.floor(Math.random() * CODE_ALPHABET.length)]).join('')}`;
 
 /** Marcas diacríticas combinadas (acentos) tras normalizar a NFD: "á" -> "a". */
+// Acepta el acento combinado de "á" en NFD; rechaza "a" sin acento.
+// Probar: https://regex101.com/?regex=%5B%CC%80-%CD%AF%5D&testString=a%CC%81&flavor=javascript
 const DIACRITICS = /[̀-ͯ]/g;
 
 const nowIso = (): string => new Date().toISOString();
@@ -110,13 +118,55 @@ function matchesText(card: ProfileCard, q: string | undefined): boolean {
 
 const normalize = (s: string): string => s.normalize('NFD').replace(DIACRITICS, '').toLowerCase();
 
+const MS_PER_DAY = 86_400_000;
+const WEEK_DAYS = 7;
+const MONTH_DAYS = 30;
+const CAMPAIGN_ORDER = ['draft', 'active', 'closed'] as const;
+const emptyAccount: Account = { accountKind: null, company: null, influencer: null };
+
+/** Cuenta del usuario: la del fixture, la registrada en esta sesión o "sin registrar". */
+function accountOf(userId: string): Account {
+  const registered = state().registrations[userId];
+  if (registered) return registered;
+  const u = fixtureUsers.find((x) => x.id === userId);
+  return u
+    ? { accountKind: u.accountKind, company: u.company, influencer: u.influencer }
+    : emptyAccount;
+}
+
+const within = (iso: string, days: number): boolean =>
+  (Date.now() - new Date(iso).getTime()) / MS_PER_DAY <= days;
+
+/** Intereses recibidos que aún no son match. */
+function receivedInterests(profileId: string) {
+  const s = state();
+  return s.interactions.filter(
+    (i) =>
+      i.targetProfileId === profileId &&
+      i.kind === 'interest' &&
+      !s.matches.some(
+        (m) =>
+          [m.creatorProfileId, m.brandProfileId].includes(profileId) &&
+          [m.creatorProfileId, m.brandProfileId].includes(i.actorProfileId),
+      ),
+  );
+}
+
+const ownBrand = (userId: string, profileId: string): FixtureProfile => {
+  const p = ownProfile(userId, profileId);
+  return p.role === 'brand' ? p : fail('FORBIDDEN', 'Solo las marcas tienen campañas');
+};
+
 const handlers: Handlers = {
   health: () => ({ status: 'ok' }),
 
   me: ({ userId }) => {
     return {
       userId,
-      email: fixtureUsers.find((u) => u.id === userId)?.email ?? '',
+      email: isMockNewUser(userId)
+        ? `nuevo-${userId.slice(-12)}@sponcer.local`
+        : (fixtureUsers.find((u) => u.id === userId)?.email ?? ''),
+      account: accountOf(userId),
       // Mock: el usuario demo es administrador.
       isAdmin: userId === demoUser.id,
       profiles: state()
@@ -125,7 +175,32 @@ const handlers: Handlers = {
     };
   },
 
+  register: ({ userId, body }) => {
+    if (accountOf(userId).accountKind) return fail('CONFLICT', 'Tu cuenta ya está registrada');
+    state().registrations[userId] =
+      body.accountKind === 'company'
+        ? {
+            accountKind: 'company',
+            company: {
+              id: crypto.randomUUID(),
+              ...body.company,
+              tradeName: body.company.tradeName ?? null,
+              createdAt: nowIso(),
+            },
+            influencer: null,
+          }
+        : {
+            accountKind: 'influencer',
+            company: null,
+            influencer: { ...body.influencer, about: body.influencer.about ?? null },
+          };
+    return handlers.me({ userId }) as Result<'me'>;
+  },
+
   startClaim: ({ userId, body }) => {
+    const kind = accountOf(userId).accountKind;
+    if (kind && (kind === 'company') !== (body.role === 'brand'))
+      return fail('FORBIDDEN', 'Tu tipo de cuenta no permite reclamar ese tipo de perfil');
     const existing = state().profiles.find((p) => p.snapshot.handle === body.handle);
     if (existing?.ownerUserId && existing.ownerUserId !== userId) {
       return fail('CONFLICT', 'Ese perfil ya fue reclamado por otra persona');
@@ -399,41 +474,189 @@ const handlers: Handlers = {
     ownProfile(userId, query.profileId);
     const items = state()
       .quotes.filter(
-        (q) => q.creatorProfileId === query.profileId || q.requesterProfileId === query.profileId,
+        (q) =>
+          (q.creatorProfileId === query.profileId || q.requesterProfileId === query.profileId) &&
+          (!query.campaignId || q.campaignId === query.campaignId),
       )
       .map(enrichQuote);
     return paginate(items, query.cursor, query.limit);
   },
 
   createQuote: ({ userId, body }) => {
-    const requester = ownProfile(userId, body.requesterProfileId);
-    if (requester.role !== 'brand')
-      return fail('FORBIDDEN', 'Solo las marcas solicitan cotizaciones');
-    const creator =
-      state().profiles.find((p) => p.services.some((s) => s.id === body.serviceId)) ??
-      fail('NOT_FOUND', 'Servicio no encontrado');
+    const requester = ownBrand(userId, body.requesterProfileId);
+    const campaign = campaignOf(body.campaignId);
+    if (campaign.brandProfileId !== requester.id)
+      return fail('FORBIDDEN', 'Esa campaña no es de tu marca');
+    if (campaign.status !== 'active')
+      return fail('VALIDATION_ERROR', 'Solo se cotiza dentro de una campaña activa');
     const at = nowIso();
-    const history: QuoteRecord['history'] = [
-      { from: null, to: 'draft', actorProfileId: requester.id, note: null, at },
-    ];
-    if (body.send)
-      history.push({ from: 'draft', to: 'sent', actorProfileId: requester.id, note: null, at });
-    const quote: QuoteRecord = {
+    const result: Result<'createQuote'> = { created: [], failed: [] };
+    const seen = new Set<string>();
+    body.targets.forEach(({ creatorProfileId, serviceId }) => {
+      const creator = state().profiles.find((p) => p.id === creatorProfileId);
+      const reject = (code: 'NOT_FOUND' | 'CONFLICT' | 'VALIDATION_ERROR', message: string) =>
+        result.failed.push({ creatorProfileId, code, message });
+      if (!creator || creator.role !== 'creator')
+        return reject('NOT_FOUND', 'Influencer no encontrado');
+      if (serviceId && !creator.services.some((s) => s.id === serviceId))
+        return reject('NOT_FOUND', 'Ese servicio no existe en su catálogo');
+      const open = state().quotes.some(
+        (q) => q.campaignId === campaign.id && q.creatorProfileId === creator.id && isOpenQuote(q),
+      );
+      if (open || seen.has(creator.id))
+        return reject('CONFLICT', 'Ya tiene una cotización abierta en esta campaña');
+      seen.add(creator.id);
+      const history: QuoteRecord['history'] = [
+        { from: null, to: 'draft', actorProfileId: requester.id, note: null, at },
+      ];
+      if (body.send)
+        history.push({ from: 'draft', to: 'sent', actorProfileId: requester.id, note: null, at });
+      const quote: QuoteRecord = {
+        id: crypto.randomUUID(),
+        campaignId: campaign.id,
+        serviceId: serviceId ?? null,
+        creatorProfileId: creator.id,
+        requesterProfileId: requester.id,
+        status: body.send ? 'sent' : 'draft',
+        amountPen: body.amountPen ?? null,
+        message: body.message,
+        history,
+        createdAt: at,
+        updatedAt: at,
+      };
+      state().quotes.push(quote);
+      if (body.send)
+        notify(creator.ownerUserId, 'quote_status_changed', { quoteId: quote.id, to: 'sent' });
+      result.created.push(enrichQuote(quote));
+    });
+    return result;
+  },
+
+  listCampaigns: ({ userId, query }) => {
+    ownBrand(userId, query.profileId);
+    const items = state()
+      .campaigns.filter(
+        (c) => c.brandProfileId === query.profileId && (!query.status || c.status === query.status),
+      )
+      .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+      .map(withStats);
+    return paginate(items, query.cursor, query.limit);
+  },
+
+  getCampaign: ({ userId, params, query }) => {
+    ownBrand(userId, query.profileId);
+    const c = campaignOf(params.campaignId);
+    return c.brandProfileId === query.profileId
+      ? withStats(c)
+      : fail('NOT_FOUND', 'Campaña no encontrada');
+  },
+
+  createCampaign: ({ userId, body }) => {
+    const brand = ownBrand(userId, body.brandProfileId);
+    const { brandProfileId: _brand, activate, ...fields } = body;
+    const at = nowIso();
+    const campaign = {
       id: crypto.randomUUID(),
-      serviceId: body.serviceId,
-      creatorProfileId: creator.id,
-      requesterProfileId: requester.id,
-      status: body.send ? 'sent' : 'draft',
-      amountPen: body.amountPen ?? null,
-      message: body.message,
-      history,
+      brandProfileId: brand.id,
+      ...fields,
+      description: fields.description ?? null,
+      status: activate ? ('active' as const) : ('draft' as const),
       createdAt: at,
       updatedAt: at,
     };
-    state().quotes.push(quote);
-    if (body.send)
-      notify(creator.ownerUserId, 'quote_status_changed', { quoteId: quote.id, to: 'sent' });
-    return enrichQuote(quote);
+    state().campaigns.push(campaign);
+    return withStats(campaign);
+  },
+
+  updateCampaign: ({ userId, params, body }) => {
+    ownBrand(userId, body.brandProfileId);
+    const c = campaignOf(params.campaignId);
+    if (c.brandProfileId !== body.brandProfileId) return fail('NOT_FOUND', 'Campaña no encontrada');
+    const { brandProfileId: _brand, status, description, ...fields } = body;
+    if (status && CAMPAIGN_ORDER.indexOf(status) < CAMPAIGN_ORDER.indexOf(c.status))
+      return fail('INVALID_TRANSITION', 'Una campaña no vuelve a un estado anterior');
+    Object.assign(c, fields, {
+      ...(description !== undefined && { description }),
+      status: status ?? c.status,
+      updatedAt: nowIso(),
+    });
+    return withStats(c);
+  },
+
+  visibilitySummary: ({ userId, query }) => {
+    ownProfile(userId, query.profileId);
+    const interests = receivedInterests(query.profileId);
+    const views = state().views.filter((v) => v.viewedProfileId === query.profileId);
+    const distinct = (days: number) =>
+      new Set(views.filter((v) => within(v.at, days)).map((v) => v.viewerProfileId)).size;
+    return {
+      interests7d: interests.filter((i) => within(i.createdAt, WEEK_DAYS)).length,
+      interests30d: interests.filter((i) => within(i.createdAt, MONTH_DAYS)).length,
+      views7d: distinct(WEEK_DAYS),
+      views30d: distinct(MONTH_DAYS),
+    };
+  },
+
+  visibility: ({ userId, query }) => {
+    ownProfile(userId, query.profileId);
+    const reciprocated = (targetId: string) =>
+      state().interactions.some(
+        (i) => i.actorProfileId === query.profileId && i.targetProfileId === targetId,
+      );
+    const toItem = (
+      kind: VisibilityItem['kind'],
+      actorId: string,
+      at: string,
+      count: number,
+    ): VisibilityItem => ({
+      kind,
+      profile: toSummary(findProfile(actorId)),
+      at,
+      count,
+      reciprocated: reciprocated(actorId),
+    });
+    const recentViews = state().views.filter(
+      (v) => v.viewedProfileId === query.profileId && within(v.at, MONTH_DAYS),
+    );
+    const byViewer = Map.groupBy(recentViews, (v) => v.viewerProfileId);
+    const items =
+      query.kind === 'interest'
+        ? receivedInterests(query.profileId).map((i) =>
+            toItem('interest', i.actorProfileId, i.createdAt, 1),
+          )
+        : [...byViewer].map(([viewer, list]) =>
+            toItem(
+              'view',
+              viewer,
+              list
+                .map((v) => v.at)
+                .sort()
+                .at(-1) ?? '',
+              list.length,
+            ),
+          );
+    items.sort((a, b) => b.at.localeCompare(a.at));
+    return paginate(items, query.cursor, query.limit);
+  },
+
+  recordProfileView: ({ userId, params, body }) => {
+    const viewer = ownProfile(userId, body.viewerProfileId);
+    const viewed = findProfile(params.profileId);
+    const today = nowIso().slice(0, 10);
+    // shortcut: el mock no excluye a administradores (el demo lo es y nunca registraría visitas).
+    const applies =
+      viewed.ownerUserId !== null &&
+      viewed.ownerUserId !== userId &&
+      viewed.role !== viewer.role &&
+      !state().views.some(
+        (v) =>
+          v.viewerProfileId === viewer.id &&
+          v.viewedProfileId === viewed.id &&
+          v.at.startsWith(today),
+      );
+    if (applies)
+      state().views.push({ viewerProfileId: viewer.id, viewedProfileId: viewed.id, at: nowIso() });
+    return { recorded: applies };
   },
 
   transitionQuote: ({ userId, params, body }) => {

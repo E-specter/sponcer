@@ -1,0 +1,82 @@
+---
+import App from '../../layouts/App.astro';
+import { ApiError, call, type Result } from '../../lib/api';
+import { getMe } from '../../lib/session';
+import {
+  CAMPAIGN_KIND_LABEL,
+  CAMPAIGN_STATUS_LABEL,
+  CITY_LABEL,
+  NICHE_LABEL,
+  formatPen,
+} from '../../lib/labels';
+import { Chip } from '../../components/ui/Chip';
+import { Tag } from '../../components/ui/Tag';
+import CampaignActions from '../../features/campaigns/islands/CampaignActions';
+import CampaignQuotePicker from '../../features/campaigns/islands/CampaignQuotePicker';
+import { CampaignStatsLine, STATUS_TONE } from '../../features/campaigns/islands/CampaignsPanel';
+import QuoteList from '../../features/quotes/islands/QuoteList';
+
+const me = await getMe(Astro.locals);
+if (me.account.accountKind === 'influencer') return Astro.redirect('/panel');
+const token = Astro.locals.accessToken;
+const id = Astro.params.id ?? '';
+
+// La campaña pertenece a una de las marcas de la empresa: se prueba con cada una.
+let found: { brand: (typeof me.profiles)[number]; campaign: Result<'getCampaign'> } | null = null;
+for (const brand of me.profiles.filter((p) => p.role === 'brand')) {
+  try {
+    const campaign = await call('getCampaign', { params: { campaignId: id }, query: { profileId: brand.id }, token });
+    found = { brand, campaign };
+    break;
+  } catch (e) {
+    if (!(e instanceof ApiError) || (e.code !== 'NOT_FOUND' && e.code !== 'FORBIDDEN')) throw e;
+  }
+}
+if (!found) Astro.response.status = 404;
+const quotes = found
+  ? await call('listQuotes', { query: { profileId: found.brand.id, campaignId: id }, token })
+  : null;
+---
+
+<App title={found ? found.campaign.name : 'Campaña no encontrada'}>
+  {
+    !found || !quotes ? (
+      <section class="card">
+        <h1>Campaña no encontrada</h1>
+        <a class="btn" href="/campanas">Volver a campañas</a>
+      </section>
+    ) : (
+      <>
+        <header class="page-head">
+          <p class="eyebrow"><a href="/campanas">Campañas</a> / @{found.brand.handle}</p>
+          <h1>{found.campaign.name}</h1>
+          <p class="row">
+            <Tag tone={STATUS_TONE[found.campaign.status]}>{CAMPAIGN_STATUS_LABEL[found.campaign.status]}</Tag>
+            <Tag>{CAMPAIGN_KIND_LABEL[found.campaign.kind]}</Tag>
+            <span class="small muted">
+              {found.campaign.startsOn}
+              {found.campaign.endsOn ? ` → ${found.campaign.endsOn}` : ''}
+              {found.campaign.budgetPen !== null ? ` · Presupuesto ${formatPen(found.campaign.budgetPen)}` : ''}
+            </span>
+          </p>
+          {found.campaign.description && <p class="lead">{found.campaign.description}</p>}
+          <CampaignStatsLine campaign={found.campaign} />
+          {(found.campaign.targetNiches.length > 0 || found.campaign.targetCities.length > 0) && (
+            <p class="row" aria-label="Objetivo de la campaña">
+              {found.campaign.targetNiches.map((n) => <Chip>{NICHE_LABEL[n]}</Chip>)}
+              {found.campaign.targetCities.map((c) => <Chip>{CITY_LABEL[c]}</Chip>)}
+            </p>
+          )}
+          <CampaignActions client:load campaign={found.campaign} />
+        </header>
+
+        <CampaignQuotePicker client:load brand={found.brand} campaignId={id} active={found.campaign.status === 'active'} />
+
+        <section class="stack" aria-labelledby="cotizaciones-campana">
+          <h2 id="cotizaciones-campana">Cotizaciones de la campaña</h2>
+          <QuoteList client:load profile={found.brand} quotes={quotes.items} nextCursor={quotes.nextCursor} campaignId={id} hideFilter />
+        </section>
+      </>
+    )
+  }
+</App>

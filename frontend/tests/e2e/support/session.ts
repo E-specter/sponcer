@@ -1,5 +1,6 @@
 import { createServerClient } from '@supabase/ssr';
 import type { BrowserContext } from '@playwright/test';
+import { apiAs } from './api';
 import { ANON_KEY, BASE_URL, SUPABASE_URL } from './env';
 import { admin, type E2EUser } from './world';
 
@@ -50,9 +51,18 @@ export async function sessionFor(user: E2EUser): Promise<Session> {
   return session;
 }
 
-/** Deja el contexto del navegador con la sesión del usuario (cookies httpOnly como las del enlace mágico). */
-export async function loginAs(context: BrowserContext, user: E2EUser): Promise<Session> {
+/**
+ * Deja el contexto del navegador con la sesión del usuario (cookies httpOnly como las del enlace mágico).
+ * ADR-009: sin registro toda ruta protegida lleva a /registro, así que por defecto el usuario queda registrado
+ * (Influencer para 'creator', Empresa para 'brand'; no repite si ya tiene tipo). `null` = dejarlo sin registrar.
+ */
+export async function loginAs(
+  context: BrowserContext,
+  user: E2EUser,
+  register: 'creator' | 'brand' | null = 'creator',
+): Promise<Session> {
   const session = await sessionFor(user);
+  if (register) await apiAs(session.accessToken).ensureRegistered(register);
   await context.addCookies(
     session.cookies.map((c) => ({
       name: c.name,

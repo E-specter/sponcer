@@ -25,7 +25,7 @@ test('E2E-03: declarar nichos y un servicio actualiza la ficha y reclasifica', a
   const niches = page.getByLabel('Nichos clasificados');
   // Aún sin nichos declarados no hay etiqueta "declarado en Sponcer".
   await expect(page.getByText('· declarado en Sponcer')).toHaveCount(0);
-  await expect(page.getByText('Este creador aún no publica servicios.')).toBeVisible();
+  await expect(page.getByText('Este influencer aún no publica servicios.')).toBeVisible();
 
   await visit(page, '/panel');
   const declared = page.getByRole('form', { name: 'Datos declarados' });

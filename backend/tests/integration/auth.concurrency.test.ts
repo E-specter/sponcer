@@ -1,9 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import { CLAIM_MAX_ATTEMPTS_PER_HOUR } from '@sponcer/contracts';
-import { demoUser } from '@sponcer/contracts/fixtures';
+import { demoInfluencer } from '@sponcer/contracts/fixtures';
 import { makeConfirmProfileClaim } from '../../src/modules/auth/application/use-cases/confirm-profile-claim';
 import { makeStartProfileClaim } from '../../src/modules/auth/application/use-cases/start-profile-claim';
-import { createInMemoryClaimStore } from '../../src/modules/auth/infrastructure/out/mock/mock-adapters';
+import {
+  createInMemoryAccountStore,
+  createInMemoryClaimStore,
+} from '../../src/modules/auth/infrastructure/out/mock/mock-adapters';
 import { createEventBus } from '../../src/shared/events/event-bus';
 import { ok } from '../../src/shared/result';
 import { createProfilesModule } from '../../src/modules/profiles';
@@ -26,15 +29,16 @@ describe('verifyClaim bajo concurrencia', () => {
     };
     const start = makeStartProfileClaim({
       claims,
+      accounts: createInMemoryAccountStore(),
       now: () => NOW,
       randomIndex: () => 0,
       newId: () => crypto.randomUUID(),
     });
     const confirm = makeConfirmProfileClaim({ claims, liveBio, profiles, bus, now: () => NOW });
-    const started = await start(demoUser.id, { handle: 'handle.nuevo', role: 'creator' });
+    const started = await start(demoInfluencer.id, { handle: 'handle.nuevo', role: 'creator' });
     if (!started.ok) throw started.error;
     await Promise.all(
-      Array.from({ length: BURST_SIZE }, () => confirm(demoUser.id, started.value.claimId)),
+      Array.from({ length: BURST_SIZE }, () => confirm(demoInfluencer.id, started.value.claimId)),
     );
     expect(liveReads).toBeLessThanOrEqual(CLAIM_MAX_ATTEMPTS_PER_HOUR);
   });
@@ -52,15 +56,16 @@ describe('verifyClaim bajo concurrencia', () => {
     };
     const start = makeStartProfileClaim({
       claims,
+      accounts: createInMemoryAccountStore(),
       now: () => NOW,
       randomIndex: () => 0,
       newId: () => crypto.randomUUID(),
     });
     const confirm = makeConfirmProfileClaim({ claims, liveBio, profiles, bus, now: () => NOW });
-    const started = await start(demoUser.id, { handle: 'handle.nuevo', role: 'creator' });
+    const started = await start(demoInfluencer.id, { handle: 'handle.nuevo', role: 'creator' });
     if (!started.ok) throw started.error;
     await Array.from({ length: BURST_SIZE }).reduce<Promise<unknown>>(
-      (prev) => prev.then(() => confirm(demoUser.id, started.value.claimId)),
+      (prev) => prev.then(() => confirm(demoInfluencer.id, started.value.claimId)),
       Promise.resolve(),
     );
     expect(liveReads).toBe(CLAIM_MAX_ATTEMPTS_PER_HOUR);

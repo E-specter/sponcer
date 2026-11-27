@@ -227,7 +227,7 @@ test.describe('F6 · panel de administración', () => {
   });
 
   // F6-A2 (corregido): las plantillas del correo apuntan a /auth/callback?token_hash=...&type=... y el callback usa verifyOtp.
-  test('la persona invitada que sigue el enlace del correo queda con sesión en /descubrir', async ({
+  test('la persona invitada que sigue el enlace del correo queda con sesión (en el registro, ADR-009)', async ({
     page,
     context,
   }) => {
@@ -243,10 +243,10 @@ test.describe('F6 · panel de administración', () => {
     await forwardConfiguredOrigin(context);
     const link = await magicLinkFor(fresh);
     await page.goto(link);
-    await expect(page).toHaveURL(`${BASE_URL}/descubrir`, { timeout: MAIL_RECEIVED_TIMEOUT_MS });
+    // ADR-009: la persona invitada es nueva y aterriza en el onboarding (con sesión).
+    await expect(page).toHaveURL(`${BASE_URL}/registro`, { timeout: MAIL_RECEIVED_TIMEOUT_MS });
     const cookie = (await context.cookies()).find((c) => c.name.endsWith('-auth-token'));
     expect(cookie?.httpOnly).toBe(true);
-    await page.goto('/panel');
     await expect(page.getByText(`Sesión: ${fresh}`)).toBeVisible();
     // El enlace es de un solo uso: repetirlo (otra persona o un escáner) no abre otra sesión.
     await context.clearCookies();
@@ -268,7 +268,7 @@ test.describe('F6 · panel de administración', () => {
     expect(new URL(link).pathname).toBe('/auth/callback');
     expect(new URL(link).searchParams.get('type')).toBe('email');
     await page.goto(link);
-    await expect(page).toHaveURL(`${BASE_URL}/descubrir`);
+    await expect(page).toHaveURL(`${BASE_URL}/registro`);
     expect((await context.cookies()).some((c) => c.name.endsWith('-auth-token'))).toBe(true);
   });
 

@@ -1,8 +1,10 @@
-import { CLAIM_MAX_ATTEMPTS_PER_HOUR } from '@sponcer/contracts';
+import { randomUUID } from 'node:crypto';
+import { CLAIM_MAX_ATTEMPTS_PER_HOUR, type Account } from '@sponcer/contracts';
 import { fixtureProfiles, fixtureUsers } from '@sponcer/contracts/fixtures';
 import { DomainError } from '../../../../../shared/errors';
 import { ok } from '../../../../../shared/result';
 import type { ClaimRecord } from '../../../domain/claim';
+import type { AccountStore } from '../../../application/ports/out/account-store';
 import type { ClaimStore } from '../../../application/ports/out/claim-store';
 import type { IdentityProvider } from '../../../application/ports/out/identity-provider';
 import type { LiveBioReader } from '../../../application/ports/out/live-bio-reader';
@@ -63,3 +65,52 @@ export const createMockLiveBioReader = (pendingCodes: Map<string, string>): Live
     });
   },
 });
+
+const documentTaken = (type: string) =>
+  new DomainError('CONFLICT', `Ya existe una empresa registrada con ese ${type.toUpperCase()}`, {
+    reason: 'document_taken',
+  });
+
+/** Cuentas en memoria sembradas desde `contracts/fixtures` (todas registradas). */
+export const createInMemoryAccountStore = (now: () => Date = () => new Date()): AccountStore => {
+  const accounts = new Map<string, Account>(
+    fixtureUsers.map((u) => [
+      u.id,
+      { accountKind: u.accountKind, company: u.company, influencer: u.influencer },
+    ]),
+  );
+  return {
+    get: async (userId) =>
+      accounts.get(userId) ?? { accountKind: null, company: null, influencer: null },
+    async register(userId, req) {
+      if (accounts.has(userId))
+        throw new DomainError('CONFLICT', 'Esta cuenta ya está registrada', {
+          reason: 'already_registered',
+        });
+      if (req.accountKind === 'influencer') {
+        const { displayName, city, about } = req.influencer;
+        accounts.set(userId, {
+          accountKind: 'influencer',
+          company: null,
+          influencer: { displayName, city, about: about ?? null },
+        });
+        return;
+      }
+      const { documentNumber, documentType, tradeName, ...rest } = req.company;
+      if ([...accounts.values()].some((a) => a.company?.documentNumber === documentNumber))
+        throw documentTaken(documentType);
+      accounts.set(userId, {
+        accountKind: 'company',
+        company: {
+          ...rest,
+          documentType,
+          documentNumber,
+          tradeName: tradeName ?? null,
+          id: randomUUID(),
+          createdAt: now().toISOString(),
+        },
+        influencer: null,
+      });
+    },
+  };
+};

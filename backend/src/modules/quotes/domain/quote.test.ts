@@ -17,6 +17,7 @@ const NEGOTIATED_AMOUNT = 250;
 
 const base = newQuote({
   id: '44444444-4444-4444-8444-444444444444',
+  campaignId: '66666666-6666-4666-8666-666666666666',
   serviceId: '55555555-5555-4555-8555-555555555555',
   creatorProfileId: CREATOR,
   requesterProfileId: REQUESTER,

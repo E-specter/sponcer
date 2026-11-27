@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { CONSENT_VERSION } from '@sponcer/contracts';
 import { BASE_URL, E2E_EMAIL_DOMAIN } from './support/env';
 import { magicLinkFor } from './support/mailpit';
 import { createWorld, uniqueTag } from './support/world';
@@ -40,6 +41,21 @@ test('E2E-01: enlace mágico real por Mailpit lleva a un panel vacío', async ({
 
   // El navegador sigue el enlace del correo: Supabase verifica, redirige y la app canjea el código PKCE.
   await page.goto(await magicLinkFor(email));
+  // ADR-009: la primera vez falta el registro; el onboarding se prueba en e2e-16. Aquí se completa por el BFF.
+  await expect(page).toHaveURL(`${BASE_URL}/registro`);
+  const registered = await page.request.post('/bff/register', {
+    data: {
+      body: {
+        accountKind: 'influencer',
+        influencer: { displayName: 'Persona E2E', city: 'lima' },
+        acceptTerms: true,
+        acceptPrivacy: true,
+        consentVersion: CONSENT_VERSION,
+      },
+    },
+  });
+  expect(registered.ok()).toBe(true);
+  await page.goto('/descubrir');
   await expect(page).toHaveURL(`${BASE_URL}/descubrir`);
 
   test.info().annotations.push({

@@ -1,11 +1,14 @@
 // Genera db/supabase/seed.sql desde @sponcer/contracts/fixtures. Uso: npm run seed:build -w db
 import { writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
+import { CONSENT_VERSION } from '@sponcer/contracts';
 import { fixtureProfiles, fixtureSocial, fixtureUsers } from '@sponcer/contracts/fixtures';
 
 const OUT_PATH = fileURLToPath(new URL('../supabase/seed.sql', import.meta.url));
 const NIL_UUID = '00000000-0000-0000-0000-000000000000';
 const EMAIL_PROVIDER = 'email';
+// Fecha de alta de las cuentas Influencer, que no traen una en el fixture.
+const SEED_CREATED_AT = '2026-11-10T15:00:00Z';
 
 // Comilla simple de SQL: se duplica dentro del literal.
 // Coincide: "Sofi's" (la comilla). No coincide: "Sofi".
@@ -20,6 +23,7 @@ const num = (v: number): Sql => String(v);
 const json = (v: unknown): Sql => `${str(JSON.stringify(v))}::jsonb`;
 const ts = (v: string): Sql => `${str(v)}::timestamptz`;
 const uuid = (v: string): Sql => `${str(v)}::uuid`;
+const textArray = (v: string[]): Sql => `array[${v.map(str).join(', ')}]::text[]`;
 
 const insert = (table: string, cols: string[], rows: Sql[][]): Sql =>
   rows.length === 0
@@ -88,16 +92,113 @@ const identities = insert(
   ]),
 );
 
+const accounts = insert(
+  'public.accounts',
+  ['user_id', 'account_kind', 'display_name', 'city', 'about', 'created_at'],
+  fixtureUsers.map((u) => [
+    uuid(u.id),
+    str(u.accountKind),
+    nullable(u.influencer?.displayName, str),
+    nullable(u.influencer?.city, str),
+    nullable(u.influencer?.about, str),
+    ts(u.company?.createdAt ?? SEED_CREATED_AT),
+  ]),
+);
+
+const companies = insert(
+  'public.companies',
+  [
+    'id',
+    'owner_user_id',
+    'person_type',
+    'document_type',
+    'document_number',
+    'legal_name',
+    'trade_name',
+    'city',
+    'created_at',
+  ],
+  fixtureUsers.flatMap((u) =>
+    u.company
+      ? [
+          [
+            uuid(u.company.id),
+            uuid(u.id),
+            str(u.company.personType),
+            str(u.company.documentType),
+            str(u.company.documentNumber),
+            str(u.company.legalName),
+            nullable(u.company.tradeName, str),
+            str(u.company.city),
+            ts(u.company.createdAt),
+          ],
+        ]
+      : [],
+  ),
+);
+
+const consents = insert(
+  'public.consents',
+  ['user_id', 'version', 'terms', 'privacy', 'accepted_at'],
+  fixtureUsers.map((u) => [
+    uuid(u.id),
+    str(CONSENT_VERSION),
+    'true',
+    'true',
+    ts(u.company?.createdAt ?? SEED_CREATED_AT),
+  ]),
+);
+
+const companyByOwner = new Map(
+  fixtureUsers.flatMap((u) => (u.company ? [[u.id, u.company.id]] : [])),
+);
+
 const profiles = insert(
   'public.profiles',
-  ['id', 'ig_handle', 'role', 'status', 'owner_user_id', 'declared'],
+  ['id', 'ig_handle', 'role', 'status', 'owner_user_id', 'company_id', 'declared'],
   fixtureProfiles.map((p) => [
     uuid(p.id),
     str(p.snapshot.handle),
     str(p.role),
     str(p.status),
     nullable(p.ownerUserId, uuid),
+    // Solo las marcas con dueño cuelgan de su empresa.
+    nullable(p.role === 'brand' && p.ownerUserId ? companyByOwner.get(p.ownerUserId) : null, uuid),
     nullable(p.declared, json),
+  ]),
+);
+
+const campaigns = insert(
+  'public.campaigns',
+  [
+    'id',
+    'brand_profile_id',
+    'name',
+    'kind',
+    'description',
+    'starts_on',
+    'ends_on',
+    'budget_pen',
+    'target_niches',
+    'target_cities',
+    'status',
+    'created_at',
+    'updated_at',
+  ],
+  fixtureSocial.campaigns.map((c) => [
+    uuid(c.id),
+    uuid(c.brandProfileId),
+    str(c.name),
+    str(c.kind),
+    nullable(c.description, str),
+    str(c.startsOn),
+    nullable(c.endsOn, str),
+    nullable(c.budgetPen, num),
+    textArray(c.targetNiches),
+    textArray(c.targetCities),
+    str(c.status),
+    ts(c.createdAt),
+    ts(c.updatedAt),
   ]),
 );
 
@@ -166,6 +267,7 @@ const quotes = insert(
   'public.quotes',
   [
     'id',
+    'campaign_id',
     'service_id',
     'creator_profile_id',
     'requester_profile_id',
@@ -177,7 +279,8 @@ const quotes = insert(
   ],
   fixtureSocial.quotes.map((q) => [
     uuid(q.id),
-    uuid(q.serviceId),
+    uuid(q.campaignId),
+    nullable(q.serviceId, uuid),
     uuid(q.creatorProfileId),
     uuid(q.requesterProfileId),
     str(q.status),
@@ -220,7 +323,11 @@ const sql = [
   '-- GENERADO por db/scripts/build-seed.ts desde contracts/fixtures. No editar a mano.\n',
   users,
   identities,
+  accounts,
+  companies,
+  consents,
   profiles,
+  campaigns,
   services,
   snapshots,
   interactions,

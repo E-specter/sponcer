@@ -4,6 +4,7 @@ import {
   CLAIM_TTL_MINUTES,
   StartClaimRequest,
   type Claim,
+  type ProfileRole,
   type VerifyClaimResult,
 } from '@sponcer/contracts';
 import { Alert } from '../../../components/ui/Alert';
@@ -15,7 +16,7 @@ type Outcome = { kind: 'success' | 'error' | 'info'; text: string };
 
 const NOT_ELIGIBLE_TEXT = {
   private: 'La cuenta es privada. Hazla pública para poder verificarla.',
-  not_professional: 'La cuenta debe ser profesional (creador o negocio) para poder verificarla.',
+  not_professional: 'La cuenta debe ser profesional (influencer o negocio) para poder verificarla.',
   removed: 'La cuenta ya no está disponible en Instagram.',
 } as const;
 
@@ -35,9 +36,22 @@ const OUTCOME_BY_STATUS: Record<VerifyClaimResult['status'], (r: VerifyClaimResu
 
 const outcomeOf = (r: VerifyClaimResult): Outcome => OUTCOME_BY_STATUS[r.status](r);
 
-export default function ClaimFlow() {
+const CLAIM_TITLE = {
+  brand: 'Reclamar la cuenta de otra marca',
+  creator: 'Reclamar otra cuenta de Instagram',
+  none: 'Reclamar un perfil',
+} as const;
+
+interface Props {
+  /** Tipo de perfil fijado por el tipo de cuenta (Empresa: marca; Influencer: cuenta propia). */
+  fixedRole?: ProfileRole;
+  /** Tras verificar: enlace en vez de recargar (onboarding). */
+  after?: { href: string; label: string };
+}
+
+export default function ClaimFlow({ fixedRole, after }: Props) {
   const [handle, setHandle] = useState('');
-  const [role, setRole] = useState<'creator' | 'brand'>('creator');
+  const [role, setRole] = useState<ProfileRole>(fixedRole ?? 'creator');
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [claim, setClaim] = useState<Claim | null>(null);
   const [outcome, setOutcome] = useState<Outcome | null>(null);
@@ -89,8 +103,12 @@ export default function ClaimFlow() {
   }
 
   return (
-    <section className="card stack" aria-labelledby="reclamar">
-      <h2 id="reclamar">Reclamar un perfil</h2>
+    <section
+      className={fixedRole && after ? 'stack' : 'card stack'}
+      aria-labelledby={fixedRole && after ? undefined : 'reclamar'}
+      aria-label={fixedRole && after ? 'Reclamar perfil' : undefined}
+    >
+      {!(fixedRole && after) && <h2 id="reclamar">{CLAIM_TITLE[fixedRole ?? 'none']}</h2>}
       <p className="muted small">
         Tus fuentes, tu control: confirmas que la cuenta es tuya con un código en tu bio. No
         accedemos a datos privados.
@@ -106,16 +124,18 @@ export default function ClaimFlow() {
               onChange={(e) => setHandle(e.target.value)}
             />
           </Field>
-          <Field id="claim-role" label="Quiero usarlo como" error={errors.role}>
-            <select
-              {...describe('claim-role', errors.role)}
-              value={role}
-              onChange={(e) => setRole(e.target.value === 'brand' ? 'brand' : 'creator')}
-            >
-              <option value="creator">Creador</option>
-              <option value="brand">Marca</option>
-            </select>
-          </Field>
+          {!fixedRole && (
+            <Field id="claim-role" label="Quiero usarlo como" error={errors.role}>
+              <select
+                {...describe('claim-role', errors.role)}
+                value={role}
+                onChange={(e) => setRole(e.target.value === 'brand' ? 'brand' : 'creator')}
+              >
+                <option value="creator">Influencer</option>
+                <option value="brand">Marca</option>
+              </select>
+            </Field>
+          )}
           <button className="btn" type="submit" disabled={busy}>
             Obtener código
           </button>
@@ -152,7 +172,12 @@ export default function ClaimFlow() {
         </div>
       )}
       <div aria-live="polite">{outcome && <Alert kind={outcome.kind}>{outcome.text}</Alert>}</div>
-      {verified && (
+      {verified && after && (
+        <a className="btn" href={after.href}>
+          {after.label}
+        </a>
+      )}
+      {verified && !after && (
         <button type="button" className="btn" onClick={() => window.location.reload()}>
           Actualizar mi panel
         </button>

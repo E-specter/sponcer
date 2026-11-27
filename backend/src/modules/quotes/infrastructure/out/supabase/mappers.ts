@@ -1,10 +1,12 @@
 import type { QuoteRecord, QuoteStatus } from '@sponcer/contracts';
+import type { CampaignRecord } from '../../../domain/campaign';
 
 type QuoteEvent = QuoteRecord['history'][number];
 
 export interface QuoteRow {
   id: string;
-  service_id: string;
+  campaign_id: string;
+  service_id: string | null;
   creator_profile_id: string;
   requester_profile_id: string;
   status: QuoteStatus;
@@ -45,6 +47,7 @@ export const eventToRow = (quoteId: string, e: QuoteEvent) => ({
 
 export const quoteFromRow = (r: QuoteRow, events: EventRow[]): QuoteRecord => ({
   id: r.id,
+  campaignId: r.campaign_id,
   serviceId: r.service_id,
   creatorProfileId: r.creator_profile_id,
   requesterProfileId: r.requester_profile_id,
@@ -58,6 +61,7 @@ export const quoteFromRow = (r: QuoteRow, events: EventRow[]): QuoteRecord => ({
 
 export const quoteToRow = (q: QuoteRecord): QuoteRow => ({
   id: q.id,
+  campaign_id: q.campaignId,
   service_id: q.serviceId,
   creator_profile_id: q.creatorProfileId,
   requester_profile_id: q.requesterProfileId,
@@ -66,4 +70,52 @@ export const quoteToRow = (q: QuoteRecord): QuoteRow => ({
   message: q.message,
   created_at: q.createdAt,
   updated_at: q.updatedAt,
+});
+
+export interface CampaignRow {
+  id: string;
+  brand_profile_id: string;
+  name: string;
+  kind: CampaignRecord['kind'];
+  description: string | null;
+  starts_on: string;
+  ends_on: string | null;
+  budget_pen: number | null;
+  target_niches: string[];
+  target_cities: string[];
+  status: CampaignRecord['status'];
+  created_at: string;
+  updated_at: string;
+}
+
+export const campaignFromRow = (r: CampaignRow): CampaignRecord => ({
+  id: r.id,
+  brandProfileId: r.brand_profile_id,
+  name: r.name,
+  kind: r.kind,
+  description: r.description,
+  startsOn: r.starts_on,
+  endsOn: r.ends_on,
+  budgetPen: r.budget_pen,
+  targetNiches: r.target_niches as CampaignRecord['targetNiches'],
+  targetCities: r.target_cities as CampaignRecord['targetCities'],
+  status: r.status,
+  createdAt: iso(r.created_at),
+  updatedAt: iso(r.updated_at),
+});
+
+export const campaignToRow = (c: CampaignRecord): CampaignRow => ({
+  id: c.id,
+  brand_profile_id: c.brandProfileId,
+  name: c.name,
+  kind: c.kind,
+  description: c.description,
+  starts_on: c.startsOn,
+  ends_on: c.endsOn,
+  budget_pen: c.budgetPen,
+  target_niches: c.targetNiches,
+  target_cities: c.targetCities,
+  status: c.status,
+  created_at: c.createdAt,
+  updated_at: c.updatedAt,
 });

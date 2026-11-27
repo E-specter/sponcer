@@ -4,11 +4,13 @@ import { registerEndpoint } from '../../../../../shared/http/register-endpoint';
 import type {
   ConfirmProfileClaim,
   GetCurrentUser,
+  RegisterAccount,
   StartProfileClaim,
 } from '../../../application/ports/in/auth-use-cases';
 
 export interface AuthUseCases {
   getCurrentUser: GetCurrentUser;
+  register: RegisterAccount;
   startClaim: StartProfileClaim;
   confirmClaim: ConfirmProfileClaim;
 }
@@ -16,6 +18,7 @@ export interface AuthUseCases {
 export function createAuthRouter(uc: AuthUseCases): Router {
   const router = Router();
   registerEndpoint(router, api.me, ({ user }) => uc.getCurrentUser(user));
+  registerEndpoint(router, api.register, ({ body, user }) => uc.register(user, body));
   registerEndpoint(router, api.startClaim, ({ body, user }) => uc.startClaim(user.userId, body));
   registerEndpoint(router, api.verifyClaim, ({ params, user }) =>
     uc.confirmClaim(user.userId, params.claimId),
