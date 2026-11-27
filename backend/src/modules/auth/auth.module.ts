@@ -6,16 +6,19 @@ import type { EventBus } from '../../shared/events/event-bus';
 import type { ProfilesApi } from '../profiles';
 import type { LiveBioReader } from './application/ports/out/live-bio-reader';
 import { makeConfirmProfileClaim } from './application/use-cases/confirm-profile-claim';
+import { makeRegisterAccount } from './application/use-cases/register-account';
 import { makeGetCurrentUser } from './application/use-cases/get-current-user';
 import { makeStartProfileClaim } from './application/use-cases/start-profile-claim';
 import { createAuthMiddleware } from './infrastructure/in/http/auth.middleware';
 import { createAuthRouter } from './infrastructure/in/http/auth.routes';
 import {
+  createInMemoryAccountStore,
   createInMemoryClaimStore,
   createMockIdentityProvider,
   createMockLiveBioReader,
 } from './infrastructure/out/mock/mock-adapters';
 import {
+  createSupabaseAccountStore,
   createSupabaseClaimStore,
   createSupabaseIdentityProvider,
 } from './infrastructure/out/supabase/supabase-adapters';
@@ -46,6 +49,9 @@ export function createAuthModule(deps: {
   const claims = real
     ? createSupabaseClaimStore(deps.supabase as SupabaseClient)
     : createInMemoryClaimStore();
+  const accounts = real
+    ? createSupabaseAccountStore(deps.supabase as SupabaseClient)
+    : createInMemoryAccountStore(now);
   const identity = real
     ? createSupabaseIdentityProvider(deps.supabase as SupabaseClient)
     : createMockIdentityProvider();
@@ -54,18 +60,23 @@ export function createAuthModule(deps: {
 
   const startClaim = makeStartProfileClaim({
     claims,
+    accounts,
     now,
     randomIndex: randomInt,
     newId: randomUUID,
   });
 
+  const getCurrentUser = makeGetCurrentUser({
+    profiles: deps.profiles,
+    accounts,
+    isAdmin: deps.isAdmin,
+  });
+
   return {
     middleware: createAuthMiddleware(identity),
     router: createAuthRouter({
-      getCurrentUser: makeGetCurrentUser({
-        profiles: deps.profiles,
-        isAdmin: deps.isAdmin,
-      }),
+      getCurrentUser,
+      register: makeRegisterAccount({ accounts, getCurrentUser }),
       // Mock: el código en claro se "pega" en la bio en vivo (mock propio o el de ingestion).
       startClaim: async (userId, req) => {
         const result = await startClaim(userId, req);
