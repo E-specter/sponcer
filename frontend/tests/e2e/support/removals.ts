@@ -33,9 +33,9 @@ export async function newAdmin(w: World): Promise<{ user: E2EUser; recognized: b
   const user = existing
     ? { id: existing.id, email: E2E_ADMIN_EMAIL }
     : await w.newUser(E2E_ADMIN_EMAIL);
-  const me = await apiAs((await sessionFor(user)).accessToken).call<{ isAdmin?: boolean }>(
-    'GET',
-    '/api/v1/me',
-  );
+  const api = apiAs((await sessionFor(user)).accessToken);
+  // F7-A2: un administrador sin registro no llega a /admin (el onboarding lo intercepta); se registra de prueba.
+  await api.ensureRegistered('creator');
+  const me = await api.call<{ isAdmin?: boolean }>('GET', '/api/v1/me');
   return { user, recognized: Boolean(me.body.isAdmin) };
 }

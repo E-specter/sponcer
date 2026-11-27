@@ -6,6 +6,7 @@ import { admin, type World } from './world';
 export const OVER_ONE_PAGE = 21;
 const HANDLE_SUFFIX_LENGTH = 6;
 const STEP_MS = 1000;
+const DATE_LENGTH = 10;
 
 interface IdRow {
   id: string;
@@ -49,7 +50,25 @@ export async function seedQuotes(world: World, creator: Actor, count: number): P
   )[0] as IdRow | undefined;
   if (!service) throw new Error('El creador no tiene servicios');
   const base = Date.now() - count * STEP_MS;
+  // ADR-009: toda cotización cuelga de una campaña (una por marca).
+  const campaigns = must(
+    await admin
+      .from('campaigns')
+      .insert(
+        brands.map((b) => ({
+          brand_profile_id: b.id,
+          name: 'Campaña de prueba',
+          kind: 'general',
+          starts_on: new Date().toISOString().slice(0, DATE_LENGTH),
+          status: 'active',
+        })),
+      )
+      .select('id, brand_profile_id'),
+    'insert campaigns',
+  ) as { id: string; brand_profile_id: string }[];
+  const campaignOf = new Map(campaigns.map((c) => [c.brand_profile_id, c.id]));
   const rows = brands.map((b, i) => ({
+    campaign_id: campaignOf.get(b.id),
     service_id: service.id,
     creator_profile_id: creator.profileId,
     requester_profile_id: b.id,

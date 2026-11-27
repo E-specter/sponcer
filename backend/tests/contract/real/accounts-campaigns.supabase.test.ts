@@ -15,8 +15,14 @@ const consent = {
   acceptPrivacy: true,
   consentVersion: CONSENT_VERSION,
 } as const;
-// RUC con dígito verificador válido; el sufijo del handle evita choques entre corridas.
-const RUC = '20100070970';
+// RUC con dígito verificador válido y cuerpo aleatorio por corrida. NUNCA el RUC de un usuario sembrado
+// (20100070970 es el de demo@sponcer.local): el `delete` de limpieza de más abajo le borraba la empresa y la
+// cuenta demo quedaba con 500 en /me (auditoría F7).
+const RUC_WEIGHTS = '5432765432';
+const RUC_SPAN = 90_000_000;
+const RUC_BASE = 10_000_000;
+const rucBody = `20${RUC_BASE + Math.floor(Math.random() * RUC_SPAN)}`;
+const RUC = `${rucBody}${(11 - ([...rucBody].reduce((a, d, i) => a + Number(RUC_WEIGHTS[i]) * Number(d), 0) % 11)) % 10}`;
 const company = (documentNumber: string): RegisterRequest => ({
   accountKind: 'company',
   company: {

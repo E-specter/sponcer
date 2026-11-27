@@ -30,7 +30,6 @@ test('E2E-02: reclamar handle, recibir código y verificar deja el perfil vincul
   await expect(page.getByText('Handle de Instagram inválido')).toBeVisible();
 
   await page.getByLabel('Tu @handle de Instagram').fill(`@${handle}`);
-  await page.getByLabel('Quiero usarlo como').selectOption('creator');
   await page.getByRole('button', { name: 'Obtener código' }).click();
 
   const code = page.locator('#claim-code');
@@ -47,7 +46,7 @@ test('E2E-02: reclamar handle, recibir código y verificar deja el perfil vincul
   await page.getByRole('button', { name: 'Actualizar mi panel' }).click();
   await waitHydrated(page);
   const title = page.getByRole('heading', { level: 3, name: `@${handle}` });
-  await expect(title.locator('.badge').first()).toHaveText('Creador');
+  await expect(title.locator('.badge').first()).toHaveText('Influencer');
   await expect(title.locator('.badge-success')).toHaveText('Verificado');
 
   // La ficha pública del perfil lo reconoce como propio y verificado.

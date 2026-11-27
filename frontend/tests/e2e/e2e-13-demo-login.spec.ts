@@ -1,6 +1,11 @@
 import { randomUUID } from 'node:crypto';
 import { expect, test } from '@playwright/test';
-import { BASE_URL, E2E_DEMO_ACCOUNT, E2E_DEMO_PASSWORD } from './support/env';
+import {
+  BASE_URL,
+  DEMO_PASSWORD_TO_RESTORE,
+  E2E_DEMO_ACCOUNT,
+  E2E_DEMO_PASSWORD,
+} from './support/env';
 import { admin } from './support/world';
 
 // F5 (ADR-007): acceso demo en /login. Requiere el frontend con PUBLIC_DEMO_LOGIN=true y DEMO_PASSWORD = E2E_DEMO_PASSWORD;
@@ -21,7 +26,9 @@ async function setPassword(password: string): Promise<void> {
 
 test.afterAll(async () => {
   if (touchedUserId)
-    await admin.auth.admin.updateUserById(touchedUserId, { password: randomUUID() });
+    await admin.auth.admin.updateUserById(touchedUserId, {
+      password: DEMO_PASSWORD_TO_RESTORE ?? randomUUID(),
+    });
 });
 
 test('F5 demo: /login ofrece cuentas demo, entra con la elegida y no filtra la contraseña', async ({
@@ -48,6 +55,8 @@ test('F5 demo: /login ofrece cuentas demo, entra con la elegida y no filtra la c
   // Solo cuentas demo: otro correo no inicia sesión y vuelve a /login con aviso.
   const other = await request.post(`${BASE_URL}/auth/demo-login`, {
     form: { email: 'otra.persona@ejemplo.example' },
+    // Sin Origin ni Sec-Fetch-Site el middleware CSRF rechaza el formulario (403): se envía como lo haría el navegador.
+    headers: { origin: BASE_URL },
     maxRedirects: 0,
   });
   expect(other.status()).toBe(HTTP_SEE_OTHER);
