@@ -24,7 +24,7 @@ const CalendarDate = z.iso.date();
 const CampaignFields = z.object({
   name: z.string().trim().min(MIN_NAME).max(MAX_CAMPAIGN_NAME),
   kind: CampaignKind,
-  description: z.string().trim().max(MAX_SHORT_TEXT).optional(),
+  description: z.string().trim().max(MAX_SHORT_TEXT).nullable(),
   startsOn: CalendarDate,
   endsOn: CalendarDate.nullable(),
   budgetPen: PricePen.nullable(),
@@ -41,6 +41,7 @@ const ENDS_MESSAGE = {
 
 /** Solo un perfil `brand` propio crea campañas. Nace en `draft` salvo `activate: true`. */
 export const CreateCampaignRequest = CampaignFields.extend({
+  description: CampaignFields.shape.description.default(null),
   endsOn: CampaignFields.shape.endsOn.default(null),
   budgetPen: CampaignFields.shape.budgetPen.default(null),
   targetNiches: CampaignFields.shape.targetNiches.default([]),

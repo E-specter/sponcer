@@ -2911,6 +2911,14 @@
               "minimum": 0,
               "maximum": 9007199254740991
             }
+          },
+          {
+            "name": "includeInteracted",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -7536,6 +7544,8 @@
                     ]
                   },
                   "description": {
+                    "default": null,
+                    "nullable": true,
                     "type": "string",
                     "maxLength": 280
                   },
@@ -8149,6 +8159,7 @@
                     ]
                   },
                   "description": {
+                    "nullable": true,
                     "type": "string",
                     "maxLength": 280
                   },
