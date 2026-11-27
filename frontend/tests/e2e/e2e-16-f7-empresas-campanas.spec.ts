@@ -380,31 +380,30 @@ test('E2E-16: campaña, cotización a dos influencers sin match (uno con servici
 });
 
 // F7-U1: la campaña rápida se crea ANTES de validar la cotización. Un mensaje vacío deja una campaña activa
-// huérfana por cada intento fallido. test.fail: pasa hoy porque el defecto existe; al corregirlo habrá que quitarlo.
-test.fail(
-  'F7-U1: un intento de cotizar con campaña rápida y mensaje vacío no deja campañas huérfanas',
-  async ({ browser }) => {
-    const [brand, creator] = [await newBrand(world), await newCreator(world)];
-    const ctx = await browser.newContext();
-    const page = await ctx.newPage();
-    await loginAs(ctx, brand.user);
-    await visit(page, `/perfil/${creator.handle}`);
-    await page.getByRole('button', { name: 'Cotizar (propuesta abierta)' }).click();
-    const dialog = page.getByRole('dialog');
-    await dialog.getByLabel('Nombre de la nueva campaña').fill('Rápida E2E');
-    await dialog.getByRole('button', { name: 'Enviar cotización' }).click();
-    await expect(dialog.locator('.field-error').first()).toBeVisible();
-    await dialog.getByLabel('Mensaje', { exact: true }).fill('Ahora sí');
-    await dialog.getByRole('button', { name: 'Enviar cotización' }).click();
-    await expect(dialog.getByText('Cotizaciones creadas (1)')).toBeVisible();
-    const campaigns = await brand.api.call<{ items: { name: string }[] }>(
-      'GET',
-      `/api/v1/campaigns?profileId=${brand.profileId}`,
-    );
-    expect(campaigns.body.items.filter((c) => c.name === 'Rápida E2E')).toHaveLength(1);
-    await ctx.close();
-  },
-);
+// huérfana por cada intento fallido (corregido: valida antes de crear y reutiliza la campaña si falla).
+test('F7-U1: un intento de cotizar con campaña rápida y mensaje vacío no deja campañas huérfanas', async ({
+  browser,
+}) => {
+  const [brand, creator] = [await newBrand(world), await newCreator(world)];
+  const ctx = await browser.newContext();
+  const page = await ctx.newPage();
+  await loginAs(ctx, brand.user);
+  await visit(page, `/perfil/${creator.handle}`);
+  await page.getByRole('button', { name: 'Cotizar (propuesta abierta)' }).click();
+  const dialog = page.getByRole('dialog');
+  await dialog.getByLabel('Nombre de la nueva campaña').fill('Rápida E2E');
+  await dialog.getByRole('button', { name: 'Enviar cotización' }).click();
+  await expect(dialog.locator('.field-error').first()).toBeVisible();
+  await dialog.getByLabel('Mensaje', { exact: true }).fill('Ahora sí');
+  await dialog.getByRole('button', { name: 'Enviar cotización' }).click();
+  await expect(dialog.getByText('Cotizaciones creadas (1)')).toBeVisible();
+  const campaigns = await brand.api.call<{ items: { name: string }[] }>(
+    'GET',
+    `/api/v1/campaigns?profileId=${brand.profileId}`,
+  );
+  expect(campaigns.body.items.filter((c) => c.name === 'Rápida E2E')).toHaveLength(1);
+  await ctx.close();
+});
 
 test('E2E-16: visibilidad: visita de la marca, interés sin match, devolver interés y privacidad', async ({
   browser,
@@ -477,45 +476,59 @@ test('E2E-16: visibilidad: visita de la marca, interés sin match, devolver inte
 
 // F7-A2: el onboarding intercepta TODA ruta protegida, también /admin, cuando no hay tipo de cuenta. Un administrador
 // (ADMIN_EMAILS) que nunca se registró no puede abrir el panel hasta declararse Empresa o Influencer.
-// test.fail: pasa hoy porque el defecto existe; al corregirlo habrá que quitarlo.
-test.fail(
-  'F7-A2: un administrador sin registro puede abrir /admin/exclusiones',
-  async ({ page, context }) => {
-    const email = 'admin@sponcer.test';
-    const existing = (
-      await admin.auth.admin.listUsers({ perPage: USERS_PAGE_SIZE })
-    ).data.users.find((u) => u.email === email);
-    test.skip(Boolean(existing), `${email} ya existe (no se toca una cuenta real)`);
-    const created = await admin.auth.admin.createUser({ email, email_confirm: true });
-    expect(created.error).toBeNull();
-    try {
-      await loginAs(context, { id: created.data.user!.id, email }, null);
-      const response = await page.goto('/admin/exclusiones');
-      expect(response?.status()).toBe(HTTP_OK);
-      await expect(page).toHaveURL(`${BASE_URL}/admin/exclusiones`);
-    } finally {
-      await admin.auth.admin.deleteUser(created.data.user!.id);
-    }
-  },
-);
+// (corregido)
+test('F7-A2: un administrador sin registro puede abrir /admin/exclusiones', async ({
+  page,
+  context,
+}) => {
+  const email = 'admin@sponcer.test';
+  const existing = (await admin.auth.admin.listUsers({ perPage: USERS_PAGE_SIZE })).data.users.find(
+    (u) => u.email === email,
+  );
+  test.skip(Boolean(existing), `${email} ya existe (no se toca una cuenta real)`);
+  const created = await admin.auth.admin.createUser({ email, email_confirm: true });
+  expect(created.error).toBeNull();
+  try {
+    await loginAs(context, { id: created.data.user!.id, email }, null);
+    const response = await page.goto('/admin/exclusiones');
+    expect(response?.status()).toBe(HTTP_OK);
+    await expect(page).toHaveURL(`${BASE_URL}/admin/exclusiones`);
+  } finally {
+    await admin.auth.admin.deleteUser(created.data.user!.id);
+  }
+});
 
 // F7-M3: el selector "Cotizar a influencers" de la campaña sale del feed, y el feed oculta a quien la marca ya marcó
 // ("Me interesa" o "No me interesa"). Justo a quien la marca quiere cotizar no se le puede encontrar en el selector.
-// test.fail: pasa hoy porque el defecto existe; al corregirlo habrá que quitarlo.
-test.fail(
-  'F7-M3: el selector de la campaña encuentra a un influencer en quien la marca ya mostró interés',
-  async ({ browser }) => {
-    const [brand, creator] = [await newBrand(world), await newCreator(world)];
-    await brand.api.interest(brand.profileId, creator.profileId);
-    const campaign = await brand.api.createCampaign(brand.profileId, 'Selector E2E');
-    const ctx = await browser.newContext();
-    const page = await ctx.newPage();
-    await loginAs(ctx, brand.user, 'brand');
-    await visit(page, `/campanas/${campaign.id}`);
-    await page.getByLabel('Buscar influencers').fill(creator.handle);
-    await expect(
-      page.getByRole('checkbox', { name: `@${creator.handle}`, exact: false }),
-    ).toBeVisible({ timeout: 5000 });
-    await ctx.close();
-  },
-);
+// (corregido)
+test('F7-M3: el selector de la campaña encuentra a influencers ya marcados (interés o descarte) y se les puede cotizar', async ({
+  browser,
+}) => {
+  const [brand, liked, dismissed] = [
+    await newBrand(world),
+    await newCreator(world),
+    await newCreator(world),
+  ];
+  await brand.api.interest(brand.profileId, liked.profileId);
+  await brand.api.call('POST', '/api/v1/interactions', {
+    actorProfileId: brand.profileId,
+    targetProfileId: dismissed.profileId,
+    kind: 'dismiss',
+  });
+  const campaign = await brand.api.createCampaign(brand.profileId, 'Selector E2E');
+  const ctx = await browser.newContext();
+  const page = await ctx.newPage();
+  await loginAs(ctx, brand.user, 'brand');
+  await visit(page, `/campanas/${campaign.id}`);
+  for (const c of [liked, dismissed]) {
+    await page.getByLabel('Buscar influencers').fill(c.handle);
+    await page.getByRole('checkbox', { name: `@${c.handle}`, exact: false }).check();
+  }
+  await page.getByRole('button', { name: 'Continuar con 2 influencers' }).click();
+  await page
+    .getByLabel('Mensaje', { exact: true })
+    .fill('Te cotizamos aunque ya te habíamos marcado');
+  await page.getByRole('button', { name: 'Enviar a 2 influencers' }).click();
+  await expect(page.getByText('Cotizaciones creadas (2)')).toBeVisible();
+  await ctx.close();
+});

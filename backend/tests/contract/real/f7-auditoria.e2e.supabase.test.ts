@@ -17,7 +17,6 @@ import { STATUS } from '../../support/app';
 /**
  * Auditoría F7 (ADR-009) con TODOS los adaptadores reales contra Supabase local y HTTP real (supertest, JWT reales):
  * registro, campañas, cotización múltiple, visibilidad y privacidad. Las rutas se llaman como lo hace el frontend.
- * Los defectos de producto se dejan como `it.fails` (pasan hoy; al corregirlos fallarán y hay que quitar `.fails`).
  */
 const SETUP_TIMEOUT_MS = 90_000;
 const DAY_MS = 86_400_000;

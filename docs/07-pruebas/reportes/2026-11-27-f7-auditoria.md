@@ -1,6 +1,6 @@
 ---
 responsable: audit
-estado: observaciones
+estado: aprobado (tras re-verificación)
 ultima_actualizacion: 2026-11-27
 ---
 
@@ -106,3 +106,31 @@ Resultados finales: backend `unit` 63 archivos / 776 tests pasan (2 saltados); `
 - Las cuentas `demo@`, `demo-influencer@` y `usuario4@sponcer.local` quedan con el `DEMO_PASSWORD` de `backend/.env` (los E2E de acceso demo ya no las dejan con una contraseña aleatoria). `usuario1-3@` no tienen contraseña hasta correr `npm run demo:accounts`.
 - Detuve los procesos que arranqué (:3100, :4421) y borré `frontend/dist-audit`. No toqué `frontend/dist` ni el proceso de :4321.
 - Las reglas del hook de estilo (`no-magic-numbers`, bucles) que aparecieron al escribir los tests no forman parte del `eslint` del repo y no se aplicaron a los tests.
+
+## Re-verificación (tras las correcciones A1, M1, M2, M3, A2, U1, B1, B3 y fichas sin dueño)
+
+Veredicto: **APROBADO**. Probado sobre el árbol de trabajo (HEAD `8885289`) con `supabase db reset` local (migración editada en su sitio) y `npm run demo:accounts`, backend en :3100 y frontend compilado en `frontend/dist-audit` (borrado al terminar) en :4421, en modo http. No toqué `frontend/dist` ni :4321.
+
+| Hallazgo | Estado | Evidencia |
+|---|---|---|
+| F7-A1 migración con duplicadas abiertas | **Resuelto** | `bash db/tests/migrations/f7-migration.sh` ampliado con aserciones sobre el contenido: de tres cotizaciones abiertas de una marca al mismo creador queda abierta solo la más reciente (`b1-c1 newest`, `negotiating`); las otras dos (`sent` y `draft`) pasan a `cancelled` con un evento `from→cancelled` y nota "cancelada al migrar a campañas: duplicada" (2 eventos); la `rejected` antigua y las de otra marca no se tocan. Caso sin duplicados sigue creando una "General" por marca. `db reset` real aplica la migración sin errores |
+| F7-M1 `/registration` sin límite | **Resuelto** | 5/hora por usuario: el test de 60 intentos recibe 429 (ya no es `it.fails`) |
+| F7-M2 reapertura por edición concurrente | **Resuelto** | `update … where status = esperado`, CONFLICT si cambió; 12 pares concurrentes dejan siempre `closed` |
+| F7-M3 selector sin influencers ya marcados | **Resuelto** | E2E de punta a punta en modo http (3 navegadores): un influencer con "Me interesa" y otro descartado aparecen en el selector de la campaña y se les cotiza a ambos (`Cotizaciones creadas (2)`) |
+| F7-A2 admin sin registro | **Resuelto** | un `admin@sponcer.test` sin cuenta abre `/admin/exclusiones` con 200 |
+| F7-U1 campaña rápida huérfana | **Resuelto** | mensaje vacío → error sin crear campaña (o se reutiliza la creada); tras corregir queda una sola "Rápida E2E" |
+| F7-B1 `description: null` | **Resuelto** | `PATCH description:null` vacía la descripción |
+| F7-B3 `/me` con empresa faltante | **Resuelto** | `/me` responde 200 con `company: null` |
+| Cotizar a fichas sin dueño | **Resuelto** | `failed` con `VALIDATION_ERROR` por destinatario |
+
+Cambios en la suite: quité todos los `it.fails`/`test.fail` de F7 (ahora son pruebas normales); `f7-migration.sh` verifica el contenido migrado y sale con error si no coincide; el test de M3 cubre también el descarte y la cotización posterior.
+
+Resultados: backend `unit` 777 pasan (2 saltados); `real-db` 288 pasan, 0 fallos esperados, 15 saltados (Apify); `db` (RLS) 222/222; `contracts` 11/11; `lint:deps` verde; `typecheck` 0 errores; `prettier --check --end-of-line auto` y `eslint` limpios en `backend/tests`, `db/tests` y `frontend/tests`; Playwright en Chromium, Firefox y WebKit **294 pasan, 8 saltados (incluye el salto conocido de axe en Firefox), 1 fallo intermitente**: `e2e-05` ("¡Match con @…!" no apareció en 15 s) en Firefox, en el arranque en frío; repetido 4 veces en Firefox pasa (8/8) y pasó en las corridas anteriores en los 3 navegadores. No está ligado a F7 (no usa campañas ni el selector).
+
+Observaciones menores que quedan (no bloquean):
+- La migración conserva la más reciente por fecha, aunque la antigua esté `accepted` y la nueva sea un `draft`: la aceptada se cancela. Para datos reales conviene priorizar `accepted`.
+- El límite de `/registration` es por usuario: quien cree muchos usuarios (un correo por cada uno) puede repetir 5 sondeos de documento por usuario; el correo de enlace mágico limita el ritmo, pero el mensaje `document_taken` sigue siendo un oráculo débil de DNI.
+- `update` condicional protege el estado, no los demás campos: dos ediciones simultáneas de campos distintos todavía se pisan (la última gana).
+- `demo:accounts` actualizó 6 cuentas (el seed trae 6, no 7). Las cuentas demo quedan con el `DEMO_PASSWORD` de `backend/.env` (verificado: las 6 inician sesión).
+
+Estado final: BD recién reseteada, sin datos de prueba (0 perfiles `zz.`/`e2e.`, 0 usuarios de prueba, `mig_audit` borrada, 3 empresas del seed); procesos :3100 y :4421 detenidos.
