@@ -59,7 +59,7 @@ export const makeGetFeed =
     const excluded = new Set([
       query.profileId,
       ...own.map((p) => p.id),
-      ...past.map((i) => i.targetProfileId),
+      ...(query.includeInteracted ? [] : past.map((i) => i.targetProfileId)),
     ]);
     const accepted = allOf(excludeIds(excluded), ...filtersFrom(query));
     const wanted = offset + query.limit;

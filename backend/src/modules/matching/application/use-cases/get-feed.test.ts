@@ -73,6 +73,40 @@ const feed = (search: CandidateSearch) =>
 const noise = (count: number) =>
   Array.from({ length: count }, (_, i) => cand(card(i + NOISE_OFFSET, { city: 'cusco' })));
 
+describe('GetFeed · includeInteracted', () => {
+  const seen = uuid(CARD_A + 1);
+  const own = uuid(CARD_B + 1);
+  const run = async (includeInteracted?: boolean) => {
+    const excludes: string[][] = [];
+    const base = fakeSearch([cand(card(CARD_A))]);
+    const get = makeGetFeed({
+      profiles: { isOwner: async () => true, listByOwner: async () => [{ id: own }] as never },
+      search: {
+        find: async (id, o) => {
+          excludes.push(o?.exclude ?? []);
+          return base.find(id, o);
+        },
+      },
+      interactions: {
+        upsert: vi.fn(),
+        find: vi.fn(),
+        listByActor: async () => [{ targetProfileId: seen, kind: 'dismiss' }] as never,
+        listByTarget: async () => [],
+      },
+      scoring: weightedScore(WEIGHTS),
+    });
+    await get('u', { profileId: VIEWER, limit: LIMIT, includeInteracted });
+    return excludes[0];
+  };
+
+  it('por defecto excluye interactuados; con includeInteracted solo propios', async () => {
+    expect(await run()).toEqual(expect.arrayContaining([seen, own]));
+    const ex = await run(true);
+    expect(ex).toContain(own);
+    expect(ex).not.toContain(seen);
+  });
+});
+
 describe('GetFeed · q y city', () => {
   it('filtra por texto (sin tildes) y ciudad', async () => {
     const search = fakeSearch([
