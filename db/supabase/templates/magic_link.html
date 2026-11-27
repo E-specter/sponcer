@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="es">
+  <body
+    style="
+      margin: 0;
+      padding: 24px;
+      background: #f6f6f4;
+      font-family: Arial, Helvetica, sans-serif;
+      color: #1a1a1a;
+    "
+  >
+    <table
+      role="presentation"
+      width="100%"
+      style="
+        max-width: 480px;
+        margin: 0 auto;
+        background: #ffffff;
+        border-radius: 8px;
+        padding: 32px;
+      "
+    >
+      <tr>
+        <td>
+          <p style="margin: 0 0 24px; font-size: 20px; font-weight: bold">Sponcer</p>
+          <h1 style="margin: 0 0 12px; font-size: 18px">Tu enlace de acceso</h1>
+          <p style="margin: 0 0 24px; font-size: 15px; line-height: 1.5">
+            Usa este enlace para entrar a Sponcer. Caduca en una hora y sirve una sola vez.
+          </p>
+          <p style="margin: 0 0 24px">
+            <a
+              href="{{ if .RedirectTo }}{{ .RedirectTo }}{{ else }}{{ .SiteURL }}/auth/callback{{ end }}?token_hash={{ .TokenHash }}&type=email"
+              style="
+                display: inline-block;
+                padding: 12px 20px;
+                background: #1a1a1a;
+                color: #ffffff;
+                text-decoration: none;
+                border-radius: 6px;
+                font-size: 15px;
+              "
+              >Entrar a Sponcer</a
+            >
+          </p>
+          <p style="margin: 0; font-size: 12px; color: #6b6b6b">
+            Si no esperabas este correo, puedes ignorarlo.
+          </p>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

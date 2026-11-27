@@ -74,7 +74,7 @@ describe.skipIf(!hasSupabase)('panel de exclusiones · de punta a punta (Supabas
       adapter: 'real',
       bus,
       supabase: sb,
-      adminEmails: env.ADMIN_EMAILS,
+      isAdmin: async (e) => env.ADMIN_EMAILS.includes(e),
     });
     ingestion = createIngestionModule({
       adapter: 'real',

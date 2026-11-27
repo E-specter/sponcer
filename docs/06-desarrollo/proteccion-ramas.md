@@ -1,10 +1,14 @@
 ---
 responsable: Eduard
-estado: pendiente
+estado: aplicado
 ultima_actualizacion: 2026-11-25
 ---
 
-# Reglas de protección de ramas (las configura Eduard en GitHub)
+# Reglas de protección de ramas
+
+> **Aplicado el 2026-11-25** en `main` y `develop` (por API con la cuenta de Eduard), con la decisión del equipo: **CI en verde y sin push directo, sin aprobación obligatoria**. Detalle aplicado: PR obligatorio (0 aprobaciones), checks `lint`, `typecheck`, `test` y `lint:deps` con la rama al día, `enforce_admins` activo (nadie hace push directo, tampoco administradores), sin force-push ni borrado.
+
+## Referencia original
 
 > **Requisito previo:** en GitHub Free, la protección de ramas solo funciona en repos **públicos**. Si `E-specter/sponcer` es privado, hace falta GitHub Pro, que se puede obtener gratis con el GitHub Student Developer Pack. No pude comprobar la visibilidad porque `gh` no está autenticado en esta PC.
 

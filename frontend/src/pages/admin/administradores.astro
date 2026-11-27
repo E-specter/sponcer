@@ -1,0 +1,12 @@
+---
+import AdminShell from '../../layouts/AdminShell.astro';
+import AdminAdmins from '../../features/admin/islands/AdminAdmins';
+---
+
+<AdminShell
+  section="administradores"
+  title="Administradores"
+  lead="Quién puede usar este panel. Los fijos vienen del archivo .env y no se quitan desde aquí."
+>
+  <AdminAdmins client:load />
+</AdminShell>

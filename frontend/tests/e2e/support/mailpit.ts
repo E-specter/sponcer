@@ -14,10 +14,12 @@ interface MessageDetail {
   HTML: string;
 }
 
-// Enlace de verificación de Supabase en el correo (Text o HTML), hasta el primer espacio, comilla o ">".
-// Acepta "http://127.0.0.1:55521/auth/v1/verify?token=abc&type=magiclink"; rechaza "http://127.0.0.1/otra/ruta".
-// Probar: https://regex101.com/?regex=https%3F%3A%5C%2F%5C%2F%5B%5E%5Cs%22%3C%3E%5D%2B%5C%2Fauth%5C%2Fv1%5C%2Fverify%5B%5E%5Cs%22%3C%3E%5D%2B&testString=Sign+in%3A+http%3A%2F%2F127.0.0.1%3A55521%2Fauth%2Fv1%2Fverify%3Ftoken%3Dabc%26type%3Dmagiclink&flavor=javascript
-const VERIFY_LINK = /https?:\/\/[^\s"<>]+\/auth\/v1\/verify[^\s"<>]+/;
+// Enlace del correo: plantillas de F6 (`/auth/callback?token_hash=...&type=...`) o, sin ellas, el de verificación de
+// Supabase (`/auth/v1/verify?token=...`). Hasta el primer espacio, comilla o ">".
+// Acepta "http://localhost:4421/auth/callback?token_hash=abc&type=email" y "http://127.0.0.1:55521/auth/v1/verify?token=abc";
+// rechaza "http://127.0.0.1/otra/ruta".
+// Probar: https://regex101.com/?regex=https%3F%3A%5C%2F%5C%2F%5B%5E%5Cs%22%3C%3E%5D%2B%5C%2Fauth%5C%2F%28callback%5C%3Ftoken_hash%7Cv1%5C%2Fverify%29%5B%5E%5Cs%22%3C%3E%5D%2B&testString=http%3A%2F%2Flocalhost%3A4421%2Fauth%2Fcallback%3Ftoken_hash%3Dabc%26type%3Demail&flavor=javascript
+const VERIFY_LINK = /https?:\/\/[^\s"<>]+\/auth\/(?:callback\?token_hash|v1\/verify)[^\s"<>]+/;
 // Entidad HTML del "&" dentro de un href. Acepta "a&amp;b"; rechaza "a&b" (ya decodificado).
 // Probar: https://regex101.com/?regex=%26amp%3B&testString=a%26amp%3Bb&flavor=javascript
 const HTML_AMPERSAND = /&amp;/g;

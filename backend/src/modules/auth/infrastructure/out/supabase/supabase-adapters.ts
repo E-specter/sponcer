@@ -14,7 +14,13 @@ export const createSupabaseIdentityProvider = (supabase: SupabaseClient): Identi
     if (!token) return null;
     try {
       const { data, error } = await supabase.auth.getUser(token);
-      return error || !data.user ? null : { userId: data.user.id, email: data.user.email ?? '' };
+      return error || !data.user
+        ? null
+        : {
+            userId: data.user.id,
+            email: data.user.email ?? '',
+            ...(data.user.email_confirmed_at ? {} : { emailConfirmed: false }),
+          };
     } catch {
       return null;
     }

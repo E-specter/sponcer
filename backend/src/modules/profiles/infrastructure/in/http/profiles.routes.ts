@@ -1,12 +1,13 @@
 import { Router } from 'express';
 import { api, IgHandle } from '@sponcer/contracts';
+import { adminEmailOf } from '../../../../../shared/admin';
 import { DomainError } from '../../../../../shared/errors';
 import { err } from '../../../../../shared/result';
-import { isAdminEmail } from '../../../../../shared/admin';
 import { registerEndpoint } from '../../../../../shared/http/register-endpoint';
 import type {
   GetProfile,
   ManageServices,
+  AdminAddProfile,
   AdminListRemovals,
   AdminReviewRemoval,
   RequestProfileRemoval,
@@ -20,8 +21,9 @@ export interface ProfilesUseCases {
   requestRemoval: RequestProfileRemoval;
   adminListRemovals: AdminListRemovals;
   adminReviewRemoval: AdminReviewRemoval;
-  /** Correos administradores (`ADMIN_EMAILS`). */
-  adminEmails: readonly string[];
+  adminAddProfile: AdminAddProfile;
+  /** ADMIN_EMAILS ∪ admin_users. */
+  isAdmin: (email: string) => Promise<boolean>;
 }
 
 const invalidHandle = () =>
@@ -47,11 +49,16 @@ export function createProfilesRouter(uc: ProfilesUseCases): Router {
   });
   const forbidden = () => err(new DomainError('FORBIDDEN', 'Solo administradores'));
   registerEndpoint(router, api.adminListRemovals, async ({ query, user }) =>
-    isAdminEmail(uc.adminEmails, user.email) ? uc.adminListRemovals(query) : forbidden(),
+    (await uc.isAdmin(adminEmailOf(user))) ? uc.adminListRemovals(query) : forbidden(),
   );
   registerEndpoint(router, api.adminReviewRemoval, async ({ params, body, user }) =>
-    isAdminEmail(uc.adminEmails, user.email)
+    (await uc.isAdmin(adminEmailOf(user)))
       ? uc.adminReviewRemoval(user.userId, params.requestId, body)
+      : forbidden(),
+  );
+  registerEndpoint(router, api.adminAddProfile, async ({ body, user }) =>
+    (await uc.isAdmin(adminEmailOf(user)))
+      ? uc.adminAddProfile(user.email, body.handle, body.role)
       : forbidden(),
   );
   return router;

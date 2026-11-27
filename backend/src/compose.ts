@@ -5,6 +5,9 @@ import type { Env } from './config/env';
 import { ok } from './shared/result';
 import { logger } from './shared/logger';
 import { createEventBus } from './shared/events/event-bus';
+import { createAdminDirectory, createInMemoryAdminStore } from './shared/admin';
+import { createSupabaseAdminStore } from './shared/supabase/admin-store';
+import { createAdminModule } from './modules/admin';
 import { createAuthModule } from './modules/auth';
 import { createChatModule } from './modules/chat';
 import {
@@ -31,12 +34,26 @@ export function composeApp(env: Env, opts: { now?: () => Date } = {}) {
         })
       : undefined;
 
+  const admins = createAdminDirectory(
+    env.ADMIN_EMAILS,
+    env.ADAPTER_AUTH === 'real' && supabase
+      ? createSupabaseAdminStore(supabase)
+      : createInMemoryAdminStore(),
+  );
+  const admin = createAdminModule({
+    adapter: env.ADAPTER_AUTH,
+    admins,
+    supabase,
+    appUrl: env.APP_URL,
+    now,
+  });
+
   // profiles <-> classification forman un ciclo: profiles lee la clasificación de forma perezosa.
   const classificationRef: { current?: { api: ClassificationApi } } = {};
 
   const profiles = createProfilesModule({
     adapter: env.ADAPTER_PROFILES,
-    adminEmails: env.ADMIN_EMAILS,
+    isAdmin: admins.isAdmin,
     // Ingesta bajo demanda: perfil primero, luego `ProfileIngested` (lo publica profiles) para que classification lo vea.
     ingester: {
       ingest: async (h) => {
@@ -111,7 +128,7 @@ export function composeApp(env: Env, opts: { now?: () => Date } = {}) {
   });
   const auth = createAuthModule({
     adapter: env.ADAPTER_AUTH,
-    adminEmails: env.ADMIN_EMAILS,
+    isAdmin: admins.isAdmin,
     now,
     bus,
     supabase,
@@ -125,6 +142,7 @@ export function composeApp(env: Env, opts: { now?: () => Date } = {}) {
     authMiddleware: auth.middleware,
     routers: [
       auth.router,
+      admin.router,
       profiles.router,
       matching.router,
       quotes.router,
