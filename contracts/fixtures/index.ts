@@ -6,13 +6,23 @@ import { Declared, Service } from '../src/schemas/profiles';
 import { IgProfileSnapshot } from '../src/schemas/instagram';
 import { ProfileRole, ProfileStatus } from '../src/schemas/catalogs';
 import { Id, IsoDate } from '../src/schemas/common';
+import { AccountKind, Company, Influencer } from '../src/schemas/accounts';
+import { Campaign } from '../src/schemas/campaigns';
 import { Message, Notification } from '../src/schemas/messaging';
 import { QuoteRecord } from '../src/schemas/quotes';
 import profilesJson from './profiles.json';
 import usersJson from './users.json';
 import socialJson from './social.json';
 
-export const FixtureUser = z.object({ id: Id, email: z.email(), name: z.string() });
+/** Cada usuario tiene un solo tipo de cuenta (ADR-009): Empresa con perfiles `brand` o Influencer con perfiles `creator`. */
+export const FixtureUser = z.object({
+  id: Id,
+  email: z.email(),
+  name: z.string(),
+  accountKind: AccountKind,
+  company: Company.nullable(),
+  influencer: Influencer.nullable(),
+});
 export type FixtureUser = z.infer<typeof FixtureUser>;
 
 export const FixtureProfile = z.object({
@@ -45,6 +55,7 @@ export const FixtureSocial = z.object({
   interactions: z.array(FixtureInteraction),
   matches: z.array(FixtureMatch),
   messages: z.array(Message),
+  campaigns: z.array(Campaign.omit({ stats: true })),
   quotes: z.array(QuoteRecord),
   notifications: z.array(Notification.extend({ userId: Id })),
 });
@@ -55,5 +66,7 @@ export const fixtureUsers = z.array(FixtureUser).parse(usersJson);
 export const fixtureProfiles = z.array(FixtureProfile).parse(profilesJson);
 export const fixtureSocial = FixtureSocial.parse(socialJson);
 
-/** Usuario con el que corre el modo mock (dueño de un perfil creador y uno marca). */
+/** Empresa demo con la que corre el modo mock: dueña de las marcas @rumbo.viajes.demo y @andina.snacks.demo. */
 export const demoUser = fixtureUsers[0]!;
+/** Influencer demo: dueña de @sofi.moda.demo, con match, chat y cotización con @rumbo.viajes.demo. */
+export const demoInfluencer = fixtureUsers[1]!;

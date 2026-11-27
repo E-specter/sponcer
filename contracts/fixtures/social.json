@@ -84,6 +84,7 @@
   "quotes": [
     {
       "id": "d6e4a652-7a5c-409f-9a03-065692d77c41",
+      "campaignId": "063ec079-6695-59ee-a787-536cd30d90f1",
       "serviceId": "fc4aad6e-5e65-4d9d-924f-74acbb2de871",
       "creatorProfileId": "376bec72-d8de-429c-a68f-7ddb0128acfd",
       "requesterProfileId": "46b50b9d-10de-4ba7-815d-217d7900c4e0",
@@ -113,7 +114,7 @@
   "notifications": [
     {
       "id": "484bf825-0cc1-4ad2-af2b-4e8b33ea52b7",
-      "userId": "97da2849-d73e-4438-9907-d090402c802d",
+      "userId": "5b8c1f3e-2a7d-4e6b-9c41-7f0e3d2a9b16",
       "kind": "match_created",
       "payload": {
         "matchId": "64e5a0c0-903b-4eec-acf6-4558153381f6",
@@ -124,7 +125,7 @@
     },
     {
       "id": "11b231b3-bd8b-4313-88d0-d5cc14bb2922",
-      "userId": "97da2849-d73e-4438-9907-d090402c802d",
+      "userId": "5b8c1f3e-2a7d-4e6b-9c41-7f0e3d2a9b16",
       "kind": "quote_status_changed",
       "payload": {
         "quoteId": "d6e4a652-7a5c-409f-9a03-065692d77c41",
@@ -135,7 +136,7 @@
     },
     {
       "id": "15b64c33-85a5-4081-ab26-725de4d0c8c8",
-      "userId": "97da2849-d73e-4438-9907-d090402c802d",
+      "userId": "5b8c1f3e-2a7d-4e6b-9c41-7f0e3d2a9b16",
       "kind": "message_received",
       "payload": {
         "matchId": "64e5a0c0-903b-4eec-acf6-4558153381f6",
@@ -143,6 +144,38 @@
       },
       "readAt": null,
       "createdAt": "2026-11-16T23:00:00Z"
+    }
+  ],
+  "campaigns": [
+    {
+      "id": "063ec079-6695-59ee-a787-536cd30d90f1",
+      "brandProfileId": "46b50b9d-10de-4ba7-815d-217d7900c4e0",
+      "name": "General",
+      "kind": "general",
+      "description": "Cotizaciones anteriores a las campañas",
+      "startsOn": "2026-11-01",
+      "endsOn": null,
+      "budgetPen": null,
+      "targetNiches": [],
+      "targetCities": [],
+      "status": "active",
+      "createdAt": "2026-11-01T15:00:00Z",
+      "updatedAt": "2026-11-01T15:00:00Z"
+    },
+    {
+      "id": "d5651e58-ff32-517f-a91f-439836803679",
+      "brandProfileId": "716609b8-f757-4303-b401-64e4414ac24c",
+      "name": "Verano 2027",
+      "kind": "season",
+      "description": "Snacks para la temporada de playa",
+      "startsOn": "2026-12-15",
+      "endsOn": "2027-03-15",
+      "budgetPen": 15000,
+      "targetNiches": ["gastronomia", "fitness"],
+      "targetCities": ["lima", "arequipa"],
+      "status": "draft",
+      "createdAt": "2026-11-20T15:00:00Z",
+      "updatedAt": "2026-11-20T15:00:00Z"
     }
   ]
 }

@@ -1,6 +1,6 @@
 ---
 responsable: Eduard
-estado: propuesto
+estado: aprobado
 ultima_actualizacion: 2026-11-27
 ---
 

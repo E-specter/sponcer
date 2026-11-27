@@ -1,11 +1,14 @@
 import { z } from 'zod';
+import { Account } from './accounts';
 import { ProfileRole } from './catalogs';
 import { Id, IgHandle, IsoDate } from './common';
 import { ProfileSummary } from './profiles';
 
+/** `account.accountKind === null` = registro pendiente. Una cuenta Empresa solo tiene perfiles `brand`; una Influencer, solo `creator`. */
 export const Me = z.object({
   userId: Id,
   email: z.email(),
+  account: Account,
   profiles: z.array(ProfileSummary),
   /** Puede revisar pedidos de exclusión (ADMIN_EMAILS en el backend). */
   isAdmin: z.boolean(),

@@ -2,26 +2,88 @@
   {
     "id": "97da2849-d73e-4438-9907-d090402c802d",
     "email": "demo@sponcer.local",
-    "name": "Usuario demo"
+    "name": "Usuario demo",
+    "accountKind": "company",
+    "company": {
+      "id": "06caf04d-f77a-556c-a12d-61ecc5af16fd",
+      "personType": "juridica",
+      "documentType": "ruc",
+      "documentNumber": "20100070970",
+      "legalName": "Andina Alimentos S.A.C.",
+      "tradeName": "Andina",
+      "city": "lima",
+      "createdAt": "2026-11-10T15:00:00Z"
+    },
+    "influencer": null
+  },
+  {
+    "id": "5b8c1f3e-2a7d-4e6b-9c41-7f0e3d2a9b16",
+    "email": "demo-influencer@sponcer.local",
+    "name": "Influencer demo",
+    "accountKind": "influencer",
+    "company": null,
+    "influencer": {
+      "displayName": "Influencer demo",
+      "city": "lima",
+      "about": null
+    }
   },
   {
     "id": "c5700893-a34b-4834-b1aa-be1f6f210579",
     "email": "usuario1@sponcer.local",
-    "name": "Usuario 1"
+    "name": "Usuario 1",
+    "accountKind": "influencer",
+    "company": null,
+    "influencer": {
+      "displayName": "Usuario 1",
+      "city": "lima",
+      "about": null
+    }
   },
   {
     "id": "1be4b28d-1f9e-4959-8b47-dbfe6841b5ce",
     "email": "usuario2@sponcer.local",
-    "name": "Usuario 2"
+    "name": "Usuario 2",
+    "accountKind": "company",
+    "company": {
+      "id": "5180838f-4c54-58a6-af6b-be9d21e52b11",
+      "personType": "juridica",
+      "documentType": "ruc",
+      "documentNumber": "20131312955",
+      "legalName": "Grupo Kallpa S.A.",
+      "tradeName": "Kallpa",
+      "city": "arequipa",
+      "createdAt": "2026-11-10T15:00:00Z"
+    },
+    "influencer": null
   },
   {
     "id": "7d2f2bb3-62a5-4ae5-a62d-50baee39720b",
     "email": "usuario3@sponcer.local",
-    "name": "Usuario 3"
+    "name": "Usuario 3",
+    "accountKind": "influencer",
+    "company": null,
+    "influencer": {
+      "displayName": "Usuario 3",
+      "city": "lima",
+      "about": null
+    }
   },
   {
     "id": "44503f9f-2284-466a-95e5-79893545a32b",
     "email": "usuario4@sponcer.local",
-    "name": "Usuario 4"
+    "name": "Usuario 4",
+    "accountKind": "company",
+    "company": {
+      "id": "9fb6fd6b-4060-5827-ae72-aad217dd3a9c",
+      "personType": "natural",
+      "documentType": "dni",
+      "documentNumber": "45678912",
+      "legalName": "Florencia Quispe Mamani",
+      "tradeName": "Flor Cosmética",
+      "city": "cusco",
+      "createdAt": "2026-11-10T15:00:00Z"
+    },
+    "influencer": null
   }
 ]

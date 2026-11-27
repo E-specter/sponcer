@@ -2,6 +2,9 @@ import { describe, expect, it } from 'vitest';
 import {
   BrandDeclared,
   CLAIM_CODE_REGEX,
+  CompanyInput,
+  documentError,
+  isValidRuc,
   IgHandle,
   ImageUrl,
   QUOTE_STATUSES,
@@ -9,7 +12,13 @@ import {
   FOLLOWERS_MICRO,
   tierFor,
 } from './index';
-import { demoUser, fixtureProfiles, fixtureSocial } from '../fixtures/index';
+import {
+  demoInfluencer,
+  demoUser,
+  fixtureProfiles,
+  fixtureSocial,
+  fixtureUsers,
+} from '../fixtures/index';
 
 const TERMINAL = ['rejected', 'completed', 'cancelled'];
 const EXPECTED_CREATORS = 20;
@@ -74,8 +83,43 @@ describe('fixtures', () => {
     fixtureSocial.matches.forEach((m) => {
       expect(ids.has(m.creatorProfileId) && ids.has(m.brandProfileId)).toBe(true);
     });
-    const owned = fixtureProfiles.filter((p) => p.ownerUserId === demoUser.id).map((p) => p.role);
-    expect(owned.sort()).toEqual(['brand', 'creator']);
     fixtureProfiles.filter((p) => p.declared).forEach((p) => expect(p.declared!.role).toBe(p.role));
+  });
+
+  it('cada cuenta tiene un solo tipo, coherente con sus perfiles (ADR-009)', () => {
+    fixtureUsers.forEach((u) => {
+      const roles = new Set(
+        fixtureProfiles.filter((p) => p.ownerUserId === u.id).map((p) => p.role),
+      );
+      expect([...roles]).toEqual([u.accountKind === 'company' ? 'brand' : 'creator']);
+      expect(u.company !== null).toBe(u.accountKind === 'company');
+      expect(u.influencer !== null).toBe(u.accountKind === 'influencer');
+      if (u.company) expect(CompanyInput.safeParse(u.company).success).toBe(true);
+    });
+    expect(demoUser.accountKind).toBe('company');
+    expect(demoInfluencer.accountKind).toBe('influencer');
+  });
+
+  it('las cotizaciones pertenecen a una campaña de la marca que cotiza', () => {
+    const campaigns = new Map(fixtureSocial.campaigns.map((c) => [c.id, c]));
+    fixtureSocial.quotes.forEach((q) => {
+      expect(campaigns.get(q.campaignId)?.brandProfileId).toBe(q.requesterProfileId);
+    });
+  });
+});
+
+describe('documentos de empresa', () => {
+  it('valida el dígito verificador del RUC', () => {
+    expect(isValidRuc('20100070970')).toBe(true);
+    expect(isValidRuc('20100070971')).toBe(false);
+    expect(isValidRuc('2010007097')).toBe(false);
+  });
+
+  it('exige el documento correcto por tipo de persona', () => {
+    expect(documentError('juridica', 'ruc', '20100070970')).toBeNull();
+    expect(documentError('natural', 'dni', '45678912')).toBeNull();
+    expect(documentError('natural', 'ruc', '20100070970')).toContain('empieza con 10');
+    expect(documentError('juridica', 'dni', '45678912')).toContain('RUC');
+    expect(documentError('natural', 'dni', '4567891')).toContain('8 dígitos');
   });
 });

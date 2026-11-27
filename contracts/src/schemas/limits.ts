@@ -27,3 +27,16 @@ export const FOLLOWERS_MACRO = 500_000;
 export const FOLLOWERS_MEGA = 1_000_000;
 /** Texto de búsqueda del feed (nombre, handle, bio, nichos). */
 export const MAX_SEARCH_QUERY = 80;
+
+// ---- F7 (ADR-009) ----
+export const MIN_NAME = 2;
+export const MAX_LEGAL_NAME = 120;
+export const MAX_DISPLAY_NAME = 80;
+export const RUC_LENGTH = 11;
+export const DNI_LENGTH = 8;
+export const MAX_CAMPAIGN_NAME = 80;
+export const MAX_CAMPAIGN_CITIES = 5;
+/** Influencers por cotización múltiple desde una campaña. */
+export const MAX_BULK_QUOTES = 20;
+/** Límite anti-abuso de cotizaciones por marca y por hora (ya no se exige match). */
+export const QUOTES_PER_BRAND_PER_HOUR = 60;
