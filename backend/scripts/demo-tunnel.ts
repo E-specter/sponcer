@@ -2,7 +2,8 @@
 import { type ChildProcess, spawn, spawnSync } from 'node:child_process';
 
 const CLOUDFLARED = 'cloudflared@0.7.3';
-const FRONTEND_PORT = 4321;
+// Configurable para convivir con otro proyecto que ya use 4321 en la misma PC.
+const FRONTEND_PORT = Number(process.env.DEMO_FRONTEND_PORT ?? 4321);
 const SUPABASE_PORT = 55521;
 const BACKEND_HEALTH = 'http://127.0.0.1:3000/api/v1/health';
 const TUNNEL_TIMEOUT_MS = 60_000;
