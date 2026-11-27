@@ -30,7 +30,7 @@ export default function CampaignQuotePicker({ brand, campaignId, active }: Props
     let cancelled = false;
     const t = setTimeout(async () => {
       try {
-        const page = await loadFeed(brand.id, EMPTY_FILTERS, q.trim());
+        const page = await loadFeed(brand.id, EMPTY_FILTERS, q.trim(), undefined, true);
         if (cancelled) return;
         setItems(page.items.filter((i) => i.card.role === 'creator'));
         setError(null);

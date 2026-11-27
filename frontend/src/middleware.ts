@@ -81,9 +81,11 @@ export const onRequest = defineMiddleware(async (context, next) => {
         },
       );
     }
-    // Registro pendiente (ADR-009): toda ruta protegida lleva al onboarding.
+    // Registro pendiente (ADR-009): toda ruta protegida lleva al onboarding, salvo /admin (ya verificado admin).
     if (
       session.user &&
+      pathname !== '/admin' &&
+      !pathname.startsWith('/admin/') &&
       isProtected(pathname) &&
       pathname !== ONBOARDING_PATH &&
       (await getMe(context.locals)).account.accountKind === null

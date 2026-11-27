@@ -59,6 +59,7 @@ export default function QuoteComposer({
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [failure, setFailure] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [createdCampaign, setCreatedCampaign] = useState<string | null>(null);
   const [result, setResult] = useState<CreateQuotesResult | null>(null);
 
   useEffect(() => {
@@ -106,6 +107,22 @@ export default function QuoteComposer({
     if (quick && quickName.trim().length < MIN_NAME) {
       return setErrors({ campaign: `Escribe un nombre de al menos ${MIN_NAME} caracteres.` });
     }
+    const build = (campaignId: string) =>
+      CreateQuoteRequest.safeParse({
+        requesterProfileId: brandProfileId,
+        campaignId,
+        targets: targets.map((t) => ({
+          creatorProfileId: t.id,
+          serviceId: picked[t.id] || undefined,
+        })),
+        message,
+        amountPen: amount === '' ? undefined : Number(amount),
+        send: true,
+      });
+    // Valida todo el formulario antes de crear la campaña rápida (con un id provisional).
+    const check = build(quick ? crypto.randomUUID() : campaign);
+    if (!check.success) return setErrors(fieldErrors(check.error));
+    setErrors({});
     setBusy(true);
     try {
       const campaignToUse = quick
@@ -119,19 +136,9 @@ export default function QuoteComposer({
             })
           ).id
         : campaign;
-      const parsed = CreateQuoteRequest.safeParse({
-        requesterProfileId: brandProfileId,
-        campaignId: campaignToUse,
-        targets: targets.map((t) => ({
-          creatorProfileId: t.id,
-          serviceId: picked[t.id] || undefined,
-        })),
-        message,
-        amountPen: amount === '' ? undefined : Number(amount),
-        send: true,
-      });
+      if (quick) setCreatedCampaign(campaignToUse);
+      const parsed = build(campaignToUse);
       if (!parsed.success) return setErrors(fieldErrors(parsed.error));
-      setErrors({});
       const out = await createQuotes(parsed.data);
       setResult(out);
       onDone?.(out);
@@ -143,6 +150,7 @@ export default function QuoteComposer({
   }
 
   if (result) {
+    const allFailed = result.created.length === 0 && createdCampaign;
     const handleOf = (id: string) => targets.find((t) => t.id === id)?.handle ?? id;
     return (
       <div className="stack" aria-live="polite">
@@ -160,6 +168,11 @@ export default function QuoteComposer({
             No se pudo cotizar a:{' '}
             {result.failed.map((f) => `@${handleOf(f.creatorProfileId)}: ${f.message}`).join(' · ')}
           </Alert>
+        )}
+        {allFailed && (
+          <a className="btn btn-secondary" href={`/campanas/${createdCampaign}`}>
+            Ver la campaña creada para reintentar o cerrarla
+          </a>
         )}
         <a className="btn btn-secondary" href="/panel/cotizaciones">
           Ver mis cotizaciones
@@ -243,7 +256,14 @@ export default function QuoteComposer({
         />
       </Field>
       {errors.targets && <p className="field-error">{errors.targets}</p>}
-      <div aria-live="polite">{failure && <Alert kind="error">{failure}</Alert>}</div>
+      <div aria-live="polite">
+        {failure && <Alert kind="error">{failure}</Alert>}
+        {createdCampaign && failure && (
+          <a href={`/campanas/${createdCampaign}`}>
+            Ver la campaña creada para reintentar o cerrarla
+          </a>
+        )}
+      </div>
       <button type="submit" className="btn" disabled={busy || targets.length === 0}>
         {targets.length > 1 ? `Enviar a ${targets.length} influencers` : 'Enviar cotización'}
       </button>

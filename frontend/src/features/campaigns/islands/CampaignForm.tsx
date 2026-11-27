@@ -54,7 +54,7 @@ export default function CampaignForm({ brandProfileId, campaign, onSaved, onCanc
       brandProfileId,
       name,
       kind,
-      description: description.trim() || undefined,
+      description: description.trim() || null,
       startsOn,
       endsOn: endsOn || null,
       budgetPen: budget === '' ? null : Number(budget),
