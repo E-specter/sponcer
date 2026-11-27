@@ -61,7 +61,12 @@ const feed = (search: CandidateSearch) =>
   makeGetFeed({
     profiles: { isOwner: async () => true, listByOwner: async () => [] },
     search,
-    interactions: { upsert: vi.fn(), find: vi.fn(), listByActor: async () => [] },
+    interactions: {
+      upsert: vi.fn(),
+      find: vi.fn(),
+      listByActor: async () => [],
+      listByTarget: async () => [],
+    },
     scoring: weightedScore(WEIGHTS),
   });
 

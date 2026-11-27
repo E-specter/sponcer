@@ -10,16 +10,23 @@ import { makeGetFeed } from './application/use-cases/get-feed';
 import { makeInteract } from './application/use-cases/interact';
 import { makeListMatches } from './application/use-cases/list-matches';
 import { makeMatchingQueries } from './application/use-cases/matching-queries';
+import {
+  makeGetVisibilitySummary,
+  makeListVisibility,
+  makeRecordProfileView,
+} from './application/use-cases/visibility';
 import { weightedScore } from './domain/weighted-score';
 import { createMatchingRouter } from './infrastructure/in/http/matching.routes';
 import {
   createSupabaseCandidateSearch,
   createSupabaseInteractionRepository,
   createSupabaseMatchRepository,
+  createSupabaseProfileViewRepository,
 } from './infrastructure/out/supabase/supabase-repositories';
 import {
   createInMemoryInteractionRepository,
   createInMemoryMatchRepository,
+  createInMemoryProfileViewRepository,
   createMockCandidateSearch,
 } from './infrastructure/out/mock/mock-adapters';
 
@@ -37,6 +44,8 @@ export function createMatchingModule(deps: {
   weights: readonly number[];
   /** Requerido con `adapter: 'real'` (cliente service_role). */
   supabase?: SupabaseClient;
+  /** Correo -> es admin (las visitas de administradores no se registran). Por defecto, nadie. */
+  isAdmin?: (email: string) => Promise<boolean>;
   now?: () => Date;
   newId?: () => string;
 }): MatchingModule {
@@ -56,6 +65,14 @@ export function createMatchingModule(deps: {
     ? createSupabaseInteractionRepository(db)
     : createInMemoryInteractionRepository();
   const matches = db ? createSupabaseMatchRepository(db) : createInMemoryMatchRepository();
+  const visibility = {
+    profiles: deps.profiles,
+    interactions,
+    matches,
+    views: db ? createSupabaseProfileViewRepository(db) : createInMemoryProfileViewRepository(),
+    isAdmin: deps.isAdmin ?? (async () => false),
+    now,
+  };
 
   return {
     api: makeMatchingQueries({ matches, profiles: deps.profiles }),
@@ -75,6 +92,9 @@ export function createMatchingModule(deps: {
         newId,
       }),
       listMatches: makeListMatches({ profiles: deps.profiles, matches }),
+      visibilitySummary: makeGetVisibilitySummary(visibility),
+      listVisibility: makeListVisibility(visibility),
+      recordProfileView: makeRecordProfileView(visibility),
     }),
   };
 }
