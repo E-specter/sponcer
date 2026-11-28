@@ -5,4 +5,6 @@ export interface InteractionRepository {
   upsert(interaction: Interaction): Promise<void>;
   find(actorProfileId: string, targetProfileId: string): Promise<Interaction | null>;
   listByActor(actorProfileId: string): Promise<Interaction[]>;
+  /** Interacciones recibidas por el perfil (Visibilidad). */
+  listByTarget(targetProfileId: string): Promise<Interaction[]>;
 }

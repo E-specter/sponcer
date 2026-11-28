@@ -152,6 +152,24 @@ export function createWorld(sb: SupabaseClient) {
       );
       return row.id;
     },
+    /** Campaña activa de una marca (las cotizaciones siempre cuelgan de una campaña, ADR-009). */
+    async newCampaign(brandProfileId: string) {
+      const row = must(
+        await sb
+          .from('campaigns')
+          .insert({
+            brand_profile_id: brandProfileId,
+            name: 'Campaña de prueba',
+            kind: 'general',
+            starts_on: '2026-11-01',
+            status: 'active',
+          })
+          .select('id')
+          .single<{ id: string }>(),
+        'insert campaign',
+      );
+      return row.id;
+    },
     async newMatch(creatorProfileId: string, brandProfileId: string) {
       const row = must(
         await sb

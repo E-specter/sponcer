@@ -6,7 +6,9 @@ import type { ProfilesApi } from '../../../../profiles';
 import type { CandidateSearch } from '../../../application/ports/out/candidate-search';
 import type { InteractionRepository } from '../../../application/ports/out/interaction-repository';
 import type { MatchRepository } from '../../../application/ports/out/match-repository';
+import type { ProfileViewRepository } from '../../../application/ports/out/profile-view-repository';
 import type { Interaction, MatchRecord } from '../../../domain/candidate';
+import type { ViewRow } from '../../../domain/visibility';
 
 const interactionKey = (actor: string, target: string) => `${actor}>${target}`;
 const pairKey = (m: Pick<MatchRecord, 'creatorProfileId' | 'brandProfileId'>) =>
@@ -28,6 +30,28 @@ export function createInMemoryInteractionRepository(): InteractionRepository {
     },
     find: async (actor, target) => store.get(interactionKey(actor, target)) ?? null,
     listByActor: async (actor) => [...store.values()].filter((i) => i.actorProfileId === actor),
+    listByTarget: async (t) => [...store.values()].filter((i) => i.targetProfileId === t),
+  };
+}
+
+/** Visitas en memoria; misma regla que la PK de `profile_views` (visitante, ficha, día). */
+export function createInMemoryProfileViewRepository(): ProfileViewRepository {
+  const rows = new Map<string, ViewRow & { viewedProfileId: string }>();
+  return {
+    async recordOnce(viewer, viewed, day, at) {
+      const key = `${viewer}>${viewed}@${day}`;
+      if (rows.has(key)) return false;
+      rows.set(key, {
+        viewerProfileId: viewer,
+        viewedProfileId: viewed,
+        viewedOn: day,
+        count: 1,
+        lastAt: at,
+      });
+      return true;
+    },
+    listSince: async (viewed, sinceDay) =>
+      [...rows.values()].filter((r) => r.viewedProfileId === viewed && r.viewedOn >= sinceDay),
   };
 }
 

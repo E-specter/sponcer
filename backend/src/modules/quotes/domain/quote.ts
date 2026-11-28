@@ -30,7 +30,8 @@ export function actorAllowed(quote: QuoteRecord, to: QuoteStatus, actorProfileId
 
 export function newQuote(p: {
   id: string;
-  serviceId: string;
+  campaignId: string;
+  serviceId: string | null;
   creatorProfileId: string;
   requesterProfileId: string;
   message: string;
@@ -40,6 +41,7 @@ export function newQuote(p: {
   const at = p.now.toISOString();
   return {
     id: p.id,
+    campaignId: p.campaignId,
     serviceId: p.serviceId,
     creatorProfileId: p.creatorProfileId,
     requesterProfileId: p.requesterProfileId,

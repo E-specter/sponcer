@@ -30,6 +30,8 @@ La URL cambia en cada arranque, y la PC debe seguir encendida. `additional_redir
 
 ## Apagar
 
+Si el puerto 4321 ya lo usa otro proyecto, elige otro: `DEMO_FRONTEND_PORT=4322 npm run demo:tunnel`.
+
 `Ctrl+C` en la terminal de `demo:tunnel` (cierra túneles y servidores que lanzó). Si quedó algo vivo, en Windows: `taskkill /PID <pid> /T /F`. Para volver al modo local, recompila con `npm run build` (usa `frontend/.env`).
 
 ## Correo real con Brevo

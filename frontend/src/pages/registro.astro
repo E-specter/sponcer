@@ -1,0 +1,19 @@
+---
+import Public from '../layouts/Public.astro';
+import { getMe } from '../lib/session';
+import Onboarding from '../features/registro/islands/Onboarding';
+
+const me = await getMe(Astro.locals);
+// Registro y primer perfil completos: no hay nada que retomar.
+if (me.account.accountKind && me.profiles.length > 0) return Astro.redirect('/panel');
+---
+
+<Public title="Crea tu cuenta" noindex>
+  <p class="eyebrow">Registro</p>
+  <h1>Crea tu cuenta en Sponcer</h1>
+  <p class="lead">
+    Sesión: {me.email}. Cuatro pasos: tipo de cuenta, tus datos, consentimiento y tu primer perfil de
+    Instagram.
+  </p>
+  <Onboarding client:load accountKind={me.account.accountKind} />
+</Public>

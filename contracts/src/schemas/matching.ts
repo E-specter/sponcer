@@ -22,6 +22,8 @@ export const FeedQuery = PageQuery.extend({
   maxPricePen: z.coerce.number().int().nonnegative().optional(),
   /** Creador: presupuesto máximo mínimo aceptable de la marca. */
   minBudgetPen: z.coerce.number().int().nonnegative().optional(),
+  /** `true` = incluye perfiles con interés o descarte previo (selector de destinatarios de una campaña). */
+  includeInteracted: z.stringbool().optional(),
 });
 export type FeedQuery = z.infer<typeof FeedQuery>;
 

@@ -1,5 +1,7 @@
 import {
   NICHES,
+  type Account,
+  type Campaign,
   tierFor,
   type AdminEntry,
   type Claim,
@@ -51,7 +53,31 @@ export interface ClaimRecord {
   attempts: number;
 }
 
+const NEW_USER_PREFIX = 'a1b2c3d4-0000-4000-8000-';
+const NEW_USER_DIGITS = 12;
+
+/**
+ * Usuario "recién llegado" del modo mock (cookie `nuevo` o `nuevo-<n>`): aún no completó el registro.
+ * Cada `<n>` (solo dígitos) es un usuario distinto, para repetir el registro sin reiniciar el mock.
+ */
+export function mockNewUser(suffix = ''): { id: string; email: string } {
+  const digits = [...suffix].filter((c) => c >= '0' && c <= '9').join('');
+  const n = digits.slice(-NEW_USER_DIGITS).padStart(NEW_USER_DIGITS, '0');
+  return { id: NEW_USER_PREFIX + n, email: `nuevo-${n}@sponcer.local` };
+}
+export const isMockNewUser = (id: string): boolean => id.startsWith(NEW_USER_PREFIX);
+
+export interface MockView {
+  viewerProfileId: string;
+  viewedProfileId: string;
+  at: string;
+}
+
 export interface MockState {
+  campaigns: FixtureSocial['campaigns'];
+  views: MockView[];
+  /** Registros completados en esta sesión del mock (usuario -> cuenta). */
+  registrations: Record<string, Account>;
   profiles: FixtureProfile[];
   interactions: FixtureSocial['interactions'];
   matches: FixtureSocial['matches'];
@@ -76,6 +102,18 @@ export interface MockRemoval {
   reviewNote: string | null;
 }
 
+const MS_PER_HOUR = 3_600_000;
+/** Visitas sembradas: (visitante, visitado, hace cuántos días). Perfiles de las cuentas demo. */
+const SEED_VIEWS: [string, string, number][] = [
+  ['andina.snacks.demo', 'sofi.moda.demo', 1],
+  ['flor.cosmetica.demo', 'sofi.moda.demo', 3],
+  ['kallpa.sport.demo', 'sofi.moda.demo', 12],
+  ['valeria.fitness.demo', 'andina.snacks.demo', 0.5],
+  ['camila.gastronomia.demo', 'andina.snacks.demo', 2],
+  ['lucia.tecnologia.demo', 'andina.snacks.demo', 9],
+  ['sofi.moda.demo', 'rumbo.viajes.demo', 2],
+];
+
 const SEED_REMOVALS = [
   { index: 3, email: 'titular@example.com', reason: 'No quiero aparecer en la plataforma.' },
   { index: 7, email: 'prensa@example.com', reason: null },
@@ -88,6 +126,21 @@ declare global {
 /** Estado en memoria compartido por todas las peticiones del proceso (se reinicia al reiniciar el servidor). */
 export function state(): MockState {
   globalThis.__sponcerMock ??= {
+    campaigns: structuredClone(fixtureSocial.campaigns),
+    registrations: {},
+    views: SEED_VIEWS.flatMap(([viewer, viewed, days]) => {
+      const id = (h: string) => fixtureProfiles.find((p) => p.snapshot.handle === h)?.id;
+      const [viewerProfileId, viewedProfileId] = [id(viewer), id(viewed)];
+      return viewerProfileId && viewedProfileId
+        ? [
+            {
+              viewerProfileId,
+              viewedProfileId,
+              at: new Date(Date.now() - days * 24 * MS_PER_HOUR).toISOString(),
+            },
+          ]
+        : [];
+    }),
     profiles: structuredClone(fixtureProfiles),
     interactions: structuredClone(fixtureSocial.interactions),
     matches: structuredClone(fixtureSocial.matches),
@@ -117,7 +170,7 @@ export const fail = (code: ConstructorParameters<typeof ApiError>[0], message: s
 
 export function userIdFromToken(token: string | undefined): string {
   const id = token?.startsWith(MOCK_TOKEN_PREFIX) ? token.slice(MOCK_TOKEN_PREFIX.length) : null;
-  if (!id || !fixtureUsers.some((u) => u.id === id))
+  if (!id || (!isMockNewUser(id) && !fixtureUsers.some((u) => u.id === id)))
     return fail('UNAUTHORIZED', 'Sesión no válida');
   return id;
 }
@@ -286,15 +339,32 @@ export function paginate<T>(items: T[], cursor: string | undefined, limit: numbe
   return { items: items.slice(start, end), nextCursor: end < items.length ? String(end) : null };
 }
 
-/** Añade las dos partes y el servicio a la cotización persistida (como hará la API real). */
+export const campaignOf = (id: string) =>
+  state().campaigns.find((c) => c.id === id) ?? fail('NOT_FOUND', 'Campaña no encontrada');
+
+const OPEN_STATUSES = new Set(['rejected', 'completed', 'cancelled']);
+/** ¿La cotización sigue abierta? (no rechazada, completada ni cancelada). */
+export const isOpenQuote = (q: QuoteRecord): boolean => !OPEN_STATUSES.has(q.status);
+
+/** Avance de la campaña: cotizaciones por estado y monto de las aceptadas o completadas. */
+export function withStats(c: FixtureSocial['campaigns'][number]): Campaign {
+  const quotes = state().quotes.filter((q) => q.campaignId === c.id);
+  const byStatus: Record<string, number> = {};
+  quotes.forEach((q) => (byStatus[q.status] = (byStatus[q.status] ?? 0) + 1));
+  const committedPen = quotes
+    .filter((q) => q.status === 'accepted' || q.status === 'completed')
+    .reduce((sum, q) => sum + (q.amountPen ?? 0), 0);
+  return { ...c, stats: { quotes: quotes.length, byStatus, committedPen } };
+}
+
+/** Añade las dos partes, el servicio (si hay) y la campaña a la cotización persistida (como hará la API real). */
 export function enrichQuote(q: QuoteRecord): Quote {
-  const service =
-    findProfile(q.creatorProfileId).services.find((s) => s.id === q.serviceId) ??
-    fail('NOT_FOUND', 'Servicio no encontrado');
+  const { id, name, kind, status } = campaignOf(q.campaignId);
   return {
     ...q,
     creator: toSummary(findProfile(q.creatorProfileId)),
     requester: toSummary(findProfile(q.requesterProfileId)),
-    service,
+    service: findProfile(q.creatorProfileId).services.find((s) => s.id === q.serviceId) ?? null,
+    campaign: { id, name, kind, status },
   };
 }

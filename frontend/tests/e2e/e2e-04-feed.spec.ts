@@ -1,7 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { apiAs } from './support/api';
 import { newBrand, newCreator } from './support/actors';
-import { BASE_URL } from './support/env';
 import { loginAs, sessionFor } from './support/session';
 import { visit } from './support/ui';
 import { createWorld } from './support/world';
@@ -31,7 +30,7 @@ test('E2E-04: marca completa necesidades y su feed sale ordenado y filtrado', as
   await declared.getByLabel('Sector').selectOption('moda-retail');
   await declared.getByLabel('Ventas').check();
   await declared
-    .getByRole('group', { name: 'Nichos de creadores que buscas' })
+    .getByRole('group', { name: 'Nichos de influencers que buscas' })
     .getByLabel('Moda')
     .check();
   await declared.getByLabel('Presupuesto mínimo (S/)').fill(BUDGET_MIN);
@@ -45,7 +44,7 @@ test('E2E-04: marca completa necesidades y su feed sale ordenado y filtrado', as
   await expect(cards.first()).toBeVisible();
   expect(await cards.count()).toBeGreaterThanOrEqual(MIN_CARDS);
   await expect(page.getByText(`Viendo como @${handle}`)).toBeVisible();
-  await expect(cards.first().getByText('Creador', { exact: false })).toBeVisible();
+  await expect(cards.first().getByText('Influencer', { exact: false })).toBeVisible();
 
   const scores = (
     await page
@@ -94,11 +93,11 @@ test('E2E-04: marca completa necesidades y su feed sale ordenado y filtrado', as
   await expect(cards.first()).toBeVisible();
 });
 
-// RF-10: "Solicitar cotización" en la tarjeta del creador cuando el perfil activo es una marca.
+// RF-10 (ADR-009): "Cotizar" en la tarjeta del creador cuando el perfil activo es una marca.
 const UNIQUE_PRICE_PEN = 8;
 const UNIQUE_BUDGET_PEN = 999_998;
 
-test('E2E-04: la tarjeta del creador ofrece "Solicitar cotización" a la marca y lleva a sus servicios', async ({
+test('E2E-04: la tarjeta del creador ofrece "Cotizar" a la marca y abre el flujo de cotización', async ({
   browser,
 }) => {
   const creator = await newCreator(world, {
@@ -121,11 +120,12 @@ test('E2E-04: la tarjeta del creador ofrece "Solicitar cotización" a la marca y
   await brandPage.getByLabel('Precio máximo del servicio (S/)').fill(String(UNIQUE_PRICE_PEN));
   const card = brandPage.getByRole('article').filter({ hasText: creator.handle });
   await expect(card).toBeVisible();
-  const request = card.getByRole('link', { name: 'Solicitar cotización' });
-  await expect(request).toHaveAttribute('href', `/perfil/${creator.handle}#servicios`);
+  // ADR-009: la tarjeta abre el flujo de cotización (sin match) en un diálogo, ya no enlaza a la ficha.
+  const request = card.getByRole('button', { name: 'Cotizar', exact: true });
   await request.click();
-  await expect(brandPage).toHaveURL(`${BASE_URL}/perfil/${creator.handle}#servicios`);
-  await expect(brandPage.getByRole('button', { name: 'Solicitar cotización' })).toBeVisible();
+  await expect(
+    brandPage.getByRole('dialog', { name: `Cotizar a @${creator.handle}` }),
+  ).toBeVisible();
   await brandCtx.close();
 
   // Un creador mira marcas: sus tarjetas no ofrecen cotización.
@@ -139,6 +139,6 @@ test('E2E-04: la tarjeta del creador ofrece "Solicitar cotización" a la marca y
     .fill(String(UNIQUE_BUDGET_PEN));
   const brandCard = creatorPage.getByRole('article').filter({ hasText: brand.handle });
   await expect(brandCard).toBeVisible();
-  await expect(brandCard.getByRole('link', { name: 'Solicitar cotización' })).toHaveCount(0);
+  await expect(brandCard.getByRole('button', { name: 'Cotizar', exact: true })).toHaveCount(0);
   await creatorCtx.close();
 });

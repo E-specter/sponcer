@@ -10,6 +10,25 @@ Formato [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). Versiones c
 
 ## [Sin publicar]
 
+## [1.4.0] - 2026-11-27
+
+### Añadido
+
+- Cuentas Empresa (persona natural con DNI o jurídica con RUC con dígito verificador) e Influencer; la Empresa administra varias marcas, cada una con sus matches, cotizaciones y campañas (ADR-009).
+- Registro completo en 4 pasos con consentimiento versionado (Ley 29733).
+- Campañas (temporada, general, segmento, otro) con avance, y cotización a varios influencers a la vez.
+- Cotizar sin match, con servicio del catálogo o como propuesta abierta.
+- Visibilidad: interesados sin match y visitas al perfil, con contadores de 7 y 30 días.
+- `DEMO_FRONTEND_PORT` para levantar la demo cuando el puerto 4321 está ocupado.
+
+### Cambiado
+
+- Los datos de demo se reparten en cuentas Empresa (`demo@`) e Influencer (`demo-influencer@`).
+- Las cotizaciones anteriores pasan a una campaña "General" por marca.
+
+### Seguridad
+
+- RLS en las tablas nuevas; límite de registros por usuario y de cotizaciones por marca y hora.
 ## [1.3.0] - 2026-11-27
 
 ### Añadido

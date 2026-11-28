@@ -5,11 +5,13 @@ import type { ProfilesApi } from '../../../profiles';
 import { toQuoteView } from '../quote-view';
 import { applyTransition } from '../../domain/quote';
 import type { TransitionQuote } from '../ports/in/quotes-use-cases';
+import type { CampaignRepository } from '../ports/out/campaign-repository';
 import type { QuoteRepository } from '../ports/out/quote-repository';
 
 export const makeTransitionQuote =
   (d: {
     quotes: QuoteRepository;
+    campaigns: CampaignRepository;
     profiles: ProfilesApi;
     bus: EventBus;
     now: () => Date;
@@ -29,5 +31,5 @@ export const makeTransitionQuote =
       from: quote.status,
       to: next.value.status,
     });
-    return toQuoteView(d.profiles, next.value);
+    return toQuoteView(d, next.value);
   };

@@ -1,5 +1,10 @@
 import type { z } from 'zod';
-import type { Declared, PutServicesRequest, StartClaimRequest } from '@sponcer/contracts';
+import type {
+  Declared,
+  PutServicesRequest,
+  RegisterRequest,
+  StartClaimRequest,
+} from '@sponcer/contracts';
 import { callBff } from '../../../lib/api/bff';
 
 export const startClaim = (body: StartClaimRequest) => callBff('startClaim', { body });
@@ -11,3 +16,5 @@ export const updateDeclared = (profileId: string, body: Declared) =>
 
 export const putServices = (profileId: string, body: z.input<typeof PutServicesRequest>) =>
   callBff('putServices', { params: { profileId }, body });
+
+export const register = (body: RegisterRequest) => callBff('register', { body });

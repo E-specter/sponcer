@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { demoUser, fixtureProfiles } from '@sponcer/contracts/fixtures';
+import { demoInfluencer, demoUser, fixtureProfiles } from '@sponcer/contracts/fixtures';
 import type { Declared } from '@sponcer/contracts';
 import { createEventBus } from '../../../../shared/events/event-bus';
 import { createProfilesMockAdapters } from '../../infrastructure/out/mock/mock-adapters';
@@ -7,8 +7,10 @@ import { createProfileAssembler } from '../profile-assembler';
 import { makeUpdateDeclared } from './update-declared';
 
 const STRANGER = '00000000-0000-4000-8000-000000000000';
+// La Influencer demo es dueña del creador; la Empresa demo, de las marcas (ADR-009).
+const ownerOf = { creator: demoInfluencer, brand: demoUser };
 const owned = (role: 'creator' | 'brand') =>
-  fixtureProfiles.find((p) => p.ownerUserId === demoUser.id && p.role === role)!;
+  fixtureProfiles.find((p) => p.ownerUserId === ownerOf[role].id && p.role === role)!;
 const creatorDeclared: Declared = { role: 'creator', niches: ['moda'], accountType: 'creator' };
 
 function setup() {
@@ -26,7 +28,7 @@ function setup() {
 describe('updateDeclared', () => {
   it('el dueño actualiza y se publica el evento', async () => {
     const { update, events } = setup();
-    const r = await update(demoUser.id, owned('creator').id, creatorDeclared);
+    const r = await update(demoInfluencer.id, owned('creator').id, creatorDeclared);
     expect(r.ok && r.value.declared).toEqual(creatorDeclared);
     expect(events).toHaveLength(1);
   });
@@ -40,7 +42,7 @@ describe('updateDeclared', () => {
 
   it('el rol del body debe coincidir con el del perfil', async () => {
     const { update, events } = setup();
-    const r = await update(demoUser.id, owned('creator').id, owned('brand').declared!);
+    const r = await update(demoInfluencer.id, owned('creator').id, owned('brand').declared!);
     expect(!r.ok && r.error.code).toBe('VALIDATION_ERROR');
     expect(events).toHaveLength(0);
   });

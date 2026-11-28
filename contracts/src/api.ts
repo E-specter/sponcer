@@ -1,5 +1,21 @@
 import { z } from 'zod';
+import { RegisterRequest } from './schemas/accounts';
 import { Claim, Me, StartClaimRequest, VerifyClaimResult } from './schemas/auth';
+import {
+  Campaign,
+  CampaignQuery,
+  CampaignsQuery,
+  CreateCampaignRequest,
+  UpdateCampaignRequest,
+} from './schemas/campaigns';
+import {
+  RecordViewRequest,
+  RecordViewResult,
+  VisibilityItem,
+  VisibilityQuery,
+  VisibilitySummary,
+  VisibilitySummaryQuery,
+} from './schemas/visibility';
 import { PageQuery, page } from './schemas/common';
 import {
   FeedItem,
@@ -17,7 +33,13 @@ import {
   RemovalRequest,
   Service,
 } from './schemas/profiles';
-import { CreateQuoteRequest, Quote, QuotesQuery, TransitionQuoteRequest } from './schemas/quotes';
+import {
+  CreateQuoteRequest,
+  CreateQuotesResult,
+  Quote,
+  QuotesQuery,
+  TransitionQuoteRequest,
+} from './schemas/quotes';
 import {
   AdminAddProfileRequest,
   AdminEmailRequest,
@@ -55,6 +77,14 @@ export const api = {
     auth: false,
   },
   me: { method: 'get', path: '/api/v1/me', summary: 'Usuario actual y sus perfiles', response: Me },
+  register: {
+    method: 'post',
+    path: '/api/v1/registration',
+    summary:
+      'Registro completo: tipo de cuenta (Empresa o Influencer), datos y consentimiento (ADR-009)',
+    body: RegisterRequest,
+    response: Me,
+  },
   startClaim: {
     method: 'post',
     path: '/api/v1/claims',
@@ -127,9 +157,9 @@ export const api = {
   createQuote: {
     method: 'post',
     path: '/api/v1/quotes',
-    summary: 'Solicita una cotización sobre un servicio (no requiere match)',
+    summary: 'Cotiza a uno o varios influencers dentro de una campaña (no requiere match)',
     body: CreateQuoteRequest,
-    response: Quote,
+    response: CreateQuotesResult,
   },
   transitionQuote: {
     method: 'post',
@@ -214,6 +244,55 @@ export const api = {
       'Quita el rol de administrador nombrado en la app; no aplica a ADMIN_EMAILS ni al último admin',
     body: AdminEmailRequest,
     response: z.array(AdminEntry),
+  },
+  listCampaigns: {
+    method: 'get',
+    path: '/api/v1/campaigns',
+    summary: 'Campañas de una marca propia con su avance',
+    query: CampaignsQuery,
+    response: page(Campaign),
+  },
+  getCampaign: {
+    method: 'get',
+    path: '/api/v1/campaigns/:campaignId',
+    summary: 'Detalle de una campaña de una marca propia',
+    query: CampaignQuery,
+    response: Campaign,
+  },
+  createCampaign: {
+    method: 'post',
+    path: '/api/v1/campaigns',
+    summary: 'Crea una campaña (temporada, general, segmento u otro) para una marca propia',
+    body: CreateCampaignRequest,
+    response: Campaign,
+  },
+  updateCampaign: {
+    method: 'patch',
+    path: '/api/v1/campaigns/:campaignId',
+    summary: 'Edita una campaña o avanza su estado (borrador → activa → cerrada)',
+    body: UpdateCampaignRequest,
+    response: Campaign,
+  },
+  visibilitySummary: {
+    method: 'get',
+    path: '/api/v1/visibility/summary',
+    summary: 'Contadores de intereses sin match y visitas de un perfil propio (7 y 30 días)',
+    query: VisibilitySummaryQuery,
+    response: VisibilitySummary,
+  },
+  visibility: {
+    method: 'get',
+    path: '/api/v1/visibility',
+    summary: 'Quién mostró interés sin match o visitó un perfil propio',
+    query: VisibilityQuery,
+    response: page(VisibilityItem),
+  },
+  recordProfileView: {
+    method: 'post',
+    path: '/api/v1/profiles/:profileId/views',
+    summary: 'Registra la visita de un perfil propio a una ficha (una por día)',
+    body: RecordViewRequest,
+    response: RecordViewResult,
   },
 } as const satisfies Record<string, Endpoint>;
 

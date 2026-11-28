@@ -5,7 +5,8 @@ const FIRST = 1;
 const SECOND = 2;
 const row = {
   id: 'q',
-  service_id: 's',
+  campaign_id: 'k',
+  service_id: null,
   creator_profile_id: 'c',
   requester_profile_id: 'r',
   status: 'sent' as const,
@@ -34,6 +35,8 @@ describe('quote mappers', () => {
     expect(quoteToRow(quoteFromRow(row, []))).toMatchObject({
       id: 'q',
       status: 'sent',
+      campaign_id: 'k',
+      service_id: null,
       amount_pen: null,
     });
   });

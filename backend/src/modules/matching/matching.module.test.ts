@@ -1,7 +1,12 @@
 import request from 'supertest';
 import { describe, expect, it } from 'vitest';
 import { FeedItem, InteractionResult, Match, type DomainEvent } from '@sponcer/contracts';
-import { demoUser, fixtureProfiles, fixtureSocial } from '@sponcer/contracts/fixtures';
+import {
+  demoInfluencer,
+  demoUser,
+  fixtureProfiles,
+  fixtureSocial,
+} from '@sponcer/contracts/fixtures';
 import { createApp } from '../../app';
 import { loadEnv } from '../../config/env';
 import { createEventBus } from '../../shared/events/event-bus';
@@ -14,6 +19,7 @@ import { createMatchingModule } from './matching.module';
 const OK = 200;
 const FORBIDDEN = 403;
 const AUTH = { Authorization: `Bearer mock:${demoUser.id}` };
+const AUTH_INF = { Authorization: `Bearer mock:${demoInfluencer.id}` };
 const idOf = (handle: string) => fixtureProfiles.find((p) => p.snapshot.handle === handle)!.id;
 
 const DEMO_CREATOR = idOf('sofi.moda.demo');
@@ -53,12 +59,14 @@ async function setup() {
 describe('feed', () => {
   it('ordena por score, excluye propios e interés ya expresado y trae 2 razones', async () => {
     const { app } = await setup();
-    const res = await request(app).get('/api/v1/feed').query({ profileId: DEMO_CREATOR }).set(AUTH);
+    const res = await request(app)
+      .get('/api/v1/feed')
+      .query({ profileId: DEMO_CREATOR })
+      .set(AUTH_INF);
     expect(res.status).toBe(OK);
     const items = FeedItem.array().parse(res.body.items);
     const ids = items.map((i) => i.card.id);
     expect(items.every((i) => i.card.role === 'brand')).toBe(true);
-    expect(ids).not.toContain(DEMO_BRAND); // perfil propio
     expect(ids).not.toContain(idOf('rumbo.viajes.demo')); // ya hay match/interés
     expect(items.map((i) => i.score)).toEqual([...items.map((i) => i.score)].sort((a, b) => b - a));
     expect(items.every((i) => i.reasons.length <= MAX_REASONS)).toBe(true);
@@ -86,7 +94,7 @@ describe('feed', () => {
     const filtered = await request(app)
       .get('/api/v1/feed')
       .query({ profileId: DEMO_CREATOR, niches: 'tecnologia' })
-      .set(AUTH);
+      .set(AUTH_INF);
     expect(
       filtered.body.items.every((i: { card: { niches: string[] } }) =>
         i.card.niches.includes('tecnologia'),
@@ -95,7 +103,7 @@ describe('feed', () => {
     const foreign = await request(app)
       .get('/api/v1/feed')
       .query({ profileId: FOREIGN_CREATOR })
-      .set(AUTH);
+      .set(AUTH_INF);
     expect(foreign.status).toBe(FORBIDDEN);
   });
 });
@@ -130,7 +138,7 @@ describe('interacciones y matches', () => {
     const send = (kind: 'interest' | 'dismiss', t: string) =>
       request(app)
         .post('/api/v1/interactions')
-        .set(AUTH)
+        .set(AUTH_INF)
         .send({ actorProfileId: DEMO_CREATOR, targetProfileId: t, kind });
     expect((await send('interest', target)).body).toEqual({ matched: false, matchId: null });
     const dismissed = idOf('sabor.costa.demo');
@@ -138,7 +146,7 @@ describe('interacciones y matches', () => {
     const feed = await request(app)
       .get('/api/v1/feed')
       .query({ profileId: DEMO_CREATOR })
-      .set(AUTH);
+      .set(AUTH_INF);
     const ids = feed.body.items.map((i: { card: { id: string } }) => i.card.id);
     expect(ids).not.toContain(target);
     expect(ids).not.toContain(dismissed);
@@ -158,7 +166,7 @@ describe('interacciones y matches', () => {
     const { matching } = await setup();
     const seeded = fixtureSocial.matches[0]!;
     expect((await matching.api.getMatch(seeded.id))?.brandProfileId).toBe(seeded.brandProfileId);
-    expect(await matching.api.isParticipant(seeded.id, demoUser.id)).toBe(true); // dueño del creador
+    expect(await matching.api.isParticipant(seeded.id, demoInfluencer.id)).toBe(true); // dueña del creador
     expect(await matching.api.isParticipant(seeded.id, 'otro-usuario')).toBe(false);
     expect(await matching.api.isParticipant('no-existe', demoUser.id)).toBe(false);
   });

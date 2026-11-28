@@ -123,17 +123,21 @@ test('teclado: el chat y el formulario de cotización son operables sin ratón',
   await loginAs(context, brand.user);
   await visit(page, `/perfil/${creator.handle}`);
 
-  const request = page.getByRole('button', { name: 'Solicitar cotización' });
+  const request = page.getByRole('button', { name: 'Cotizar (propuesta abierta)' });
   await tabTo(page, request);
   await expectVisibleFocus(request);
   await page.keyboard.press('Enter');
-  const message = page.getByLabel('Mensaje para el creador');
-  await expect(message).toBeVisible();
+  // Sin campañas activas, el diálogo propone crear una rápida: nombre y mensaje, todo por teclado.
+  const quick = page.getByLabel('Nombre de la nueva campaña');
+  await expect(quick).toBeVisible();
+  await tabTo(page, quick);
+  await page.keyboard.type('Campaña por teclado');
+  const message = page.getByLabel('Mensaje', { exact: true });
   await tabTo(page, message);
   await page.keyboard.type('Cotización por teclado');
-  const send = page.getByRole('button', { name: 'Enviar solicitud' });
+  const send = page.getByRole('button', { name: 'Enviar cotización' });
   await tabTo(page, send);
   await expectVisibleFocus(send);
   await page.keyboard.press('Enter');
-  await expect(page.getByText('Cotización enviada.')).toBeVisible();
+  await expect(page.getByText('Cotizaciones creadas (1)')).toBeVisible();
 });

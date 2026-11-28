@@ -7,6 +7,7 @@ describe('quotes · adaptador mock', () => {
   describeQuoteRepositoryContract(() => ({
     repo: createMockQuoteRepository(),
     newScenario: async () => ({
+      campaignId: randomUUID(),
       serviceId: randomUUID(),
       creatorProfileId: randomUUID(),
       requesterProfileId: randomUUID(),

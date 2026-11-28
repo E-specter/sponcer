@@ -1,7 +1,17 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { unwrap } from '../../../../../shared/supabase/unwrap';
 import type { QuoteRepository } from '../../../application/ports/out/quote-repository';
-import { eventToRow, quoteFromRow, quoteToRow, type EventRow, type QuoteRow } from './mappers';
+import type { CampaignRepository } from '../../../application/ports/out/campaign-repository';
+import {
+  campaignFromRow,
+  campaignToRow,
+  eventToRow,
+  quoteFromRow,
+  quoteToRow,
+  type CampaignRow,
+  type EventRow,
+  type QuoteRow,
+} from './mappers';
 
 const SELECT = '*, quote_events(*)';
 type QuoteWithEvents = QuoteRow & { quote_events: EventRow[] };
@@ -14,6 +24,15 @@ export function createSupabaseQuoteRepository(supabase: SupabaseClient): QuoteRe
         await supabase.from('quotes').select(SELECT).eq('id', id).maybeSingle<QuoteWithEvents>(),
       );
       return row ? map(row) : null;
+    },
+    async listByCampaign(campaignId) {
+      return unwrap(
+        await supabase
+          .from('quotes')
+          .select(SELECT)
+          .eq('campaign_id', campaignId)
+          .returns<QuoteWithEvents[]>(),
+      ).map(map);
     },
     // Dos consultas con `.eq` (parametrizadas): nada del profileId se interpola en un filtro de PostgREST.
     async listByProfile(profileId) {
@@ -66,3 +85,38 @@ export function createSupabaseQuoteRepository(supabase: SupabaseClient): QuoteRe
     },
   };
 }
+
+export const createSupabaseCampaignRepository = (supabase: SupabaseClient): CampaignRepository => ({
+  async findById(id) {
+    const row = unwrap(
+      await supabase.from('campaigns').select('*').eq('id', id).maybeSingle<CampaignRow>(),
+    );
+    return row ? campaignFromRow(row) : null;
+  },
+  async listByBrand(brandProfileId, status) {
+    const q = supabase
+      .from('campaigns')
+      .select('*')
+      .eq('brand_profile_id', brandProfileId)
+      .order('created_at', { ascending: false })
+      .order('id');
+    return unwrap(await (status ? q.eq('status', status) : q).returns<CampaignRow[]>()).map(
+      campaignFromRow,
+    );
+  },
+  async save(campaign) {
+    unwrap(await supabase.from('campaigns').upsert(campaignToRow(campaign)));
+  },
+  async update(campaign, expectedStatus) {
+    const { id, created_at: _created, ...row } = campaignToRow(campaign);
+    const rows = unwrap(
+      await supabase
+        .from('campaigns')
+        .update(row)
+        .eq('id', id)
+        .eq('status', expectedStatus)
+        .select('id'),
+    );
+    return rows.length > 0;
+  },
+});

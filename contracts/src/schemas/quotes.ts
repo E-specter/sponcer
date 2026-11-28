@@ -1,5 +1,6 @@
 import { z } from 'zod';
-import { MAX_QUOTE_MESSAGE, MAX_QUOTE_NOTE } from './limits';
+import { CampaignRef } from './campaigns';
+import { MAX_BULK_QUOTES, MAX_QUOTE_MESSAGE, MAX_QUOTE_NOTE } from './limits';
 import { Id, IsoDate, PageQuery, PricePen } from './common';
 import { ProfileSummary, Service } from './profiles';
 
@@ -37,9 +38,18 @@ export const QUOTE_TRANSITION_ACTOR: Record<QuoteStatus, 'requester' | 'creator'
   cancelled: 'any',
 };
 
+/** Destinatario de una cotización: un servicio de su catálogo o, sin `serviceId`, una propuesta abierta. */
+export const QuoteTarget = z.object({ creatorProfileId: Id, serviceId: Id.optional() });
+export type QuoteTarget = z.infer<typeof QuoteTarget>;
+
+/**
+ * Cotiza a uno o varios influencers dentro de una campaña activa de la marca (ADR-009). No exige match.
+ * Un `creatorProfileId` repetido o con cotización abierta en la misma campaña da CONFLICT para ese destinatario.
+ */
 export const CreateQuoteRequest = z.object({
   requesterProfileId: Id,
-  serviceId: Id,
+  campaignId: Id,
+  targets: z.array(QuoteTarget).min(1).max(MAX_BULK_QUOTES),
   message: z.string().trim().min(1).max(MAX_QUOTE_MESSAGE),
   amountPen: PricePen.optional(),
   send: z.boolean().default(true),
@@ -65,7 +75,9 @@ export const QuoteEvent = z.object({
 /** Cotización persistida (sin datos de otras entidades). */
 export const QuoteRecord = z.object({
   id: Id,
-  serviceId: Id,
+  campaignId: Id,
+  /** `null` = propuesta abierta, sin servicio del catálogo. */
+  serviceId: Id.nullable(),
   creatorProfileId: Id,
   requesterProfileId: Id,
   status: QuoteStatus,
@@ -81,8 +93,22 @@ export type QuoteRecord = z.infer<typeof QuoteRecord>;
 export const Quote = QuoteRecord.extend({
   creator: ProfileSummary,
   requester: ProfileSummary,
-  service: Service,
+  service: Service.nullable(),
+  campaign: CampaignRef,
 });
 export type Quote = z.infer<typeof Quote>;
 
-export const QuotesQuery = PageQuery.extend({ profileId: Id });
+export const QuotesQuery = PageQuery.extend({ profileId: Id, campaignId: Id.optional() });
+
+/** Resultado de una cotización múltiple: las creadas y, por destinatario, las rechazadas con su motivo. */
+export const CreateQuotesResult = z.object({
+  created: z.array(Quote),
+  failed: z.array(
+    z.object({
+      creatorProfileId: Id,
+      code: z.enum(['NOT_FOUND', 'CONFLICT', 'VALIDATION_ERROR']),
+      message: z.string(),
+    }),
+  ),
+});
+export type CreateQuotesResult = z.infer<typeof CreateQuotesResult>;

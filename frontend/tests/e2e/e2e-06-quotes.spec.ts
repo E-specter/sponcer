@@ -29,12 +29,13 @@ test('E2E-06: ciclo completo de una cotización con los dos actores correctos', 
 
   // 1. La marca solicita desde la ficha del creador (estado: enviada).
   await visit(brandPage, `/perfil/${creator.handle}`);
-  await brandPage.getByRole('button', { name: 'Solicitar cotización' }).click();
-  await brandPage
-    .getByLabel('Mensaje para el creador')
-    .fill('Hola, queremos un reel para nuestro lanzamiento');
-  await brandPage.getByRole('button', { name: 'Enviar solicitud' }).click();
-  await expect(brandPage.getByText('Cotización enviada.')).toBeVisible();
+  // ADR-009: sin match y dentro de una campaña; sin campañas activas se crea una rápida.
+  await brandPage.getByRole('button', { name: 'Cotizar (propuesta abierta)' }).click();
+  const dialog = brandPage.getByRole('dialog', { name: `Cotizar a @${creator.handle}` });
+  await dialog.getByLabel('Nombre de la nueva campaña').fill('Lanzamiento E2E');
+  await dialog.getByLabel('Mensaje').fill('Hola, queremos un reel para nuestro lanzamiento');
+  await dialog.getByRole('button', { name: 'Enviar cotización' }).click();
+  await expect(dialog.getByText('Cotizaciones creadas (1)')).toBeVisible();
 
   await visit(brandPage, '/panel/cotizaciones');
   const mine = quoteCard(brandPage, creator.handle);
